@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Membaca Buku — Perpustakaan SMK MA'arif Walisongo Kajoran</title>
+  
+  <!-- Font & Ikon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Library PDF.js untuk membaca file PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  </script>
+
+  <style>
+    :root {
+      --green-900: #0c3f2e;
+      --green-800: #105843;
+      --green-700: #146b52;
+      --mint-100: #d7f0e4;
+      --mint-50: #eefbf5;
+      --ink: #16302c;
+      --muted: #5f7a75;
+      --border: #e1ece9;
+      --bg: #f5f9f8;
+      --card: #ffffff;
+      --shadow: 0 10px 30px -12px rgba(12, 63, 46, .16);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { 
+      margin: 0; 
+      padding: 0; 
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    h1, h2, h3, .brand-title, .nav-link, .btn, .avatar-name {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    /* ---------- NAVBAR ---------- */
+    header.topbar {
+      background: linear-gradient(180deg, var(--green-900), var(--green-800));
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, .12);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #fff;
+      margin-left: 12px;
+    }
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      box-shadow: inset 0 0 0 3px var(--green-700);
+      overflow: hidden;
+    }
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .brand-title {
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: .3px;
+      line-height: 1.15;
+    }
+    .brand-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 11.5px;
+      color: #c7e8da;
+      font-weight: 500;
+      line-height: 1.3;
+      margin-top: 2px;
+    }
+
+    nav.nav-links {
+      display: flex;
+      gap: 6px;
+    }
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #e3f4ec;
+      background: transparent;
+      border: none;
+      text-decoration: none;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 14.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .15s ease;
+    }
+    .nav-link i {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .nav-link:hover {
+      background: rgba(255, 255, 255, .08);
+    }
+    .nav-link.active {
+      background: rgba(255, 255, 255, .16);
+      color: #fff;
+    }
+
+    /* Auth Area & Dropdown */
+    .auth-area {
+      display: flex;
+      align-items: center;
+    }
+    .btn-login {
+      background: #fff;
+      color: var(--green-800);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: .15s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+    .btn-login:hover {
+      background: var(--mint-50);
+      transform: translateY(-1px);
+    }
+
+    .user-menu {
+      position: relative;
+    }
+    .user-trigger {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 4px 6px 4px 4px;
+      border-radius: 12px;
+      transition: .15s ease;
+    }
+    .user-trigger:hover {
+      background: rgba(255, 255, 255, .08);
+    }
+    .avatar-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      font-size: 20px;
+      flex-shrink: 0;
+      border: 2px solid rgba(255, 255, 255, .5);
+      overflow: hidden;
+    }
+    .avatar-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .user-text {
+      text-align: left;
+      line-height: 1.25;
+    }
+    .avatar-name {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .avatar-status {
+      font-size: 11.5px;
+      color: #bfe8d5;
+      font-weight: 500;
+    }
+    .chev {
+      width: 16px;
+      height: 16px;
+      color: #cdead9;
+      transition: .15s ease;
+    }
+    .user-trigger[aria-expanded="true"] .chev { transform: rotate(180deg); }
+
+    /* ---------- MOBILE NAV TOGGLE (hamburger) ---------- */
+    .nav-toggle {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .08);
+      border: none;
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: .15s ease;
+    }
+    .nav-toggle:hover { background: rgba(255, 255, 255, .16); }
+
+    .dropdown {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 10px);
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      width: 190px;
+      padding: 8px;
+      display: none;
+      flex-direction: column;
+      gap: 2px;
+      z-index: 100;
+    }
+    .dropdown.open { display: flex; }
+    .dropdown a, .dropdown button {
+      all: unset;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+    .dropdown a:hover, .dropdown button:hover { background: var(--mint-50); }
+    .dropdown .logout { color: #c0392b; }
+    .dropdown hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 4px 0;
+    }
+
+    main { 
+      padding: 24px 28px 40px; 
+      max-width: 1440px; 
+      margin: 0 auto; 
+    }
+
+    .breadcrumb { 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      font-size: 13.5px; 
+      color: var(--muted); 
+      margin-bottom: 20px; 
+      font-weight: 500; 
+    }
+    .breadcrumb a { 
+      color: var(--green-800); 
+      text-decoration: none; 
+      font-weight: 600; 
+    }
+
+    .reader-container {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+      align-items: start; /* Menyamakan tinggi kedua kolom */
+    }
+
+    .reader-main-card {
+      background: var(--card);
+      border-radius: 18px;
+      border: 1.5px solid var(--border);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .reader-top-bar {
+      padding: 16px 24px;
+      border-bottom: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      background: var(--card);
+    }
+
+    .btn-action {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 13.5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ink);
+      transition: .15s;
+    }
+    .btn-action:hover { 
+      background: var(--mint-50); 
+      border-color: var(--green-800); 
+    }
+
+    .pagination-top { 
+      display: flex; 
+      align-items: center; 
+      gap: 12px; 
+      font-weight: 600; 
+      font-size: 14px; 
+    }
+    .pagination-top button { 
+      background: none; 
+      border: 1.5px solid var(--border); 
+      width: 32px; 
+      height: 32px; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      color: var(--ink); 
+    }
+    .pagination-top button:hover { background: var(--mint-50); }
+
+    .canvas-container {
+      padding: 20px;
+      background: #e9f2ef;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-bottom: 1.5px solid var(--border);
+      overflow-x: auto;
+      flex-grow: 1; /* Agar kanvas fleksibel mengisi ruang tengah */
+    }
+    #pdfCanvas {
+      max-width: 100%;
+      height: auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-radius: 4px;
+      background: #fff;
+    }
+
+    .reader-footer-bar {
+      padding: 16px 24px;
+      border-top: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      background: var(--card);
+      flex-wrap: wrap;
+    }
+
+    .font-controls { 
+      display: flex; 
+      align-items: center; 
+      gap: 12px; 
+      font-size: 13px; 
+      font-weight: 600; 
+    }
+    .font-btn-group { display: flex; gap: 4px; }
+    .font-btn-group button { 
+      background: var(--card); 
+      color: var(--ink); 
+      border: 1.5px solid var(--border); 
+      padding: 6px 12px; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      font-weight: 700; 
+    }
+    .font-btn-group button:hover { background: var(--mint-50); }
+
+    .theme-switcher { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; }
+    .theme-dots { display: flex; gap: 8px; }
+    .theme-dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border); cursor: pointer; }
+    .theme-dot.white { background: #ffffff; }
+    .theme-dot.cream { background: #fbf0d9; }
+    .theme-dot.dark { background: #1a1a1a; }
+    .theme-dot.active { border-color: var(--green-800); transform: scale(1.1); }
+
+    .page-select-box { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; }
+    .page-select-box select { 
+      padding: 6px 12px; 
+      border-radius: 8px; 
+      border: 1.5px solid var(--border); 
+      font-weight: 600; 
+      cursor: pointer; 
+      font-family: 'Inter', sans-serif; 
+      background: var(--card); 
+      color: var(--ink); 
+    }
+
+    .chapter-sidebar {
+      background: var(--card);
+      border-radius: 18px;
+      border: 1.5px solid var(--border);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      max-height: 85vh; /* Menyamakan panjang card baca buku */
+      overflow: hidden;
+    }
+    .sidebar-head { 
+      background: linear-gradient(180deg, var(--green-900), var(--green-800)); 
+      color: #fff; 
+      padding: 16px 20px; 
+      font-weight: 700; 
+      font-size: 16px; 
+    }
+    .chapter-list { 
+      padding: 12px; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 8px; 
+      flex-grow: 1; 
+      overflow-y: auto; /* Scroll mandiri jika daftar bab panjang */
+    }
+    .chapter-item { 
+      padding: 12px 14px; 
+      border-radius: 10px; 
+      border: 1.5px solid var(--border); 
+      cursor: pointer; 
+      background: var(--card); 
+      transition: .15s; 
+    }
+    .chapter-item:hover, .chapter-item.active { 
+      background: var(--mint-50); 
+      border-color: var(--green-800); 
+    }
+    .chap-title-sm { font-size: 12px; font-weight: 700; color: var(--green-800); text-transform: uppercase; margin-bottom: 2px; }
+    .chap-desc-sm { font-size: 13px; font-weight: 600; color: var(--ink); }
+
+    body.theme-cream { background: #f7f1e3; --card: #fbf0d9; --ink: #2c2416; --muted: #736248; --border: #e6d7be; }
+    body.theme-dark { background: #121212; --card: #1e1e1e; --ink: #e0e0e0; --muted: #a0a0a0; --border: #333333; }
+
+    @media (max-width:820px){
+      header.topbar {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        gap: 0;
+        position: relative;
+      }
+      .brand { margin-left: 0; width: auto; justify-content: flex-start; }
+      .nav-toggle { display: flex; }
+      nav.nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        flex-direction: column;
+        gap: 4px;
+        background: linear-gradient(180deg, var(--green-800), var(--green-900));
+        padding: 10px 16px 16px;
+        box-shadow: 0 12px 20px -8px rgba(0,0,0,.25);
+        z-index: 60;
+      }
+      nav.nav-links.open { display: flex; }
+      .nav-link { width: 100%; justify-content: flex-start; padding: 12px 14px; }
+      .auth-area { display: none; }
+      .reader-container { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-logo">
+        <img src="img/logo.smk.png" alt="logo sekolah">
+      </div>
+      <div>
+        <div class="brand-title">PERPUSTAKAAN</div>
+        <div class="brand-sub">SMK MA'arif Walisongo Kajoran</div>
+      </div>
+    </div>
+
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html" class="nav-link">
+        <i class="fa-solid fa-house-chimney"></i>
+        <span>Beranda</span>
+      </a>
+      <a href="katalog_buku.html" class="nav-link active">
+        <i class="fa-solid fa-book-bookmark"></i>
+        <span>Katalog</span>
+      </a>
+      <a href="pinjam.html" class="nav-link">
+        <i class="fa-solid fa-box"></i>
+        <span>Pinjam</span>
+      </a>
+      <a href="profile_anggota.html" class="nav-link">
+        <i class="fa-solid fa-circle-user"></i>
+        <span>Profile</span>
+      </a>
+    </nav>
+
+    <!-- Area Autentikasi Dinamis -->
+    <div class="auth-area" id="authArea"></div>
+
+    <!-- Tombol menu khusus tampilan mobile -->
+    <button class="nav-toggle" id="navToggle" aria-label="Buka menu" aria-expanded="false">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </header>
+
+  <main>
+    <div class="breadcrumb">
+      <span id="breadcrumbBookTitle">Membaca</span>
+    </div>
+
+    <div class="reader-container">
+      <!-- KOTAK BACA UTAMA -->
+      <div class="reader-main-card">
+        <div class="reader-top-bar">
+          <button class="btn-action" onclick="window.location.href='katalog_buku.html'"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+          <div class="pagination-top">
+            <button onclick="changePage(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+            <span id="pageIndicator">Memuat...</span>
+            <button onclick="changePage(1)"><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+          <button class="btn-action"><i class="fa-solid fa-bookmark"></i> Bookmark</button>
+        </div>
+
+        <!-- TEMPAT KANVAS GAMBAR PDF -->
+        <div class="canvas-container">
+          <canvas id="pdfCanvas"></canvas>
+        </div>
+
+        <div class="reader-footer-bar">
+          <div class="font-controls">
+            <span>Zoom:</span>
+            <div class="font-btn-group">
+              <button onclick="adjustZoom(-0.2)">A-</button>
+              <button onclick="adjustZoom(0.2)">A+</button>
+            </div>
+            <span id="fontSizeLabel" style="color:var(--muted); font-size:12px;">100%</span>
+          </div>
+
+          <div class="theme-switcher">
+            <span>Tema:</span>
+            <div class="theme-dots">
+              <div class="theme-dot white active" onclick="setTheme('white')" title="Terang"></div>
+              <div class="theme-dot cream" onclick="setTheme('cream')" title="Krem"></div>
+              <div class="theme-dot dark" onclick="setTheme('dark')" title="Gelap"></div>
+            </div>
+          </div>
+
+          <div class="page-select-box">
+            <span>Halaman</span>
+            <select id="pageSelector" onchange="jumpToPage(this.value)"></select>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIDEBAR DAFTAR BAB -->
+      <aside class="chapter-sidebar">
+        <div class="sidebar-head">Daftar Bab / Halaman</div>
+        <div class="chapter-list" id="chapterListContainer"></div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    // Integrasi status login dari localStorage
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const savedUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    const currentUser = isLoggedIn && savedUser ? savedUser : {
+      name: "Tamu",
+      status: "Belum Login",
+      avatarImg: "" 
+    };
+
+    function renderAuthArea() {
+      const authArea = document.getElementById('authArea');
+      if (isLoggedIn) {
+        const avatarContent = currentUser.avatarImg 
+          ? `<img src="${currentUser.avatarImg}" alt="Foto Profil">` 
+          : `<i class="fa-solid fa-user"></i>`;
+
+        authArea.innerHTML = `
+          <div class="user-menu">
+            <button class="user-trigger" id="userTrigger" aria-expanded="false">
+              <div class="avatar-circle">${avatarContent}</div>
+              <div class="user-text">
+                <div class="avatar-name">${currentUser.name}</div>
+                <div class="avatar-status">${currentUser.status}</div>
+              </div>
+              <i class="fa-solid fa-chevron-down chev"></i>
+            </button>
+            <div class="dropdown" id="userDropdown">
+              <a href="profile_anggota.html"><i class="fa-solid fa-user"></i> Profil Saya</a>
+              <a href="pinjam.html"><i class="fa-solid fa-book-open"></i> Buku Pinjaman</a>
+              <hr>
+              <button class="logout" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+            </div>
+          </div>
+        `;
+
+        const trigger = document.getElementById('userTrigger');
+        const dropdown = document.getElementById('userDropdown');
+        trigger.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = dropdown.classList.toggle('open');
+          trigger.setAttribute('aria-expanded', isOpen);
+        });
+
+        window.addEventListener('click', () => {
+          dropdown.classList.remove('open');
+          trigger.setAttribute('aria-expanded', 'false');
+        });
+      } else {
+        authArea.innerHTML = `<button class="btn-login" onclick="window.location.href='login.html'">Log in</button>`;
+      }
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('currentUser');
+      alert("Berhasil Logout");
+      window.location.reload();
+    }
+
+    renderAuthArea();
+
+    // ---------- MOBILE NAV TOGGLE ----------
+    const navToggle = document.getElementById('navToggle');
+    const navLinksEl = document.getElementById('navLinks');
+
+    navToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = navLinksEl.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', isOpen);
+      navToggle.innerHTML = isOpen
+        ? '<i class="fa-solid fa-xmark"></i>'
+        : '<i class="fa-solid fa-bars"></i>';
+    });
+
+    navLinksEl.addEventListener('click', (e) => e.stopPropagation());
+
+    window.addEventListener('click', () => {
+      if (navLinksEl.classList.contains('open')) {
+        navLinksEl.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.innerHTML = '<i class="fa-solid fa-bars"></i>';
+      }
+    });
+
+    // Logika PDF Viewer
+    const pdfDatabase = {
+      3: { title: "Matilda - Roald Dahl", file: "pdf/matilda-by-roald-dahl.pdf" },
+      4: { title: "Harry Potter and the Sorcerer's Stone", file: "pdf/harrypotter.pdf" },
+      6: { title: "Informatika", file: "pdf/Informatika-BS-KLS-XI.pdf" },
+      7: { title: "Matematika", file: "pdf/Matematika_x.pdf"}
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const bookId = Number(urlParams.get('id')) || 3;
+    const selectedBook = pdfDatabase[bookId] || pdfDatabase[3];
+
+    document.getElementById('breadcrumbBookTitle').innerText = selectedBook.title;
+
+    let pdfDoc = null;
+    let currentPage = 1;
+    let currentScale = 0.7; // Ukuran buku disesuaikan jadi lebih pas/kecil
+
+    pdfjsLib.getDocument(selectedBook.file).promise.then(function(pdfDoc_) {
+      pdfDoc = pdfDoc_;
+      
+      pdfDoc.getOutline().then(function(outline) {
+        if (outline && outline.length > 0) {
+          buildSidebarFromOutline(outline);
+        } else {
+          buildSidebarFallback(pdfDoc.numPages);
+        }
+      }).catch(function() {
+        buildSidebarFallback(pdfDoc.numPages);
+      });
+
+      loadPageText(currentPage);
+    }).catch(function(error) {
+      console.error("Gagal memuat PDF", error);
+    });
+
+    function renderPage(num) {
+      if (!pdfDoc) return;
+      pdfDoc.getPage(num).then(function(page) {
+        var canvas = document.getElementById('pdfCanvas');
+        var ctx = canvas.getContext('2d');
+        var viewport = page.getViewport({ scale: currentScale });
+        
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        page.render({ canvasContext: ctx, viewport: viewport });
+      });
+    }
+
+    function loadPageText(pageNum) {
+      if (!pdfDoc) return;
+      currentPage = pageNum;
+      renderPage(currentPage);
+      document.getElementById('pageIndicator').innerText = `${currentPage} / ${pdfDoc.numPages}`;
+      document.getElementById('pageSelector').value = currentPage;
+      updateActiveSidebar(currentPage);
+    }
+
+    function buildSidebarFromOutline(outline) {
+      const container = document.getElementById('chapterListContainer');
+      container.innerHTML = "";
+      outline.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = `chapter-item`;
+        div.id = `outline-item-${index}`;
+        div.innerHTML = `
+          <div class="chap-title-sm">Bab ${index + 1}</div>
+          <div class="chap-desc-sm">${item.title}</div>
+        `;
+        div.onclick = async () => {
+          if (item.dest) {
+            try {
+              let dest = item.dest;
+              if (typeof dest === 'string') dest = await pdfDoc.getDestination(dest);
+              if (dest && dest[0]) {
+                const pageIndex = await pdfDoc.getPageIndex(dest[0]);
+                loadPageText(pageIndex + 1);
+              }
+            } catch (err) {
+              console.error("Gagal melompat ke bab:", err);
+            }
+          }
+        };
+        container.appendChild(div);
+      });
+      buildPageSelector(pdfDoc.numPages);
+    }
+
+    function buildSidebarFallback(numPages) {
+      const container = document.getElementById('chapterListContainer');
+      container.innerHTML = "";
+      for (let i = 1; i <= numPages; i++) {
+        const item = document.createElement('div');
+        item.className = `chapter-item`;
+        item.id = `sidebar-item-${i}`;
+        item.innerHTML = `
+          <div class="chap-title-sm">Halaman ${i}</div>
+          <div class="chap-desc-sm">Bagian Dokumen PDF</div>
+        `;
+        item.onclick = () => loadPageText(i);
+        container.appendChild(item);
+      }
+      buildPageSelector(numPages);
+    }
+
+    function buildPageSelector(numPages) {
+      const selector = document.getElementById('pageSelector');
+      selector.innerHTML = "";
+      for (let i = 1; i <= numPages; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.innerText = i;
+        selector.appendChild(opt);
+      }
+    }
+
+    function updateActiveSidebar(pageNum) {
+      document.querySelectorAll('.chapter-item').forEach(el => el.classList.remove('active'));
+      const activeItem = document.getElementById(`sidebar-item-${pageNum}`) || document.getElementById(`outline-item-${pageNum - 1}`);
+      if (activeItem) {
+        activeItem.classList.add('active');
+        activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    function changePage(direction) {
+      const newPage = currentPage + direction;
+      if (pdfDoc && newPage >= 1 && newPage <= pdfDoc.numPages) loadPageText(newPage);
+    }
+
+    function jumpToPage(val) {
+      const targetPage = Number(val);
+      if (pdfDoc && targetPage >= 1 && targetPage <= pdfDoc.numPages) loadPageText(targetPage);
+    }
+
+    function adjustZoom(amount) {
+      currentScale += amount;
+      if (currentScale < 0.6) currentScale = 0.6;
+      if (currentScale > 2.5) currentScale = 2.5;
+      document.getElementById('fontSizeLabel').innerText = Math.round(currentScale * 100) + '%';
+      renderPage(currentPage);
+    }
+
+    function setTheme(themeName) {
+      document.body.className = "";
+      if (themeName === 'cream') document.body.classList.add('theme-cream');
+      if (themeName === 'dark') document.body.classList.add('theme-dark');
+      document.querySelectorAll('.theme-dot').forEach(dot => dot.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>

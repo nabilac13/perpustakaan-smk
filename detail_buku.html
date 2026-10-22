@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detail Buku — Perpustakaan SMK MA'arif Walisongo Kajoran</title>
+
+  <!-- Font & Ikon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Library PDF.js untuk membaca metadata PDF secara otomatis -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  </script>
+
+  <style>
+    :root {
+      --green-900: #0c3f2e;
+      --green-800: #105843;
+      --green-700: #146b52;
+      --green-600: #1c8264;
+      --mint-100: #d7f0e4;
+      --mint-50: #eefbf5;
+      --ink: #16302c;
+      --muted: #5f7a75;
+      --border: #e1ece9;
+      --bg: #f5f9f8;
+      --card: #ffffff;
+      --available: #22a55e;
+      --shadow: 0 10px 30px -12px rgba(12, 63, 46, .16);
+      --navbar-h: 78px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    h1, h2, h3, .brand-title, .nav-link, .btn, .badge, .avatar-name {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    /* ---------- NAVBAR ---------- */
+    header.topbar {
+      background: linear-gradient(180deg, var(--green-900), var(--green-800));
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, .12);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #fff;
+      margin-left: 12px;
+    }
+
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      box-shadow: inset 0 0 0 3px var(--green-700);
+      overflow: hidden;
+    }
+
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .brand-title {
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: .3px;
+      line-height: 1.15;
+    }
+
+    .brand-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 11.5px;
+      color: #c7e8da;
+      font-weight: 500;
+      line-height: 1.3;
+      margin-top: 2px;
+    }
+
+    nav.nav-links {
+      display: flex;
+      gap: 6px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #e3f4ec;
+      background: transparent;
+      border: none;
+      text-decoration: none;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 14.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .15s ease;
+    }
+
+    .nav-link i {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .nav-link:hover {
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .nav-link.active {
+      background: rgba(255, 255, 255, .16);
+      color: #fff;
+    }
+
+    .auth-area {
+      display: flex;
+      align-items: center;
+    }
+
+    .btn-login {
+      background: #fff;
+      color: var(--green-800);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: .15s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .btn-login:hover {
+      background: var(--mint-50);
+      transform: translateY(-1px);
+    }
+
+    .user-menu {
+      position: relative;
+    }
+
+    .user-trigger {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 4px 6px 4px 4px;
+      border-radius: 12px;
+      transition: .15s ease;
+    }
+
+    .user-trigger:hover {
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .avatar-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      font-size: 20px;
+      flex-shrink: 0;
+      border: 2px solid rgba(255, 255, 255, .5);
+      overflow: hidden;
+    }
+
+    .avatar-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .user-text {
+      text-align: left;
+      line-height: 1.25;
+    }
+
+    .avatar-name {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .avatar-status {
+      font-size: 11.5px;
+      color: #bfe8d5;
+      font-weight: 500;
+    }
+
+    .chev {
+      width: 16px;
+      height: 16px;
+      color: #cdead9;
+      transition: .15s ease;
+    }
+
+    .user-trigger[aria-expanded="true"] .chev {
+      transform: rotate(180deg);
+    }
+
+    /* ---------- MOBILE NAV TOGGLE (hamburger) ---------- */
+    .nav-toggle {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .08);
+      border: none;
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: .15s ease;
+    }
+
+    .nav-toggle:hover {
+      background: rgba(255, 255, 255, .16);
+    }
+
+    .dropdown {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 10px);
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      width: 190px;
+      padding: 8px;
+      display: none;
+      flex-direction: column;
+      gap: 2px;
+      z-index: 100;
+    }
+
+    .dropdown.open {
+      display: flex;
+    }
+
+    .dropdown a,
+    .dropdown button {
+      all: unset;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .dropdown a:hover,
+    .dropdown button:hover {
+      background: var(--mint-50);
+    }
+
+    .dropdown .logout {
+      color: #c0392b;
+    }
+
+    .dropdown hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 4px 0;
+    }
+
+    /* ---------- MAIN LAYOUT ---------- */
+    main { padding: 24px 28px 48px; max-width: 1440px; margin: 0 auto; }
+
+    .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--muted); margin-bottom: 20px; font-weight: 500; flex-wrap: wrap; }
+    .breadcrumb a { color: var(--green-800); text-decoration: none; font-weight: 600; }
+    .breadcrumb a:hover { text-decoration: underline; }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr 320px;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .cover-card {
+      background: var(--card);
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .book-cover-preview {
+      width: 100%;
+      flex-grow: 1;
+      background: #e9f2ef;
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      min-height: 400px;
+    }
+    #coverCanvas {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .info-card {
+      background: var(--card);
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--mint-100);
+      color: var(--green-800);
+      font-weight: 700;
+      font-size: 13.5px;
+      padding: 7px 16px;
+      border-radius: 999px;
+    }
+    .status-pill i { font-size: 15px; }
+
+    .stock-count-text {
+      font-size: 13.5px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .book-main-title { font-size: 30px; font-weight: 800; color: var(--ink); line-height: 1.2; margin: 0; }
+
+    .section-block-title { display: flex; align-items: center; gap: 8px; font-size: 16.5px; font-weight: 700; color: var(--green-800); margin: 0 0 10px; }
+    .synopsis-text { font-size: 14px; line-height: 1.8; color: var(--muted); margin: 0; }
+
+    .detail-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 32px;
+    }
+
+    .detail-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .detail-list li {
+      display: grid;
+      grid-template-columns: 20px 118px 10px 1fr;
+      align-items: baseline;
+      font-size: 13.5px;
+    }
+    .detail-list li::before { content: "•"; color: var(--green-700); font-weight: 700; }
+    .detail-label { color: var(--muted); font-weight: 500; }
+    .detail-colon { color: var(--muted); }
+    .detail-val { font-weight: 700; color: var(--ink); }
+
+    .action-card {
+      background: var(--card);
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: sticky;
+      top: calc(var(--navbar-h) + 16px);
+    }
+
+    .btn-main-action {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: none;
+      transition: .15s;
+      font-family: 'Poppins', sans-serif;
+    }
+    .btn-read { background: var(--green-800); color: #fff; }
+    .btn-read:hover { background: var(--green-900); }
+
+    .btn-bookmark-action { 
+      background: #fff; 
+      color: var(--green-800); 
+      border: 2px solid var(--green-800); 
+    }
+    .btn-bookmark-action:hover { background: var(--mint-50); }
+    .btn-bookmark-action.added { 
+      background: var(--green-800); 
+      color: #fff; 
+      border: 2px solid var(--green-800); 
+    }
+    .btn-bookmark-action.added:hover { background: var(--green-900); }
+
+    .stats-list { margin-top: 8px; padding-top: 14px; border-top: 1.5px solid var(--border); display: flex; flex-direction: column; gap: 4px; }
+    .stat-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 4px;
+    }
+    .stat-row-label { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: var(--ink); }
+    .stat-row-label i { font-size: 15px; color: var(--green-700); width: 18px; text-align: center; }
+    .stat-row-num { font-size: 16px; font-weight: 800; color: var(--green-800); font-family: 'Poppins', sans-serif; }
+
+    @media (max-width: 1180px) {
+      .detail-grid { grid-template-columns: 280px 1fr; }
+      .action-card { grid-column: 1 / -1; position: static; }
+    }
+
+    @media (max-width: 768px) {
+      header.topbar {
+        padding: 12px 16px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0;
+        position: relative;
+      }
+      .brand { margin-left: 0; width: auto; justify-content: flex-start; }
+      .nav-toggle { display: flex; }
+      nav.nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        flex-direction: column;
+        gap: 4px;
+        background: linear-gradient(180deg, var(--green-800), var(--green-900));
+        padding: 10px 16px 16px;
+        box-shadow: 0 12px 20px -8px rgba(0, 0, 0, .25);
+        z-index: 60;
+      }
+      nav.nav-links.open { display: flex; }
+      .nav-link { width: 100%; justify-content: flex-start; padding: 12px 14px; }
+      .auth-area { display: none; }
+      main { padding: 16px; }
+      .detail-grid { grid-template-columns: 1fr; }
+      .info-card { padding: 22px; }
+      .detail-columns { grid-template-columns: 1fr; }
+      .title-row { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-logo"><img src="img/logo.smk.png" alt="logo sekolah"></div>
+      <div>
+        <div class="brand-title">PERPUSTAKAAN</div>
+        <div class="brand-sub">SMK MA'arif Walisongo Kajoran</div>
+      </div>
+    </div>
+
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html" class="nav-link">
+        <i class="fa-solid fa-house-chimney"></i>
+        <span>Beranda</span>
+      </a>
+      <a href="katalog_buku.html" class="nav-link active">
+        <i class="fa-solid fa-book-bookmark"></i>
+        <span>Katalog</span>
+      </a>
+      <a href="pinjam.html" class="nav-link">
+        <i class="fa-solid fa-box"></i>
+        <span>Pinjam</span>
+      </a>
+      <a href="profile_anggota.html" class="nav-link">
+        <i class="fa-solid fa-circle-user"></i>
+        <span>Profile</span>
+      </a>
+    </nav>
+
+    <div class="auth-area" id="authArea"></div>
+
+    <!-- Tombol menu khusus tampilan mobile -->
+    <button class="nav-toggle" id="navToggle" aria-label="Buka menu" aria-expanded="false">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </header>
+
+  <main>
+    <div class="breadcrumb">
+      <a href="index.html">Beranda</a> <i class="fa-solid fa-chevron-right" style="font-size:10px;"></i>
+      <a href="katalog_buku.html">Katalog Buku</a> <i class="fa-solid fa-chevron-right" style="font-size:10px;"></i>
+      <span id="breadcrumbTitle">Memuat...</span>
+    </div>
+
+    <div class="detail-grid">
+
+      <!-- 1. COVER BUKU -->
+      <div class="cover-card">
+        <div class="book-cover-preview">
+          <canvas id="coverCanvas"></canvas>
+        </div>
+      </div>
+
+      <!-- KOLOM TENGAH: INFORMASI UTAMA -->
+      <div class="info-card">
+
+        <div class="status-row">
+          <div class="status-pill"><i class="fa-solid fa-circle-check" id="stockStatusIcon"></i> <span id="stockStatusText">Tersedia</span></div>
+          <div class="stock-count-text" id="stockCountText">Memuat informasi stok...</div>
+        </div>
+
+        <div class="title-row">
+          <h1 class="book-main-title" id="bookTitleDisplay">Memuat judul buku...</h1>
+        </div>
+
+        <!-- DETAIL LENGKAP BUKU -->
+        <div>
+          <div class="section-block-title"><i class="fa-solid fa-book-open"></i> Detail Lengkap Buku</div>
+          <div class="detail-columns">
+            <ul class="detail-list">
+              <li><span class="detail-label">Penulis</span><span class="detail-colon">:</span><span class="detail-val" id="detailPenulis">-</span></li>
+              <li><span class="detail-label">Penerbit</span><span class="detail-colon">:</span><span class="detail-val" id="infoPublisher">-</span></li>
+              <li><span class="detail-label">ISBN</span><span class="detail-colon">:</span><span class="detail-val" id="detailIsbn">-</span></li>
+              <li><span class="detail-label">Terbit</span><span class="detail-colon">:</span><span class="detail-val" id="detailYearPlace">-</span></li>
+              <li><span class="detail-label">Format Buku</span><span class="detail-colon">:</span><span class="detail-val" id="infoFormat">E-Book Digital & Buku Fisik</span></li>
+            </ul>
+            <ul class="detail-list">
+              <li><span class="detail-label">Genre</span><span class="detail-colon">:</span><span class="detail-val" id="detailGenre">-</span></li>
+              <li><span class="detail-label">Total Eksemplar</span><span class="detail-colon">:</span><span class="detail-val" id="detailTotalEksemplar">-</span></li>
+              <li><span class="detail-label">Jumlah Halaman</span><span class="detail-colon">:</span><span class="detail-val" id="infoTotalPages">- halaman</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- SINOPSIS BUKU -->
+        <div>
+          <div class="section-block-title"><i class="fa-regular fa-comment-dots"></i> Sinopsis Buku</div>
+          <p class="synopsis-text" id="bookSynopsisDisplay">Memuat sinopsis buku...</p>
+        </div>
+
+      </div>
+
+      <!-- KOLOM KANAN: AKSI & STATISTIK -->
+      <div class="action-card">
+        <button class="btn-main-action btn-read" id="btnReadNow">
+          <i class="fa-solid fa-book-open-reader"></i> Baca Sekarang
+        </button>
+
+        <button class="btn-main-action btn-bookmark-action" id="btnAddToCollection" title="Tambah ke Daftar Baca">
+          <i class="fa-solid fa-bookmark" id="bookmarkIcon" style="font-size: 18px;"></i>
+        </button>
+
+        <div class="stats-list">
+          <div class="stat-row">
+            <div class="stat-row-label"><i class="fa-solid fa-circle-check"></i> Tersedia</div>
+            <div class="stat-row-num" id="statAvailable">0</div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-row-label"><i class="fa-regular fa-clock"></i> Sedang Dipinjam</div>
+            <div class="stat-row-num" id="statBorrowed">0</div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-row-label"><i class="fa-solid fa-book"></i> Total Eksemplar</div>
+            <div class="stat-row-num" id="statTotal">0</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const savedUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    const currentUser = isLoggedIn && savedUser ? savedUser : {
+      name: "Budi Santoso",
+      status: "Siswa",
+      avatarImg: "" 
+    };
+
+    function renderAuthArea() {
+      const authArea = document.getElementById('authArea');
+      if (isLoggedIn) {
+        const avatarContent = currentUser.avatarImg 
+          ? `<img src="${currentUser.avatarImg}" alt="Foto Profil">` 
+          : `<i class="fa-solid fa-user"></i>`;
+
+        authArea.innerHTML = `
+          <div class="user-menu">
+            <button class="user-trigger" id="userTrigger" aria-expanded="false">
+              <div class="avatar-circle">${avatarContent}</div>
+              <div class="user-text">
+                <div class="avatar-name">${currentUser.name}</div>
+                <div class="avatar-status">${currentUser.status}</div>
+              </div>
+              <i class="fa-solid fa-chevron-down chev"></i>
+            </button>
+            <div class="dropdown" id="userDropdown">
+              <a href="profile_anggota.html"><i class="fa-solid fa-user"></i> Profil Saya</a>
+              <a href="pinjam.html"><i class="fa-solid fa-book-open"></i> Buku Pinjaman</a>
+              <hr>
+              <button class="logout" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+            </div>
+          </div>
+        `;
+
+        const trigger = document.getElementById('userTrigger');
+        const dropdown = document.getElementById('userDropdown');
+        trigger.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = dropdown.classList.toggle('open');
+          trigger.setAttribute('aria-expanded', isOpen);
+        });
+
+        window.addEventListener('click', () => {
+          dropdown.classList.remove('open');
+          trigger.setAttribute('aria-expanded', 'false');
+        });
+      } else {
+        authArea.innerHTML = `<button class="btn-login" onclick="window.location.href='login.html'">Log in</button>`;
+      }
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('currentUser');
+      alert("Berhasil Logout");
+      window.location.reload();
+    }
+
+    renderAuthArea();
+
+    // ---------- MOBILE NAV TOGGLE ----------
+    const navToggle = document.getElementById('navToggle');
+    const navLinksEl = document.getElementById('navLinks');
+
+    navToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = navLinksEl.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', isOpen);
+      navToggle.innerHTML = isOpen
+        ? '<i class="fa-solid fa-xmark"></i>'
+        : '<i class="fa-solid fa-bars"></i>';
+    });
+
+    navLinksEl.addEventListener('click', (e) => e.stopPropagation());
+
+    window.addEventListener('click', () => {
+      if (navLinksEl.classList.contains('open')) {
+        navLinksEl.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.innerHTML = '<i class="fa-solid fa-bars"></i>';
+      }
+    });
+
+    const pdfDatabase = {
+      1: { 
+        title: "Laut Bercerita",
+        img: "img/bumi_tereliye.jpg", 
+        file: "pdf/matilda-by-roald-dahl.pdf", 
+        author: "Leila S. Chudori", 
+        genre: "Fiksi", 
+        publisher: "Kepustakaan Populer Gramedia", 
+        yearPlace: "2017, Jakarta", 
+        format: "E-Book Digital & Buku Fisik",
+        avail: 12, 
+        total: 15,
+        synopsis: "Novel Laut Bercerita karya Leila S. Chudori mengisahkan Biru Laut, seorang mahasiswa aktivis yang disekap dan disiksa bersama kawan-kawannya pada masa Orde Baru tahun 1998. Cerita ini terbagi menjadi dua bagian: sudut pandang Laut saat ditahan dan adiknya, Asmara Jati, yang bersama keluarga mencari kejelasan nasib para aktivis yang hilang."
+      },
+      2: { 
+        title: "Bumi", 
+        file: "pdf/bumi_tereliye.pdf", 
+        author: "Tere Liye", 
+        genre: "Fiksi", 
+        publisher: "Gramedia Pustaka Utama", 
+        yearPlace: "2014, Jakarta", 
+        format: "E-Book Digital & Buku Fisik",
+        isbn: "978-623-9726-26-3",
+        avail: 8, 
+        total: 10,
+        synopsis: "Novel Bumi karya Tere Liye mengisahkan petualangan Raib (15 tahun) yang bisa menghilang, Seli yang bisa mengeluarkan petir, dan Ali si jenius. Bersama-sama, mereka menjelajahi dunia paralel bernama Klan Bulan untuk menyelamatkan guru mereka, Miss Selena, dari rencana jahat Tamus yang ingin menguasai bumi."
+      },
+      3: { 
+        title: "Matilda", 
+        file: "pdf/matilda-by-roald-dahl.pdf", 
+        author: "Roald Dahl", 
+        genre: "Fiksi", 
+        publisher: "Puffin Books", 
+        yearPlace: "1988, London", 
+        format: "E-Book Digital & Buku Fisik",
+        isbn: "978-0141346342",
+        avail: 6, 
+        total: 8,
+        synopsis: "Matilda adalah kisah tentang seorang anak perempuan ceria berhati lembut yang gemar membaca buku, namun memiliki orang tua yang mengabaikannya serta kepala sekolah yang kejam. Dengan kekuatan telekinetik yang dimilikinya, Matilda berjuang melawan ketidakadilan di sekitarnya."
+      },
+      4: { 
+        title: "Harry Potter and the Sorcerer's Stone", 
+        file: "pdf/harrypotter.pdf", 
+        author: "J.K. Rowling", 
+        genre: "Fantasi", 
+        publisher: "Bloomsbury", 
+        yearPlace: "1997, London", 
+        format: "E-Book Digital & Buku Fisik",
+        isbn: "9786020337647",
+        avail: 7, 
+        total: 10,
+        synopsis: "Harry Potter mengisahkan seorang anak yatim piatu yang mengetahui pada ulang tahun kesebelasnya bahwa ia adalah seorang penyihir. Ia kemudian bersekolah di Sekolah Sihir Hogwarts dan memulai petualangan besar untuk menghadapi kekuatan gelap yang dipimpin oleh Lord Voldemort."
+      },
+      5: { 
+        title: "Na Willa", 
+        file: "pdf/matilda-by-roald-dahl.pdf", 
+        author: "Reda Gaudiamo", 
+        genre: "Fiksi Anak", 
+        publisher: "Visinesia", 
+        yearPlace: "2021, Yogyakarta", 
+        format: "E-Book Digital",
+        isbn: "978-602-60304-2-9",
+        avail: 9, 
+        total: 12,
+        synopsis: "Na Willa adalah cerita tentang empat bersaudara yang tumbuh dengan kasih sayang, tawa, dan berbagai petualangan kecil di rumah mereka. Lewat keseharian yang sederhana, mereka belajar tentang keluarga, persahabatan, dan arti kebersamaan yang sesungguhnya."
+      },
+      6: { 
+        title: "Informatika Kelas XI", 
+        file: "pdf/Informatika-BS-KLS-XI.pdf", 
+        author: "Kemendikbudristek", 
+        genre: "Pendidikan", 
+        publisher: "Kementerian Pendidikan", 
+        yearPlace: "2021, Jakarta", 
+        format: "E-Book Digital & Buku Fisik (Kurikulum Merdeka)",
+        avail: 9, 
+        total: 12,
+        synopsis: "Buku teks pelajaran Informatika Kelas XI ini merupakan buku panduan resmi pendidikan yang dirancang untuk mendalami berbagai konsep teknologi, berpikir komputasional, analisis data, jaringan komputer, hingga pemrograman tingkat lanjut sesuai dengan Kurikulum Merdeka bagi siswa."
+      },
+      7: {
+        title: "Matematika Kelas X",
+        file: "pdf/Matematika_x.pdf",
+        author: "Kemendikbudristek",
+        genre: "Pendidikan",
+        publisher: "Kementerian Pendidikan",
+        yearPlace: "2021, Jakarta",
+        format: "E-Book Digital & Buku Fisik (Kurikulum Merdeka)",
+        avail: 10,
+        total: 14,
+        synopsis: "Buku teks pelajaran Matematika Kelas X Kurikulum Merdeka ini menyajikan materi pendidikan esensial mulai dari bilangan berpangkat, barisan dan deret, vektor, trigonometri, hingga statistika dasar untuk melatih kemampuan bernalar kritis siswa di sekolah."
+      },
+      8: {
+        title: "Laskar Pelangi",
+        file: "pdf/laskar pelangi.pdf",
+        author: "Andrea Hiirata",
+        genre: "Fiksi",
+        publisher: "Bentang Pusaka",
+        yearPlace: "2005, Yogyakarta",
+        format: "E-Book Digital & Buku Fisik (Kurikulum Merdeka)",
+        avail: 10,
+        total: 14,
+        synopsis: "Novel Laskar Pelangi karya Andrea Hirata menceritakan perjuangan sepuluh anak dari keluarga sederhana di Desa Gantung, Belitung, untuk mendapatkan pendidikan di SD Muhammadiyah yang nyaris ditutup karena kekurangan murid."
+      }
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const bookId = Number(urlParams.get('id')) || 3;
+    const selectedBook = pdfDatabase[bookId] || pdfDatabase[3];
+
+    document.getElementById('breadcrumbTitle').innerText = selectedBook.title;
+    document.getElementById('bookTitleDisplay').innerText = selectedBook.title;
+    document.getElementById('bookSynopsisDisplay').innerText = selectedBook.synopsis;
+
+    document.getElementById('detailPenulis').innerText = selectedBook.author;
+    document.getElementById('infoPublisher').innerText = selectedBook.publisher;
+    document.getElementById('detailYearPlace').innerText = selectedBook.yearPlace;
+    document.getElementById('infoFormat').innerText = selectedBook.format;
+    document.getElementById('detailGenre').innerText = selectedBook.genre;
+    document.getElementById('detailTotalEksemplar').innerText = selectedBook.total + " Eksemplar";
+    document.getElementById('detailIsbn').innerText = selectedBook.isbn || "Belum Tersedia";
+
+    const borrowedCount = selectedBook.total - selectedBook.avail;
+    document.getElementById('statTotal').innerText = selectedBook.total;
+    document.getElementById('statAvailable').innerText = selectedBook.avail;
+    document.getElementById('statBorrowed').innerText = borrowedCount;
+    document.getElementById('stockCountText').innerText = `${selectedBook.avail} dari ${selectedBook.total} eksemplar tersedia`;
+
+    function updateBookmarkButtonUI() {
+      let userList = JSON.parse(localStorage.getItem('userReadingList')) || [];
+      const isExist = userList.some(item => item.id === bookId);
+      const btn = document.getElementById('btnAddToCollection');
+
+      if (isExist) {
+        btn.classList.add('added');
+      } else {
+        btn.classList.remove('added');
+      }
+    }
+    
+    updateBookmarkButtonUI();
+
+    document.getElementById('btnReadNow').onclick = () => {
+      window.location.href = `baca_buku.html?id=${bookId}`;
+    };
+
+    document.getElementById('btnAddToCollection').onclick = () => {
+      let userList = JSON.parse(localStorage.getItem('userReadingList')) || [];
+      const index = userList.findIndex(item => item.id === bookId);
+      
+      if (index === -1) {
+        userList.push({
+          id: bookId,
+          title: selectedBook.title,
+          author: selectedBook.author,
+          file: selectedBook.file,
+          genre: selectedBook.genre
+        });
+        localStorage.setItem('userReadingList', JSON.stringify(userList));
+      } else {
+        userList.splice(index, 1);
+        localStorage.setItem('userReadingList', JSON.stringify(userList));
+      }
+      updateBookmarkButtonUI();
+    };
+
+    pdfjsLib.getDocument(selectedBook.file).promise.then(async function(pdfDoc) {
+      document.getElementById('infoTotalPages').innerText = `${pdfDoc.numPages} halaman`;
+
+      pdfDoc.getPage(1).then(function(page) {
+        var canvas = document.getElementById('coverCanvas');
+        var ctx = canvas.getContext('2d');
+        var viewport = page.getViewport({ scale: 1.5 });
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        page.render({ canvasContext: ctx, viewport: viewport });
+      });
+    }).catch(function(error) {
+      console.error("Gagal memuat cover PDF", error);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil — Perpustakaan SMK MA'arif Walisongo Kajoran</title>
+  <!-- Font Awesome untuk Ikon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --green-900: #0c3f2e;
+      --green-800: #105843;
+      --green-700: #146b52;
+      --mint-100: #d7f0e4;
+      --mint-50: #eefbf5;
+      --ink: #16302c;
+      --muted: #5f7a75;
+      --border: #e1ece9;
+      --bg: #f5f9f8;
+      --card: #ffffff;
+      --available: #22a55e;
+      --danger: #d9534f;
+      --danger-bg: #fdf2f2;
+      --shadow: 0 10px 30px -12px rgba(12, 63, 46, .16);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    h1, h2, h3, .brand-title, .nav-link, .btn, .badge, .avatar-name {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    /* ---------- NAVBAR ---------- */
+    header.topbar {
+      background: linear-gradient(180deg, var(--green-900), var(--green-800));
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, .12);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #fff;
+      margin-left: 12px;
+    }
+
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      box-shadow: inset 0 0 0 3px var(--green-700);
+      overflow: hidden;
+    }
+
+    .brand-logo img { width: 100%; height: 100%; object-fit: cover; }
+
+    .brand-title {
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: .3px;
+      line-height: 1.15;
+    }
+
+    .brand-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 11.5px;
+      color: #c7e8da;
+      font-weight: 500;
+      line-height: 1.3;
+      margin-top: 2px;
+    }
+
+    nav.nav-links { display: flex; gap: 6px; }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #e3f4ec;
+      background: transparent;
+      border: none;
+      text-decoration: none;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 14.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .15s ease;
+    }
+
+    .nav-link i { font-size: 18px; flex-shrink: 0; }
+    .nav-link:hover { background: rgba(255, 255, 255, .08); }
+    .nav-link.active { background: rgba(255, 255, 255, .16); color: #fff; }
+
+    .auth-area { display: flex; align-items: center; }
+
+    .user-menu { position: relative; }
+    .user-trigger {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 4px 6px 4px 4px;
+      border-radius: 12px;
+      transition: .15s ease;
+    }
+    .user-trigger:hover { background: rgba(255, 255, 255, .08); }
+
+    .avatar-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      font-size: 20px;
+      flex-shrink: 0;
+      border: 2px solid rgba(255, 255, 255, .5);
+      overflow: hidden;
+    }
+    .avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
+
+    .user-text { text-align: left; line-height: 1.25; }
+    .avatar-name { font-size: 13.5px; font-weight: 700; color: #fff; }
+    .avatar-status { font-size: 11.5px; color: #bfe8d5; font-weight: 500; }
+    .chev { width: 16px; height: 16px; color: #cdead9; transition: .15s ease; }
+    .user-trigger[aria-expanded="true"] .chev { transform: rotate(180deg); }
+
+    .dropdown {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 10px);
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      width: 190px;
+      padding: 8px;
+      display: none;
+      flex-direction: column;
+      gap: 2px;
+      z-index: 100;
+    }
+    .dropdown.open { display: flex; }
+    .dropdown a, .dropdown button {
+      all: unset;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+    .dropdown a:hover, .dropdown button:hover { background: var(--mint-50); }
+    .dropdown .logout { color: #c0392b; }
+    .dropdown hr { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
+
+    .nav-toggle {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .08);
+      border: none; color: #fff; font-size: 18px;
+      cursor: pointer; flex-shrink: 0;
+    }
+
+    /* ---------- MAIN CONTENT ---------- */
+    main {
+      padding: 30px 28px 50px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ---------- LAYOUT PROFIL (Satu Kartu Gabungan) ---------- */
+
+    /* Kartu Profil Tunggal */
+    .profile-single-card {
+      background: var(--card); border: 1.5px solid var(--border);
+      border-radius: 20px; box-shadow: var(--shadow); padding: 32px;
+    }
+
+    /* Header kartu: foto + judul di kiri, tombol Ubah Password di kanan */
+    .profile-card-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 20px; flex-wrap: wrap;
+      margin-bottom: 8px; padding-bottom: 24px; border-bottom: 1px solid var(--border);
+    }
+    .header-left { display: flex; align-items: center; gap: 20px; flex: 1; min-width: 260px; }
+
+    .avatar-edit-wrap { position: relative; width: 100px; flex-shrink: 0; margin: 0; }
+    .sidebar-avatar-wrap {
+      width: 100px; height: 100px; border-radius: 50%;
+      margin: 0; overflow: hidden;
+      border: 3px solid var(--mint-100); background: var(--mint-50);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 38px; color: var(--green-800);
+    }
+    .sidebar-avatar-wrap img { width: 100%; height: 100%; object-fit: cover; }
+
+    .avatar-edit-btn {
+      position: absolute; bottom: 0; right: 0;
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--green-800); color: #fff; border: 2.5px solid #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,.18);
+      transition: .15s ease;
+    }
+    .avatar-edit-btn:hover { background: var(--green-900); }
+
+    .avatar-edit-menu {
+      position: absolute; top: calc(100% + 8px); left: 0;
+      background: #fff; border: 1.5px solid var(--border); border-radius: 12px;
+      box-shadow: var(--shadow); padding: 6px; display: none; flex-direction: column; gap: 2px;
+      width: 168px; z-index: 20; text-align: left;
+    }
+    .avatar-edit-menu.open { display: flex; }
+    .avatar-edit-menu button {
+      all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 8px;
+      padding: 9px 10px; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--ink);
+      cursor: pointer; font-family: 'Inter', sans-serif; width: 100%;
+    }
+    .avatar-edit-menu button:hover { background: var(--mint-50); }
+    .avatar-edit-menu button.danger { color: #c0392b; }
+    .avatar-edit-menu button.danger:hover { background: var(--danger-bg); }
+
+    .profile-card-title h2 { margin: 0 0 4px; font-size: 20px; font-weight: 700; color: var(--ink); }
+    .profile-card-title p { margin: 0; font-size: 13.5px; color: var(--muted); }
+
+    /* Baris tombol aksi di bawah kartu: Riwayat Peminjaman, Denda, Logout */
+    .profile-footer-actions {
+      display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap;
+    }
+    .footer-action-btn {
+      flex: 1; min-width: 170px; display: flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 14px 18px; border-radius: 14px; font-size: 14px; font-weight: 700;
+      font-family: 'Poppins', sans-serif; cursor: pointer; text-decoration: none;
+      border: 1.5px solid var(--mint-100); background: #fff; color: var(--ink);
+      transition: .15s ease;
+    }
+    .footer-action-btn i { color: var(--green-800); font-size: 16px; }
+    .footer-action-btn:hover { background: var(--mint-50); border-color: var(--green-800); }
+    .footer-action-btn.logout { border-color: #f5c6c4; color: #c0392b; }
+    .footer-action-btn.logout i { color: #c0392b; }
+    .footer-action-btn.logout:hover { background: var(--danger-bg); border-color: #c0392b; }
+
+    .profile-row {
+      display: flex; align-items: center; gap: 16px;
+      padding: 18px 4px; border-bottom: 1px solid var(--border); flex-wrap: wrap;
+    }
+    .profile-row:last-of-type { border-bottom: none; }
+    .row-icon-box {
+      width: 40px; height: 40px; border-radius: 10px; background: var(--mint-50);
+      color: var(--green-800); display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .row-label { width: 140px; flex-shrink: 0; font-size: 13.5px; font-weight: 600; color: var(--muted); }
+    .row-value { flex: 1; font-size: 14.5px; font-weight: 600; color: var(--ink); min-width: 140px; }
+    .row-action-btn {
+      background: #fff; border: 1.5px solid var(--mint-100); color: var(--green-800);
+      padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 700;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+      transition: .15s ease; font-family: 'Poppins', sans-serif; white-space: nowrap;
+    }
+    .row-action-btn:hover { background: var(--mint-50); border-color: var(--green-800); }
+
+    .row-icon-btn {
+      background: #fff; border: 1.5px solid var(--border); color: var(--muted);
+      width: 34px; height: 34px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 13px; transition: .15s ease; flex-shrink: 0;
+    }
+    .row-icon-btn:hover { background: var(--mint-50); border-color: var(--green-800); color: var(--green-800); }
+
+    .password-mask { letter-spacing: 2px; }
+
+    .row-main { display: flex; align-items: center; gap: 16px; width: 100%; }
+
+    .edit-password-box {
+      display: none; flex-direction: column; gap: 10px; margin-top: 14px;
+      background: #fafcfb; border: 1.5px solid var(--border); border-radius: 14px;
+      padding: 16px; width: 100%;
+    }
+    .edit-password-box.open { display: flex; }
+    .edit-password-box input {
+      padding: 10px 14px; border-radius: 10px; border: 1.5px solid var(--border);
+      font-family: 'Inter', sans-serif; font-size: 13.5px; outline: none;
+    }
+    .edit-password-box input:focus { border-color: var(--green-800); box-shadow: 0 0 0 3px var(--mint-50); }
+    .edit-password-actions { display: flex; gap: 10px; }
+    .btn-save-small {
+      background: var(--green-800); color: #fff; border: none; padding: 9px 18px;
+      border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+    }
+    .btn-save-small:hover { background: var(--green-900); }
+    .btn-cancel-small {
+      background: #fff; border: 1.5px solid var(--border); color: var(--muted);
+      padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 700;
+      cursor: pointer; font-family: 'Poppins', sans-serif;
+    }
+    .btn-cancel-small:hover { background: #f5f5f5; }
+
+    .tip-banner {
+      margin-top: 24px; background: var(--mint-50); border: 1.5px solid var(--mint-100);
+      border-radius: 16px; padding: 18px 22px; display: flex; align-items: flex-start; gap: 14px;
+    }
+    .tip-banner i { color: var(--green-800); font-size: 18px; margin-top: 2px; }
+    .tip-banner .t-title { font-size: 14px; font-weight: 700; color: var(--green-900); margin-bottom: 2px; }
+    .tip-banner .t-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      header.topbar { padding: 12px 16px; position: relative; }
+      .brand { margin-left: 0; }
+      .nav-toggle { display: flex; }
+      nav.nav-links {
+        display: none; position: absolute; top: 100%; left: 0; width: 100%;
+        flex-direction: column; gap: 4px; background: linear-gradient(180deg, var(--green-800), var(--green-900));
+        padding: 10px 16px 16px; box-shadow: 0 12px 20px -8px rgba(0,0,0,.25); z-index: 60;
+      }
+      nav.nav-links.open { display: flex; }
+      .nav-link { width: 100%; padding: 12px 14px; }
+      .auth-area { display: none; }
+      main { padding: 16px; }
+      .profile-single-card { padding: 22px; }
+      .row-label { width: 100%; }
+      .profile-card-header { flex-direction: column; align-items: stretch; }
+      .profile-card-header > .row-action-btn { align-self: flex-start; }
+      .profile-footer-actions { flex-direction: column; }
+      .footer-action-btn { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR UTAMA -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-logo">
+        <img src="img/logo.smk.png" alt="logo sekolah">
+      </div>
+      <div>
+        <div class="brand-title">PERPUSTAKAAN</div>
+        <div class="brand-sub">SMK MA'arif Walisongo Kajoran</div>
+      </div>
+    </div>
+
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html" class="nav-link">
+        <i class="fa-solid fa-house-chimney"></i>
+        <span>Beranda</span>
+      </a>
+      <a href="katalog_buku.html" class="nav-link">
+        <i class="fa-solid fa-book-bookmark"></i>
+        <span>Katalog</span>
+      </a>
+      <a href="pinjam.html" class="nav-link">
+        <i class="fa-solid fa-box"></i>
+        <span>Pinjam</span>
+      </a>
+      <a href="profile_anggota.html" class="nav-link active">
+        <i class="fa-solid fa-circle-user"></i>
+        <span>Profil</span>
+      </a>
+    </nav>
+
+    <div class="auth-area" id="authArea"></div>
+
+    <button class="nav-toggle" id="navToggle" aria-label="Buka menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </header>
+
+  <!-- KONTEN UTAMA HALAMAN -->
+  <main id="mainContainer">
+    <!-- Konten akan dirender otomatis via JavaScript -->
+  </main>
+
+  <script>
+    // Cek status login
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (!isLoggedIn) {
+      window.location.href = 'login.html';
+    }
+
+    // Ambil data user dari localStorage
+    // Data ini akan otomatis disinkronkan saat mengisi form di register.html
+    const savedUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+
+    const currentUser = {
+      name: savedUser.name || "Ahmad Fauzi",
+      email: savedUser.email || "ahmadfauzi@gmail.com",
+      password: savedUser.password || "",
+      phone: savedUser.phone || savedUser.noTelepon || "-",
+      kelas: savedUser.kelas || savedUser.class || "-",
+      jurusan: savedUser.jurusan || "-",
+      role: savedUser.role || savedUser.peran || "Siswa",
+      joinDate: savedUser.joinDate || savedUser.gabungSejak || "-",
+      status: savedUser.status || "Belum Keanggotaan",
+      noAnggota: savedUser.noAnggota || null,
+      isMember: savedUser.isMember || (savedUser.status && savedUser.status !== "Belum Keanggotaan" && savedUser.status !== "Belum Login"),
+      avatarImg: savedUser.avatarImg || ""
+    };
+
+    // Jika belum ada nomor anggota tapi sudah terdaftar, buatkan otomatis
+    if (currentUser.isMember && !currentUser.noAnggota) {
+      const currentYear = new Date().getFullYear();
+      let allUser = JSON.parse(localStorage.getItem('allUsers')) || [];
+      let nextNumber = allUser.length + 1;
+      let formattedNumber = String(nextNumber).padStart(3, '0');
+
+      currentUser.noAnggota = `SMKW-${currentYear}-${formattedNumber}`;
+      savedUser.noAnggota = currentUser.noAnggota;
+
+      localStorage.setItem('currentUser', JSON.stringify(savedUser));
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('currentUser');
+      alert("Berhasil Logout");
+      window.location.href = 'login.html';
+    }
+
+    // ---------- HELPER: Kelas (angka -> romawi) & Nama Jurusan ----------
+    function kelasRoman(kelas) {
+      const map = { '10': 'X', '11': 'XI', '12': 'XII', 10: 'X', 11: 'XI', 12: 'XII' };
+      return map[kelas] || kelas || '';
+    }
+    function jurusanNama(kode) {
+      const map = {
+        PPLG: 'Pengembangan Perangkat Lunak dan Gim (PPLG)',
+        BCF: 'Broadcasting dan Perfilman (BCF)',
+        MPLB: 'Manajemen Perkantoran dan Layanan Bisnis (MPLB)'
+      };
+      return map[kode] || (kode && kode !== '-' ? kode : '-');
+    }
+    function maskPassword(pw) {
+      return pw ? '•'.repeat(Math.max(pw.length, 8)) : '-';
+    }
+
+    // Simpan perubahan profil ke localStorage (currentUser + allUsers) agar
+    // otomatis tersinkron di semua halaman lain saat halaman itu dimuat ulang.
+    function persistUserChanges() {
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+      const allUsers = JSON.parse(localStorage.getItem('allUsers')) || [];
+      const idx = allUsers.findIndex(u => u.email && currentUser.email && u.email.toLowerCase() === currentUser.email.toLowerCase());
+      if (idx > -1) {
+        allUsers[idx] = { ...allUsers[idx], ...currentUser };
+        localStorage.setItem('allUsers', JSON.stringify(allUsers));
+      }
+    }
+
+    // ---------- LIHAT / SEMBUNYIKAN PASSWORD ----------
+    let isPasswordVisible = false;
+    function togglePasswordVisibility() {
+      const display = document.getElementById('passwordDisplay');
+      const btn = document.getElementById('togglePasswordVisibilityBtn');
+      isPasswordVisible = !isPasswordVisible;
+      if (isPasswordVisible) {
+        display.textContent = currentUser.password || '-';
+        display.classList.remove('password-mask');
+        btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+        btn.setAttribute('aria-label', 'Sembunyikan password');
+      } else {
+        display.textContent = maskPassword(currentUser.password);
+        display.classList.add('password-mask');
+        btn.innerHTML = '<i class="fa-solid fa-eye"></i>';
+        btn.setAttribute('aria-label', 'Lihat password');
+      }
+    }
+
+    // ---------- UBAH PASSWORD ----------
+    function togglePasswordEdit() {
+      const box = document.getElementById('editPasswordBox');
+      box.classList.toggle('open');
+      document.getElementById('newPasswordInput').value = '';
+      document.getElementById('confirmPasswordInput').value = '';
+    }
+    function savePasswordChange() {
+      const newPass = document.getElementById('newPasswordInput').value;
+      const confirmPass = document.getElementById('confirmPasswordInput').value;
+      if (!newPass || newPass.length < 6) {
+        alert('Password baru minimal 6 karakter.');
+        return;
+      }
+      if (newPass !== confirmPass) {
+        alert('Konfirmasi password tidak sama.');
+        return;
+      }
+      currentUser.password = newPass;
+      persistUserChanges();
+      isPasswordVisible = false;
+      const passwordDisplay = document.getElementById('passwordDisplay');
+      passwordDisplay.textContent = maskPassword(newPass);
+      passwordDisplay.classList.add('password-mask');
+      document.getElementById('togglePasswordVisibilityBtn').innerHTML = '<i class="fa-solid fa-eye"></i>';
+      togglePasswordEdit();
+      alert('Password berhasil diubah.');
+    }
+
+    // ---------- UBAH / HAPUS FOTO PROFIL ----------
+    function toggleAvatarMenu(event) {
+      event.stopPropagation();
+      document.getElementById('avatarEditMenu').classList.toggle('open');
+    }
+    function closeAvatarMenu() {
+      const menu = document.getElementById('avatarEditMenu');
+      if (menu) menu.classList.remove('open');
+    }
+    function handleAvatarChange(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        alert('File harus berupa gambar.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        currentUser.avatarImg = e.target.result;
+        persistUserChanges();
+        document.getElementById('sidebarAvatarWrap').innerHTML = `<img src="${currentUser.avatarImg}" alt="Foto Profil">`;
+        renderAuthArea(); // Ikut update avatar di navbar atas
+      };
+      reader.readAsDataURL(file);
+    }
+    function handleAvatarDelete() {
+      closeAvatarMenu();
+      if (!currentUser.avatarImg) return;
+      currentUser.avatarImg = '';
+      persistUserChanges();
+      document.getElementById('sidebarAvatarWrap').innerHTML = `<i class="fa-solid fa-user"></i>`;
+      renderAuthArea();
+    }
+
+    // Render Konten Utama Halaman Profil
+    function renderPage() {
+      const mainContainer = document.getElementById('mainContainer');
+      const avatarContent = currentUser.avatarImg
+        ? `<img src="${currentUser.avatarImg}" alt="Foto Profil">`
+        : `<i class="fa-solid fa-user"></i>`;
+
+      mainContainer.innerHTML = `
+        <div class="profile-single-card">
+          <div class="profile-card-header">
+            <div class="header-left">
+              <div class="avatar-edit-wrap">
+                <div class="sidebar-avatar-wrap" id="sidebarAvatarWrap">${avatarContent}</div>
+                <button type="button" class="avatar-edit-btn" onclick="toggleAvatarMenu(event)" aria-label="Ubah foto profil">
+                  <i class="fa-solid fa-pen"></i>
+                </button>
+                <div class="avatar-edit-menu" id="avatarEditMenu">
+                  <button type="button" onclick="document.getElementById('avatarFileInput').click(); closeAvatarMenu();">
+                    <i class="fa-solid fa-camera"></i> Ubah Foto
+                  </button>
+                  <button type="button" class="danger" onclick="handleAvatarDelete()">
+                    <i class="fa-solid fa-trash"></i> Hapus Foto
+                  </button>
+                </div>
+                <input type="file" id="avatarFileInput" accept="image/*" style="display:none" onchange="handleAvatarChange(event)">
+              </div>
+              <div class="profile-card-title">
+                <h2>Informasi Profil</h2>
+                <p>Informasi ini adalah data akun perpustakaan Anda.</p>
+              </div>
+            </div>
+            <button type="button" class="row-action-btn" onclick="togglePasswordEdit()">
+              <i class="fa-solid fa-pen"></i> Ubah Password
+            </button>
+          </div>
+
+          <div class="profile-row">
+            <div class="row-icon-box"><i class="fa-solid fa-id-card"></i></div>
+            <div class="row-label">No. Anggota</div>
+            <div class="row-value">${currentUser.noAnggota || '-'}</div>
+          </div>
+
+          <div class="profile-row">
+            <div class="row-icon-box"><i class="fa-solid fa-user"></i></div>
+            <div class="row-label">Nama Lengkap</div>
+            <div class="row-value">${currentUser.name}</div>
+          </div>
+
+          <div class="profile-row">
+            <div class="row-icon-box"><i class="fa-solid fa-chalkboard-user"></i></div>
+            <div class="row-label">Kelas</div>
+            <div class="row-value">${kelasRoman(currentUser.kelas) || '-'}</div>
+          </div>
+
+          <div class="profile-row">
+            <div class="row-icon-box"><i class="fa-solid fa-graduation-cap"></i></div>
+            <div class="row-label">Jurusan</div>
+            <div class="row-value">${jurusanNama(currentUser.jurusan)}</div>
+          </div>
+
+          <div class="profile-row">
+            <div class="row-icon-box"><i class="fa-solid fa-envelope"></i></div>
+            <div class="row-label">Email</div>
+            <div class="row-value">${currentUser.email}</div>
+          </div>
+
+          <div class="profile-row">
+            <div class="row-icon-box"><i class="fa-solid fa-phone"></i></div>
+            <div class="row-label">No. HP/Telp</div>
+            <div class="row-value">${currentUser.phone || '-'}</div>
+          </div>
+
+          <div class="profile-row">
+            <div class="row-main">
+              <div class="row-icon-box"><i class="fa-solid fa-lock"></i></div>
+              <div class="row-label">Password</div>
+              <div class="row-value password-mask" id="passwordDisplay">${maskPassword(currentUser.password)}</div>
+              <button type="button" class="row-icon-btn" id="togglePasswordVisibilityBtn" onclick="togglePasswordVisibility()" aria-label="Lihat password">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+            <div class="edit-password-box" id="editPasswordBox">
+              <input type="password" id="newPasswordInput" placeholder="Password baru (min. 6 karakter)">
+              <input type="password" id="confirmPasswordInput" placeholder="Ulangi password baru">
+              <div class="edit-password-actions">
+                <button type="button" class="btn-save-small" onclick="savePasswordChange()">Simpan</button>
+                <button type="button" class="btn-cancel-small" onclick="togglePasswordEdit()">Batal</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="tip-banner">
+            <i class="fa-solid fa-shield-halved"></i>
+            <div>
+              <div class="t-title">Jaga kerahasiaan akun Anda.</div>
+              <div class="t-desc">Jangan bagikan email dan password kepada siapa pun.</div>
+            </div>
+          </div>
+
+          <div class="profile-footer-actions">
+            <a href="pinjam.html#riwayatCard" class="footer-action-btn">
+              <i class="fa-solid fa-clock-rotate-left"></i> Riwayat Peminjaman
+            </a>
+            <a href="pinjam.html#statsRow" class="footer-action-btn">
+              <i class="fa-solid fa-wallet"></i> Denda
+            </a>
+            <button type="button" class="footer-action-btn logout" onclick="handleLogout()">
+              <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Render Navigasi Atas (Dropdown User)
+    function renderAuthArea() {
+      const authArea = document.getElementById('authArea');
+      const avatarContent = currentUser.avatarImg
+        ? `<img src="${currentUser.avatarImg}" alt="Foto Profil">`
+        : `<i class="fa-solid fa-user"></i>`;
+      // Baris kedua di navbar menampilkan Kelas + Jurusan (mis. "XII PPLG")
+      const kelasJurusan = `${kelasRoman(currentUser.kelas)} ${currentUser.jurusan && currentUser.jurusan !== '-' ? currentUser.jurusan : ''}`.trim();
+      const displayStatus = kelasJurusan || (currentUser.isMember ? 'Aktif' : 'Belum Keanggotaan');
+
+      authArea.innerHTML = `
+        <div class="user-menu">
+          <button class="user-trigger" id="userTrigger" aria-expanded="false">
+            <div class="avatar-circle">${avatarContent}</div>
+            <div class="user-text">
+              <div class="avatar-name">${currentUser.name}</div>
+              <div class="avatar-status">${displayStatus}</div>
+            </div>
+            <i class="fa-solid fa-chevron-down chev"></i>
+          </button>
+          <div class="dropdown" id="userDropdown">
+            <a href="profile_anggota.html"><i class="fa-solid fa-user"></i> Profil Saya</a>
+            <a href="pinjam.html"><i class="fa-solid fa-book-open"></i> Buku Pinjaman</a>
+            <hr>
+            <button class="logout" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+          </div>
+        </div>
+      `;
+
+      const trigger = document.getElementById('userTrigger');
+      const dropdown = document.getElementById('userDropdown');
+
+      trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = dropdown.classList.toggle('open');
+        trigger.setAttribute('aria-expanded', isOpen);
+      });
+
+      window.addEventListener('click', () => {
+        dropdown.classList.remove('open');
+        trigger.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    // Mobile Menu Toggle Script
+    const navToggle = document.getElementById('navToggle');
+    const navLinksEl = document.getElementById('navLinks');
+
+    navToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = navLinksEl.classList.toggle('open');
+      navToggle.innerHTML = isOpen ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
+    });
+
+    // Tutup menu edit foto saat klik di luar area menu
+    document.addEventListener('click', () => {
+      closeAvatarMenu();
+    });
+
+    // Inisialisasi awal saat halaman dimuat
+    renderPage();
+    renderAuthArea();
+  </script>
+</body>
+</html>

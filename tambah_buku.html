@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tambah Buku — Perpustakaan SMK MA'arif Walisongo Kajoran</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --green-900: #0c3f2e;
+  --green-800: #105843;
+  --green-700: #146b52;
+  --green-600: #1c8264;
+  --mint-100: #d7f0e4;
+  --mint-50: #eefbf5;
+  --ink: #16302c;
+  --muted: #5f7a75;
+  --border: #e1ece9;
+  --bg: #f5f9f8;
+  --card: #ffffff;
+  --shadow: 0 10px 30px -12px rgba(12, 63, 46, .14);
+  --sidebar-w: 268px;
+  --sidebar-w-collapsed: 78px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  height: 100vh;
+  overflow: hidden;
+}
+
+h1, h2, h3, .brand-title, .btn-primary, .nav-link, .stat-value {
+  font-family: 'Poppins', sans-serif;
+}
+
+.app-shell { display: flex; height: 100vh; width: 100%; }
+
+/* ================= SIDEBAR (identik dengan Dashboard Admin) ================= */
+.sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  background: #022c22;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  transition: width .2s ease;
+}
+.sidebar.collapsed { width: var(--sidebar-w-collapsed); }
+
+.sidebar-brand {
+  display: flex; align-items: center; gap: 12px;
+  padding: 18px 16px; border-bottom: 1px solid rgba(255,255,255,.12); flex-shrink: 0;
+}
+.brand-logo {
+  width: 42px; height: 42px; border-radius: 50%; background: #fff;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  box-shadow: inset 0 0 0 3px var(--green-700); overflow: hidden;
+}
+.brand-logo img { width: 100%; height: 100%; object-fit: cover; }
+.brand-text { line-height: 1.25; overflow: hidden; white-space: nowrap; }
+.sidebar.collapsed .brand-text { display: none; }
+.brand-title { font-weight: 700; font-size: 14.5px; letter-spacing: .3px; }
+.brand-sub { font-size: 11px; color: #c7e8da; font-weight: 500; margin-top: 1px; }
+.brand-npp { font-size: 10px; color: #9fd8bd; font-weight: 500; margin-top: 3px; }
+
+.sidebar-nav { flex: 1; overflow-y: auto; padding: 14px 12px 24px; }
+.sidebar-nav::-webkit-scrollbar { width: 6px; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,.18); border-radius: 6px; }
+
+.nav-group { margin-bottom: 18px; }
+.nav-label {
+  font-size: 10.5px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase;
+  color: #8fd6b4; margin: 0 0 8px 10px; white-space: nowrap; overflow: hidden;
+}
+.sidebar.collapsed .nav-label { opacity: 0; height: 0; margin: 0; }
+
+.nav-link {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; border-radius: 10px; color: #e3f4ec;
+  text-decoration: none; font-size: 14px; font-weight: 600;
+  margin-bottom: 3px; cursor: pointer; border: none; background: transparent;
+  width: 100%; text-align: left; transition: background .15s ease;
+  white-space: nowrap; overflow: hidden;
+}
+.nav-link i { width: 18px; text-align: center; font-size: 16px; flex-shrink: 0; }
+.nav-link:hover { background: rgba(255,255,255,.1); }
+.nav-link.active { background: var(--green-700); color: #fff; box-shadow: 0 3px 10px rgba(0,0,0,.12); }
+.nav-link.logout { color: #ffc9c0; }
+.nav-link.logout:hover { background: rgba(192,57,43,.25); }
+.sidebar.collapsed .nav-link span { display: none; }
+
+@media (max-width: 860px) {
+  .sidebar { position: fixed; z-index: 300; }
+  .sidebar:not(.collapsed) { width: 240px; }
+  .sidebar.collapsed { width: 0; overflow: hidden; }
+}
+
+/* ================= SIDEBAR FOOTER (Profile + Logout + Copyright) ================= */
+.sidebar-footer {
+  flex-shrink: 0; padding: 14px 16px 18px; border-top: 1px solid rgba(255,255,255,.12);
+}
+.sidebar.collapsed .sidebar-footer { display: none; }
+.sidebar-profile-wrap { position: relative; }
+.sidebar-profile {
+  display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff;
+  padding: 8px; border-radius: 12px; background: rgba(255,255,255,.06);
+  margin-bottom: 10px; transition: .15s ease; border: none; width: 100%;
+  cursor: pointer; font-family: 'Inter', sans-serif; text-align: left;
+}
+.sidebar-profile:hover { background: rgba(255,255,255,.12); }
+.avatar-circle-lg {
+  width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,.15);
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
+  flex-shrink: 0; overflow: hidden;
+}
+.avatar-circle-lg img { width: 100%; height: 100%; object-fit: cover; }
+.sidebar-profile-text { overflow: hidden; white-space: nowrap; }
+.sidebar-profile-name { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 13.5px; }
+.sidebar-profile-role { font-size: 11px; color: #c7e8da; margin-top: 1px; }
+.sidebar-logout-btn {
+  width: 100%; background: transparent; border: 1.5px solid #e2564c; color: #ff9a90;
+  padding: 9px; border-radius: 10px; font-family: 'Poppins', sans-serif; font-weight: 600;
+  font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  gap: 8px; transition: .15s ease;
+}
+.sidebar-logout-btn:hover { background: rgba(192,57,43,.2); color: #fff; }
+.sidebar-profile-chev { margin-left: auto; font-size: 11px; color: #c7e8da; transition: transform .15s ease; flex-shrink: 0; }
+.sidebar-profile[aria-expanded="true"] .sidebar-profile-chev { transform: rotate(180deg); }
+#sidebarProfileDropdown {
+  position: absolute; left: 0; right: 0; bottom: calc(100% + 6px); top: auto; width: auto;
+}
+.sidebar-copyright { text-align: center; font-size: 10.5px; color: #8fd6b4; line-height: 1.5; margin-top: 14px; }
+
+/* ================= MAIN AREA ================= */
+.main-area { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; min-width: 0; }
+
+.topbar {
+  height: 68px; flex-shrink: 0; background: #044c29; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; padding: 0 24px;
+  z-index: 50; color: #ffffff;
+}
+.topbar .page-title { color: #ffffff; }
+.topbar-left { display: flex; align-items: center; gap: 16px; }
+
+.icon-btn {
+  width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border);
+  background: #fff; color: var(--ink); font-size: 16px; display: flex;
+  align-items: center; justify-content: center; cursor: pointer; transition: .15s ease;
+}
+.icon-btn:hover { background: var(--mint-50); border-color: var(--green-700); color: var(--green-800); }
+
+.page-title { font-size: 20px; font-weight: 700; margin: 0; }
+
+/* --- user menu / dropdown --- */
+.user-menu { position: relative; }
+.user-trigger {
+  display: flex; align-items: center; gap: 10px; background: var(--bg);
+  border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px 6px 6px;
+  cursor: pointer; transition: .15s ease;
+}
+.user-trigger:hover { background: var(--mint-50); border-color: var(--green-700); }
+.avatar-circle {
+  width: 32px; height: 32px; border-radius: 50%; background: var(--green-800);
+  color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;
+}
+.user-name { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+.chev { font-size: 11px; color: var(--muted); transition: transform .15s ease; }
+.user-trigger[aria-expanded="true"] .chev { transform: rotate(180deg); }
+
+.dropdown {
+  position: absolute; right: 0; top: calc(100% + 8px);
+  background: #fff; border-radius: 12px; box-shadow: var(--shadow);
+  border: 1px solid var(--border); width: 220px; padding: 8px;
+  display: none; flex-direction: column; gap: 2px; z-index: 1000;
+}
+.dropdown.open { display: flex !important; }
+.dropdown a, .dropdown button {
+  all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 8px; font-size: 13.5px; font-weight: 600;
+  color: var(--ink); cursor: pointer; font-family: 'Inter', sans-serif; width: 100%;
+}
+.dropdown a i, .dropdown button i { width: 16px; text-align: center; }
+.dropdown a:hover, .dropdown button:hover { background: var(--mint-50); }
+.dropdown .logout, .dropdown button.logout { color: #c0392b; }
+.dropdown hr { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
+
+/* ================= CONTENT ================= */
+.content { flex: 1; overflow-y: auto; padding: 22px 26px 40px; }
+
+/* ================= FORM TAMBAH BUKU ================= */
+.form-layout { display: flex; gap: 22px; align-items: flex-start; flex-wrap: wrap; }
+
+.panel-form {
+  flex: 1; min-width: 480px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  box-shadow: var(--shadow); padding: 24px 26px;
+}
+.panel-upload {
+  width: 340px; flex-shrink: 0;
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  box-shadow: var(--shadow); padding: 24px 26px;
+}
+
+.section-title { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+.section-icon {
+  width: 34px; height: 34px; border-radius: 10px; background: var(--mint-100);
+  color: var(--green-800); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0;
+}
+.section-title h2 { margin: 0; font-size: 17px; color: var(--ink); }
+
+.form-grid {
+  display: flex; align-items: flex-start; gap: 20px;
+}
+.form-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 18px; }
+.field-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 900px) { .form-grid { flex-direction: column; } }
+
+.field { display: flex; flex-direction: column; gap: 7px; }
+.field label { font-size: 13px; font-weight: 600; color: var(--ink); }
+.field .required { color: #e74c3c; margin-left: 2px; }
+.field input, .field select, .field textarea {
+  width: 100%; padding: 11px 14px; border-radius: 10px; border: 1.5px solid var(--border);
+  font-size: 13.5px; font-family: 'Inter', sans-serif; color: var(--ink); outline: none;
+  background: #fff; transition: .15s ease;
+}
+.field textarea { resize: vertical; min-height: 96px; line-height: 1.5; }
+.field input::placeholder, .field textarea::placeholder { color: #9db3ae; }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--green-600); }
+.field select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235f7a75' stroke-width='2.5'><path d='M6 9l6 6 6-6'/></svg>"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+.field .price-wrap { position: relative; }
+.field .price-wrap input { padding-left: 42px; }
+.field .price-prefix {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  font-size: 12.5px; font-weight: 700; color: var(--muted); background: var(--bg);
+  padding: 3px 7px; border-radius: 6px;
+}
+.field .date-wrap { position: relative; }
+.field .date-wrap i { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+
+.required-note { margin-top: 20px; font-size: 12.5px; font-weight: 600; color: #e74c3c; }
+
+/* Upload panel */
+.upload-block { margin-bottom: 22px; }
+.upload-block:last-child { margin-bottom: 0; }
+.upload-block label { display: block; font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 10px; }
+.upload-box {
+  border: 1.5px dashed var(--mint-100); border-radius: 14px; padding: 26px 16px;
+  text-align: center; background: var(--mint-50); cursor: pointer; transition: .15s ease;
+  position: relative; overflow: hidden;
+}
+.upload-box:hover { border-color: var(--green-600); background: #eafaf2; }
+.upload-box.has-file { padding: 0; border-style: solid; }
+.upload-icon {
+  width: 56px; height: 56px; border-radius: 14px; background: var(--mint-100);
+  color: var(--green-800); display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 14px; font-size: 22px;
+}
+.upload-text { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.upload-hint { font-size: 11.5px; color: var(--muted); margin-bottom: 14px; }
+.btn-pilih-file {
+  background: var(--green-800); color: #fff; border: none; padding: 9px 18px;
+  border-radius: 9px; font-weight: 700; font-size: 12.5px; cursor: pointer; font-family: 'Poppins', sans-serif;
+}
+.btn-pilih-file:hover { background: var(--green-700); }
+.upload-box input[type="file"] { display: none; }
+
+.cover-preview { width: 100%; height: 200px; object-fit: cover; display: block; }
+.file-chosen-info {
+  display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: var(--mint-50);
+}
+.file-chosen-info i { color: var(--green-800); font-size: 20px; flex-shrink: 0; }
+.file-chosen-name { font-size: 12.5px; font-weight: 600; color: var(--ink); word-break: break-all; }
+.file-chosen-size { font-size: 11px; color: var(--muted); }
+.btn-remove-file {
+  margin-left: auto; background: none; border: none; color: #c0392b; cursor: pointer; font-size: 15px; flex-shrink: 0;
+}
+
+.upload-note { display: flex; gap: 8px; align-items: flex-start; margin-top: 16px; font-size: 11.5px; color: var(--muted); }
+.upload-note i { margin-top: 2px; flex-shrink: 0; }
+
+/* Footer actions */
+.form-footer {
+  display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;
+}
+.btn-cancel {
+  display: flex; align-items: center; gap: 8px; background: #fff; color: var(--ink);
+  border: 1.5px solid var(--border); padding: 12px 22px; border-radius: 10px;
+  font-weight: 700; font-size: 13.5px; cursor: pointer; font-family: 'Poppins', sans-serif; transition: .15s ease;
+}
+.btn-cancel:hover { background: var(--bg); }
+.btn-save {
+  display: flex; align-items: center; gap: 8px; background: var(--green-800); color: #fff;
+  border: none; padding: 12px 24px; border-radius: 10px;
+  font-weight: 700; font-size: 13.5px; cursor: pointer; font-family: 'Poppins', sans-serif; transition: .15s ease;
+}
+.btn-save:hover { background: var(--green-700); }
+
+/* Toast sukses */
+.toast {
+  position: fixed; top: 24px; right: 24px; background: var(--green-800); color: #fff;
+  padding: 14px 20px; border-radius: 12px; box-shadow: var(--shadow); font-size: 13.5px; font-weight: 600;
+  display: flex; align-items: center; gap: 10px; z-index: 2000; opacity: 0; transform: translateY(-10px);
+  transition: .25s ease; pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo">
+        <img src="img/logo.smk.png" alt="Logo Sekolah">
+      </div>
+      <div class="brand-text">
+        <div class="brand-title">PERPUSTAKAAN</div>
+        <div class="brand-sub">SMK MA'arif Walisongo Kajoran</div>
+        <div class="brand-npp">NPP: 05014210J0000031</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group">
+        <a href="dashboard_admin.html" class="nav-link"><i class="fa-solid fa-house"></i><span>Dashboard Admin</span></a>
+        <a href="data_buku.html" class="nav-link"><i class="fa-solid fa-book"></i><span>Data Buku</span></a>
+        <a href="tambah_buku.html" class="nav-link active"><i class="fa-solid fa-square-plus"></i><span>Tambah Buku</span></a>
+        <a href="data_kunjungan.html" class="nav-link"><i class="fa-solid fa-user-clock"></i><span>Data Kunjungan</span></a>
+        <a href="data_anggota.html" class="nav-link"><i class="fa-solid fa-users"></i><span>Data Anggota</span></a>
+        <a href="data_per_item.html" class="nav-link"><i class="fa-solid fa-chart-pie"></i><span>Data Per Item</span></a>
+        <a href="data_peminjaman.html" class="nav-link"><i class="fa-solid fa-file-invoice"></i><span>Data Peminjaman</span></a>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-profile-wrap">
+        <button class="sidebar-profile" id="sidebarProfileButton" aria-expanded="false">
+          <div class="avatar-circle-lg"><i class="fa-solid fa-user"></i></div>
+          <div class="sidebar-profile-text">
+            <div class="sidebar-profile-name" id="sidebarAdminName">Admin Perpus</div>
+            <div class="sidebar-profile-role">Administrator</div>
+          </div>
+          <i class="fa-solid fa-chevron-up sidebar-profile-chev"></i>
+        </button>
+        <div class="dropdown" id="sidebarProfileDropdown">
+          <a href="profile_admin.html"><i class="fa-solid fa-user-gear"></i><span>Profile Admin</span></a>
+        </div>
+      </div>
+      <button class="sidebar-logout-btn" id="btnLogoutSidebar"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+      <div class="sidebar-copyright">&copy; 2026 SMK Ma'arif Walisongo Kajoran<br>All Rights Reserved</div>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <div class="main-area">
+
+    <header class="topbar">
+      <div class="topbar-left">
+        <button id="sidebarToggle" class="icon-btn" title="Buka/Tutup Sidebar">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <h1 class="page-title">Tambah Buku</h1>
+      </div>
+
+      <div class="user-menu">
+        <button class="user-trigger" id="profileMenuButton" aria-expanded="false">
+          <div class="avatar-circle"><i class="fa-solid fa-user"></i></div>
+          <span class="user-name" id="topbarAdminName">Admin Perpus</span>
+          <i class="fa-solid fa-chevron-down chev"></i>
+        </button>
+
+        <div class="dropdown" id="profileDropdown">
+          <a href="profile_admin.html"><i class="fa-solid fa-user-gear"></i><span>Profile Admin</span></a>
+          <hr>
+          <button class="logout" id="btnLogoutTopbar"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></button>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <form id="formTambahBuku" novalidate>
+        <div class="form-layout">
+
+          <!-- ============ PANEL 1: DETAIL BUKU ============ -->
+          <div class="panel-form">
+            <div class="section-title">
+              <div class="section-icon"><i class="fa-solid fa-file-lines"></i></div>
+              <h2>1. Detail Buku</h2>
+            </div>
+
+            <div class="form-grid">
+              <!-- ===== KOLOM KIRI: 1–5 ===== -->
+              <div class="form-col">
+                <div class="field">
+                  <label>1. Judul Buku <span class="required">*</span></label>
+                  <input type="text" id="fJudul" placeholder="Masukkan judul buku" required>
+                </div>
+                <div class="field">
+                  <label>2. Penulis <span class="required">*</span></label>
+                  <input type="text" id="fPenulis" placeholder="Masukkan nama penulis" required>
+                </div>
+                <div class="field">
+                  <label>3. Penerbit <span class="required">*</span></label>
+                  <input type="text" id="fPenerbit" placeholder="Masukkan nama penerbit" required>
+                </div>
+                <div class="field">
+                  <label>4. Tempat &amp; Tahun Terbit <span class="required">*</span></label>
+                  <div class="field-row-2">
+                    <input type="text" id="fTempatTerbit" placeholder="Tempat terbit" required>
+                    <input type="number" id="fTahunTerbit" placeholder="Tahun" min="1900" max="2100" required>
+                  </div>
+                </div>
+                <div class="field">
+                  <label>5. Genre Buku <span class="required">*</span></label>
+                  <select id="fGenre" required>
+                    <option value="" disabled selected>Pilih genre buku</option>
+                    <option>Fiksi</option>
+                    <option>Nonfiksi</option>
+                    <option>Fantasi</option>
+                    <option>Sains</option>
+                    <option>Matematika</option>
+                    <option>Sejarah</option>
+                    <option>Pendidikan</option>
+                    <option>Teknologi</option>
+                    <option>Agama</option>
+                    <option>Biografi</option>
+                    <option>Lainnya</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- ===== KOLOM TENGAH: 6–10 ===== -->
+              <div class="form-col">
+                <div class="field">
+                  <label>6. Format Buku <span class="required">*</span></label>
+                  <select id="fFormat" required>
+                    <option value="" disabled selected>Pilih format buku</option>
+                    <option>Buku Fisik</option>
+                    <option>E-Book</option>
+                    <option>E-Book & Fisik</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>7. ISBN <span class="required">*</span></label>
+                  <input type="text" id="fIsbn" placeholder="Masukkan ISBN" required>
+                </div>
+                <div class="field">
+                  <label>8. Harga per Eksemplar (Rp) <span class="required">*</span></label>
+                  <div class="price-wrap">
+                    <span class="price-prefix">Rp</span>
+                    <input type="number" id="fHarga" placeholder="Masukkan harga" min="0" required>
+                  </div>
+                </div>
+                <div class="field">
+                  <label>9. Jumlah Eksemplar <span class="required">*</span></label>
+                  <input type="number" id="fJumlah" placeholder="Masukkan jumlah" min="1" required>
+                </div>
+                <div class="field">
+                  <label>10. Jilid / Edisi</label>
+                  <input type="text" id="fJilid" placeholder="Masukkan jilid / edisi">
+                </div>
+              </div>
+
+              <!-- ===== KOLOM KANAN: 11–16 ===== -->
+              <div class="form-col">
+                <div class="field">
+                  <label>11. Nomor Klasifikasi <span class="required">*</span></label>
+                  <input type="text" id="fKlasifikasi" placeholder="Masukkan nomor klasifikasi" required>
+                </div>
+                <div class="field">
+                  <label>12. Sumber Dana <span class="required">*</span></label>
+                  <select id="fSumberDana" required>
+                    <option value="" disabled selected>Pilih sumber dana</option>
+                    <option>APBN</option>
+                    <option>APBD</option>
+                    <option>Dana BOS</option>
+                    <option>Sumbangan</option>
+                    <option>Mandiri / Yayasan</option>
+                    <option>Lainnya</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>13. Tanggal Masuk <span class="required">*</span></label>
+                  <div class="date-wrap">
+                    <input type="date" id="fTanggalMasuk" required>
+                  </div>
+                </div>
+                <div class="field">
+                  <label>14. Kelas Peruntukan <span class="required">*</span></label>
+                  <select id="fKelasPeruntukan" required>
+                    <option value="" disabled selected>Pilih kelas peruntukan</option>
+                    <option>Kelas X</option>
+                    <option>Kelas XI</option>
+                    <option>Kelas XII</option>
+                    <option>Umum / Semua Kelas</option>
+                    <option>Guru & Staf</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>15. Nomor Inventaris <span class="required">*</span></label>
+                  <input type="text" id="fNomorInventaris" placeholder="Masukkan nomor inventaris" required>
+                </div>
+                <div class="field">
+                  <label>16. Sinopsis Buku <span class="required">*</span></label>
+                  <textarea id="fSinopsis" placeholder="Tulis ringkasan singkat isi buku" required></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="required-note">* Wajib diisi</div>
+          </div>
+
+          <!-- ============ PANEL 2: UPLOAD FILE ============ -->
+          <div class="panel-upload">
+            <div class="section-title">
+              <div class="section-icon"><i class="fa-solid fa-upload"></i></div>
+              <h2>2. Upload File</h2>
+            </div>
+
+            <div class="upload-block">
+              <label>17. Upload Sampul Buku <span class="required">*</span></label>
+              <div class="upload-box" id="coverUploadBox">
+                <div class="upload-icon"><i class="fa-regular fa-image"></i></div>
+                <div class="upload-text">Klik atau drag & drop file sampul di sini</div>
+                <div class="upload-hint">JPG, PNG, WEBP (Maks. 2MB)</div>
+                <button type="button" class="btn-pilih-file">Pilih File</button>
+                <input type="file" id="fCover" accept=".jpg,.jpeg,.png,.webp">
+              </div>
+            </div>
+
+            <div class="upload-block" id="ebookUploadBlock" style="display:none;">
+              <label>18. Upload Buku Digital (E-Book) <span class="required">*</span></label>
+              <div class="upload-box" id="ebookUploadBox">
+                <div class="upload-icon"><i class="fa-regular fa-file-lines"></i></div>
+                <div class="upload-text">Klik atau drag & drop file e-book di sini</div>
+                <div class="upload-hint">PDF, EPUB (Maks. 20MB)</div>
+                <button type="button" class="btn-pilih-file">Pilih File</button>
+                <input type="file" id="fEbook" accept=".pdf,.epub">
+              </div>
+            </div>
+
+            <div class="upload-note" id="ebookUploadNote">
+              <i class="fa-solid fa-circle-info"></i>
+              <span>Pilih dulu Format Buku di panel kiri. Kolom upload e-book akan muncul otomatis jika formatnya "E-Book" atau "E-Book & Fisik".</span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="form-footer">
+          <button type="button" class="btn-cancel" id="btnBatal"><i class="fa-solid fa-xmark"></i> Batal</button>
+          <button type="submit" class="btn-save"><i class="fa-solid fa-print"></i> Simpan Buku</button>
+        </div>
+      </form>
+    </main>
+
+  </div>
+</div>
+
+<div class="toast" id="toastSukses"><i class="fa-solid fa-circle-check"></i> <span id="toastText">Buku berhasil disimpan!</span></div>
+
+<script src="js/data-buku.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ============ SIDEBAR TOGGLE ============
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  const sidebar = document.getElementById('sidebar');
+  if (sidebarToggle && sidebar) {
+    sidebarToggle.addEventListener('click', () => sidebar.classList.toggle('collapsed'));
+  }
+
+  // ============ NAMA ADMIN (topbar & sidebar, dinamis kalau tersedia) ============
+  try {
+    const adminUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    if (adminUser && adminUser.name) {
+      const sidebarNameEl = document.getElementById('sidebarAdminName');
+      const topbarNameEl = document.getElementById('topbarAdminName');
+      if (sidebarNameEl) sidebarNameEl.textContent = adminUser.name;
+      if (topbarNameEl) topbarNameEl.textContent = adminUser.name;
+    }
+  } catch (e) { /* pakai nama default "Admin Perpus" */ }
+
+  // ============ LOGOUT (topbar & footer sidebar) ============
+  const handleLogout = () => {
+    if (confirm('Apakah Anda yakin ingin keluar dari halaman admin?')) {
+      localStorage.removeItem('isLoggedIn');
+      window.location.href = 'login.html';
+    }
+  };
+  const btnLogoutSidebar = document.getElementById('btnLogoutSidebar');
+  const btnLogoutTopbar = document.getElementById('btnLogoutTopbar');
+  if (btnLogoutSidebar) btnLogoutSidebar.addEventListener('click', handleLogout);
+  if (btnLogoutTopbar) btnLogoutTopbar.addEventListener('click', handleLogout);
+
+  // ============ DROPDOWN PROFIL (topbar kanan atas) ============
+  const profileMenuButton = document.getElementById('profileMenuButton');
+  const profileDropdown = document.getElementById('profileDropdown');
+  const sidebarProfileButton = document.getElementById('sidebarProfileButton');
+  const sidebarProfileDropdown = document.getElementById('sidebarProfileDropdown');
+
+  function closeOtherMenus(except) {
+    if (except !== 'profile' && profileDropdown) { profileDropdown.classList.remove('open'); profileMenuButton?.setAttribute('aria-expanded', 'false'); }
+    if (except !== 'sidebarProfile' && sidebarProfileDropdown) { sidebarProfileDropdown.classList.remove('open'); sidebarProfileButton?.setAttribute('aria-expanded', 'false'); }
+  }
+
+  if (profileMenuButton && profileDropdown) {
+    profileMenuButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = profileDropdown.classList.toggle('open');
+      profileMenuButton.setAttribute('aria-expanded', isOpen);
+      closeOtherMenus('profile');
+    });
+  }
+  if (sidebarProfileButton && sidebarProfileDropdown) {
+    sidebarProfileButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = sidebarProfileDropdown.classList.toggle('open');
+      sidebarProfileButton.setAttribute('aria-expanded', isOpen);
+      closeOtherMenus('sidebarProfile');
+    });
+  }
+  window.addEventListener('click', () => closeOtherMenus());
+
+  // ============ UPLOAD SAMPUL BUKU (preview + drag&drop) ============
+  const coverBox = document.getElementById('coverUploadBox');
+  const coverInput = document.getElementById('fCover');
+  let coverDataUrl = null;
+
+  function renderCoverPreview(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      coverDataUrl = e.target.result;
+      coverBox.classList.add('has-file');
+      coverBox.innerHTML = `
+        <img src="${coverDataUrl}" class="cover-preview" alt="Preview sampul">
+        <div class="file-chosen-info">
+          <i class="fa-regular fa-image"></i>
+          <div>
+            <div class="file-chosen-name">${file.name}</div>
+            <div class="file-chosen-size">${(file.size/1024).toFixed(0)} KB</div>
+          </div>
+          <button type="button" class="btn-remove-file" id="btnRemoveCover"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      `;
+      document.getElementById('btnRemoveCover').addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        coverDataUrl = null;
+        resetCoverBox();
+      });
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function resetCoverBox() {
+    coverBox.classList.remove('has-file');
+    coverBox.innerHTML = `
+      <div class="upload-icon"><i class="fa-regular fa-image"></i></div>
+      <div class="upload-text">Klik atau drag & drop file sampul di sini</div>
+      <div class="upload-hint">JPG, PNG, WEBP (Maks. 2MB)</div>
+      <button type="button" class="btn-pilih-file">Pilih File</button>
+      <input type="file" id="fCover" accept=".jpg,.jpeg,.png,.webp">
+    `;
+    bindCoverInput();
+  }
+
+  function bindCoverInput() {
+    const input = document.getElementById('fCover');
+    coverBox.addEventListener('click', () => input.click());
+    input.addEventListener('click', (e) => e.stopPropagation());
+    input.addEventListener('change', () => {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        if (file.size > 2 * 1024 * 1024) { alert('Ukuran file sampul maksimal 2MB.'); return; }
+        renderCoverPreview(file);
+      }
+    });
+  }
+  bindCoverInput();
+
+  ['dragover', 'dragleave', 'drop'].forEach(evt => {
+    coverBox.addEventListener(evt, (e) => { e.preventDefault(); e.stopPropagation(); });
+  });
+  coverBox.addEventListener('drop', (e) => {
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) { alert('Ukuran file sampul maksimal 2MB.'); return; }
+      renderCoverPreview(file);
+    }
+  });
+
+  // ============ UPLOAD E-BOOK ============
+  const ebookBox = document.getElementById('ebookUploadBox');
+  const ebookInput = document.getElementById('fEbook');
+  let ebookFileInfo = null; // { name, size, dataUrl (hanya kalau cukup kecil) }
+
+  function renderEbookChosen(file) {
+    const finish = (dataUrl) => {
+      ebookFileInfo = { name: file.name, size: file.size, dataUrl: dataUrl || null };
+      ebookBox.classList.add('has-file');
+      ebookBox.innerHTML = `
+        <div class="file-chosen-info">
+          <i class="fa-regular fa-file-pdf"></i>
+          <div>
+            <div class="file-chosen-name">${file.name}</div>
+            <div class="file-chosen-size">${(file.size/1024/1024).toFixed(2)} MB</div>
+          </div>
+          <button type="button" class="btn-remove-file" id="btnRemoveEbook"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      `;
+      document.getElementById('btnRemoveEbook').addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        ebookFileInfo = null;
+        resetEbookBox();
+      });
+    };
+    // Hanya file e-book kecil (<3MB) yang disimpan isinya ke localStorage,
+    // supaya tidak melebihi kuota penyimpanan browser. File lebih besar
+    // tetap tercatat namanya saja (bisa dihubungkan ke server/storage lain nanti).
+    if (file.size <= 3 * 1024 * 1024) {
+      const reader = new FileReader();
+      reader.onload = (e) => finish(e.target.result);
+      reader.readAsDataURL(file);
+    } else {
+      finish(null);
+    }
+  }
+
+  function resetEbookBox() {
+    ebookBox.classList.remove('has-file');
+    ebookBox.innerHTML = `
+      <div class="upload-icon"><i class="fa-regular fa-file-lines"></i></div>
+      <div class="upload-text">Klik atau drag & drop file e-book di sini</div>
+      <div class="upload-hint">PDF, EPUB (Maks. 20MB)</div>
+      <button type="button" class="btn-pilih-file">Pilih File</button>
+      <input type="file" id="fEbook" accept=".pdf,.epub">
+    `;
+    bindEbookInput();
+  }
+
+  function bindEbookInput() {
+    const input = document.getElementById('fEbook');
+    ebookBox.addEventListener('click', () => input.click());
+    input.addEventListener('click', (e) => e.stopPropagation());
+    input.addEventListener('change', () => {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        if (file.size > 20 * 1024 * 1024) { alert('Ukuran file e-book maksimal 20MB.'); return; }
+        renderEbookChosen(file);
+      }
+    });
+  }
+  bindEbookInput();
+
+  ['dragover', 'dragleave', 'drop'].forEach(evt => {
+    ebookBox.addEventListener(evt, (e) => { e.preventDefault(); e.stopPropagation(); });
+  });
+  ebookBox.addEventListener('drop', (e) => {
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      if (file.size > 20 * 1024 * 1024) { alert('Ukuran file e-book maksimal 20MB.'); return; }
+      renderEbookChosen(file);
+    }
+  });
+
+  // ============ TOGGLE OTOMATIS: UPLOAD E-BOOK BERDASARKAN FORMAT BUKU ============
+  // Kolom upload buku digital hanya muncul kalau formatnya mengandung E-Book.
+  const fFormat = document.getElementById('fFormat');
+  const ebookUploadBlock = document.getElementById('ebookUploadBlock');
+  const ebookUploadNote = document.getElementById('ebookUploadNote');
+
+  function formatButuhkanEbook(format) {
+    return format === 'E-Book' || format === 'E-Book & Fisik';
+  }
+
+  function terapkanTampilanFormat() {
+    const perluEbook = formatButuhkanEbook(fFormat.value);
+    ebookUploadBlock.style.display = perluEbook ? '' : 'none';
+    ebookUploadNote.style.display = perluEbook ? 'none' : 'flex';
+    if (!perluEbook) {
+      // Format Buku Fisik: kosongkan pilihan e-book yang mungkin sudah diisi
+      ebookFileInfo = null;
+      resetEbookBox();
+    }
+  }
+
+  fFormat.addEventListener('change', terapkanTampilanFormat);
+  terapkanTampilanFormat();
+
+  function showToast(text) {
+    const toast = document.getElementById('toastSukses');
+    document.getElementById('toastText').textContent = text;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2400);
+  }
+
+  // ============ SUBMIT FORM ============
+  const form = document.getElementById('formTambahBuku');
+  const btnBatal = document.getElementById('btnBatal');
+
+  btnBatal.addEventListener('click', () => {
+    if (confirm('Batalkan penambahan buku ini? Data yang sudah diisi akan hilang.')) {
+      window.location.href = 'katalog_buku.html';
+    }
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // Validasi HTML5 bawaan (required) + cek sampul wajib diisi
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+    if (!coverDataUrl) {
+      alert('Sampul buku wajib diunggah.');
+      coverBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    if (formatButuhkanEbook(fFormat.value) && !ebookFileInfo) {
+      alert('Format buku ini mengandung E-Book, jadi file buku digital (PDF/EPUB) wajib diunggah.');
+      ebookBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    const judul = document.getElementById('fJudul').value.trim();
+    const penulis = document.getElementById('fPenulis').value.trim();
+    const penerbit = document.getElementById('fPenerbit').value.trim();
+    const tempatTerbit = document.getElementById('fTempatTerbit').value.trim();
+    const tahunTerbit = Number(document.getElementById('fTahunTerbit').value);
+    const genre = document.getElementById('fGenre').value;
+    const format = document.getElementById('fFormat').value;
+    const isbn = document.getElementById('fIsbn').value.trim();
+    const harga = Number(document.getElementById('fHarga').value);
+    const jumlah = Number(document.getElementById('fJumlah').value);
+    const jilid = document.getElementById('fJilid').value.trim();
+    const klasifikasi = document.getElementById('fKlasifikasi').value.trim();
+    const sumberDana = document.getElementById('fSumberDana').value;
+    const tanggalMasuk = document.getElementById('fTanggalMasuk').value;
+    const kelasPeruntukan = document.getElementById('fKelasPeruntukan').value;
+    const nomorInventaris = document.getElementById('fNomorInventaris').value.trim();
+    const sinopsis = document.getElementById('fSinopsis').value.trim();
+
+    const newBook = DataBuku.addBook({
+      // ---- field yang dipakai kartu di Katalog Buku & Beranda ----
+      title: judul,
+      author: penulis,
+      genre: genre,
+      format: format,
+      avail: jumlah,
+      total: jumlah,
+      year: tahunTerbit,
+      eyebrow: genre,
+      image: coverDataUrl,
+      pdf: (ebookFileInfo && ebookFileInfo.dataUrl) ? ebookFileInfo.dataUrl : null,
+      // ---- field lengkap Detail Buku (ditampilkan di halaman detail_buku.html) ----
+      publisher: penerbit,
+      place: tempatTerbit,
+      isbn: isbn,
+      price: harga,
+      edition: jilid,
+      classification: klasifikasi,
+      fundingSource: sumberDana,
+      dateIn: tanggalMasuk,
+      targetClass: kelasPeruntukan,
+      inventoryNumber: nomorInventaris,
+      ebookFileName: ebookFileInfo ? ebookFileInfo.name : null,
+      synopsis: sinopsis
+    });
+
+    showToast('Buku "' + newBook.title + '" berhasil disimpan!');
+    setTimeout(() => { window.location.href = 'katalog_buku.html'; }, 1000);
+  });
+
+});
+</script>
+</body>
+</html>

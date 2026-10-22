@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tambah Data Kunjungan — Perpustakaan SMK MA'arif Walisongo Kajoran</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --green-900: #0c3f2e;
+  --green-800: #105843;
+  --green-700: #146b52;
+  --green-600: #1c8264;
+  --mint-100: #d7f0e4;
+  --mint-50: #eefbf5;
+  --ink: #16302c;
+  --muted: #5f7a75;
+  --border: #e1ece9;
+  --bg: #f5f9f8;
+  --card: #ffffff;
+  --shadow: 0 10px 30px -12px rgba(12, 63, 46, .14);
+  --sidebar-w: 268px;
+  --sidebar-w-collapsed: 78px;
+
+  --blue-bg: #dbeafe; --blue-txt: #1d4ed8;
+  --purple-bg: #ede9fe; --purple-txt: #7c3aed;
+  --orange-bg: #ffedd5; --orange-txt: #b45309;
+  --red-bg: #fde2df; --red-txt: #d9382d;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  height: 100vh;
+  overflow: hidden;
+}
+
+h1, h2, h3, .brand-title, .btn-primary, .nav-link, .stat-value { font-family: 'Poppins', sans-serif; }
+
+.app-shell { display: flex; height: 100vh; width: 100%; }
+
+/* ================= SIDEBAR ================= */
+.sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  background: #022c22;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  transition: width .2s ease;
+}
+.sidebar.collapsed { width: var(--sidebar-w-collapsed); }
+
+.sidebar-brand {
+  display: flex; align-items: center; gap: 12px;
+  padding: 18px 16px; border-bottom: 1px solid rgba(255,255,255,.12); flex-shrink: 0;
+}
+.brand-logo {
+  width: 42px; height: 42px; border-radius: 50%; background: #fff;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  box-shadow: inset 0 0 0 3px var(--green-700); overflow: hidden;
+}
+.brand-logo img { width: 100%; height: 100%; object-fit: cover; }
+.brand-text { line-height: 1.25; overflow: hidden; white-space: nowrap; }
+.sidebar.collapsed .brand-text { display: none; }
+.brand-title { font-weight: 700; font-size: 14.5px; letter-spacing: .3px; }
+.brand-sub { font-size: 11px; color: #c7e8da; font-weight: 500; margin-top: 1px; }
+.brand-npp { font-size: 10px; color: #9fd8bd; font-weight: 500; margin-top: 3px; }
+
+.sidebar-nav { flex: 1; overflow-y: auto; padding: 14px 12px 24px; }
+.sidebar-nav::-webkit-scrollbar { width: 6px; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,.18); border-radius: 6px; }
+
+.nav-group { margin-bottom: 18px; }
+.nav-label {
+  font-size: 10.5px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase;
+  color: #8fd6b4; margin: 0 0 8px 10px; white-space: nowrap; overflow: hidden;
+}
+.sidebar.collapsed .nav-label { opacity: 0; height: 0; margin: 0; }
+
+.nav-link {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; border-radius: 10px; color: #e3f4ec;
+  text-decoration: none; font-size: 14px; font-weight: 600;
+  margin-bottom: 3px; cursor: pointer; border: none; background: transparent;
+  width: 100%; text-align: left; transition: background .15s ease;
+  white-space: nowrap; overflow: hidden;
+}
+.nav-link i { width: 18px; text-align: center; font-size: 16px; flex-shrink: 0; }
+.nav-link:hover { background: rgba(255,255,255,.1); }
+.nav-link.active { background: var(--green-700); color: #fff; box-shadow: 0 3px 10px rgba(0,0,0,.12); }
+.sidebar.collapsed .nav-link span { display: none; }
+
+/* Submenu (accordion) di sidebar, mis. Data Kunjungan > Data Kunjungan / Tambah Data Kunjungan */
+.nav-parent-chev { margin-left: auto; font-size: 12px; transition: transform .2s ease; flex-shrink: 0; }
+.nav-parent[aria-expanded="false"] .nav-parent-chev { transform: rotate(-90deg); }
+.nav-submenu {
+  display: flex; flex-direction: column; gap: 3px; overflow: hidden;
+  max-height: 0; transition: max-height .2s ease;
+}
+.nav-submenu.open { max-height: 300px; }
+.nav-sublink { padding-left: 42px; font-size: 13px; }
+.sidebar.collapsed .nav-submenu { display: none; }
+
+/* ================= MAIN AREA ================= */
+.main-area { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; min-width: 0; }
+
+.topbar {
+  height: 68px; flex-shrink: 0; background: #044c29; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; padding: 0 24px;
+  z-index: 50; color: #ffffff;
+}
+.topbar .page-title { color: #ffffff; }
+.topbar-left { display: flex; align-items: center; gap: 16px; }
+
+.icon-btn {
+  width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border);
+  background: #fff; color: var(--ink); font-size: 16px; display: flex;
+  align-items: center; justify-content: center; cursor: pointer; transition: .15s ease;
+}
+.icon-btn:hover { background: var(--mint-50); border-color: var(--green-700); color: var(--green-800); }
+
+.page-title { font-size: 20px; font-weight: 700; margin: 0; }
+
+/* --- user menu / dropdown --- */
+.user-menu { position: relative; }
+.user-trigger {
+  display: flex; align-items: center; gap: 10px; background: var(--bg);
+  border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px 6px 6px;
+  cursor: pointer; transition: .15s ease;
+}
+.user-trigger:hover { background: var(--mint-50); border-color: var(--green-700); }
+.avatar-circle {
+  width: 32px; height: 32px; border-radius: 50%; background: var(--green-800);
+  color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;
+}
+.user-name { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+.chev { font-size: 11px; color: var(--muted); transition: transform .15s ease; }
+.user-trigger[aria-expanded="true"] .chev { transform: rotate(180deg); }
+
+.dropdown {
+  position: absolute; right: 0; top: calc(100% + 8px);
+  background: #fff; border-radius: 12px; box-shadow: var(--shadow);
+  border: 1px solid var(--border); width: 220px; padding: 8px;
+  display: none; flex-direction: column; gap: 2px; z-index: 1000;
+}
+.dropdown.open { display: flex !important; }
+.dropdown a, .dropdown button {
+  all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 8px; font-size: 13.5px; font-weight: 600;
+  color: var(--ink); cursor: pointer; font-family: 'Inter', sans-serif; width: 100%;
+}
+.dropdown a i, .dropdown button i { width: 16px; text-align: center; }
+.dropdown a:hover, .dropdown button:hover { background: var(--mint-50); }
+.dropdown .logout, .dropdown button.logout { color: #c0392b; }
+.dropdown hr { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
+
+/* ================= CONTENT ================= */
+.content { flex: 1; overflow-y: auto; padding: 22px 26px 40px; }
+
+/* Stat Cards Hijau (samain dengan Dashboard Admin) */
+.stat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 22px; }
+.stat-card {
+  background: linear-gradient(135deg, var(--green-800), var(--green-900));
+  border: 1px solid var(--green-900); border-radius: 16px;
+  box-shadow: var(--shadow); padding: 18px; display: flex; align-items: flex-start; gap: 14px;
+  color: #fff;
+}
+.stat-icon {
+  width: 48px; height: 48px; border-radius: 14px; background: rgba(255,255,255,.15);
+  color: #fff; display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0;
+}
+.stat-label { font-size: 12.5px; font-weight: 600; color: #c7e8da; margin: 0 0 4px; }
+.stat-value { font-size: 24px; font-weight: 700; color: #fff; margin: 0; line-height: 1.2; }
+.stat-desc { font-size: 11.5px; color: #9fd8bd; margin: 4px 0 0; }
+
+/* Panel umum */
+.panel {
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  box-shadow: var(--shadow); padding: 20px 22px; margin-bottom: 22px;
+}
+
+/* ================= TOOLBAR (Tambah / Cari / Filter / Cetak) ================= */
+.toolbar {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.btn-add {
+  display: flex; align-items: center; gap: 8px; background: var(--green-700);
+  border: 1px solid var(--green-700); color: #fff; padding: 10px 18px; border-radius: 10px;
+  font-size: 13.5px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: .15s ease;
+  white-space: nowrap;
+}
+.btn-add:hover { background: var(--green-800); border-color: var(--green-800); }
+
+.search-wrap {
+  flex: 1; min-width: 220px; position: relative; display: flex; align-items: center;
+}
+.search-wrap i { position: absolute; left: 14px; color: var(--muted); font-size: 13px; }
+.search-input {
+  width: 100%; padding: 10px 14px 10px 36px; border: 1px solid var(--border); border-radius: 10px;
+  font-size: 13.5px; font-family: 'Inter', sans-serif; color: var(--ink); background: #fff;
+}
+.search-input:focus { outline: none; border-color: var(--green-700); }
+
+.filter-select {
+  padding: 10px 14px; border: 1px solid var(--border); border-radius: 10px;
+  font-size: 13px; font-weight: 600; color: var(--green-900); background: var(--mint-50);
+  font-family: 'Inter', sans-serif; cursor: pointer; min-width: 130px;
+}
+.filter-select:focus { outline: none; border-color: var(--green-700); }
+
+/* Tombol Cetak Laporan (sama seperti Dashboard Admin) */
+.print-select { position: relative; }
+.btn-print {
+  display: flex; align-items: center; gap: 8px; background: var(--green-800);
+  border: 1px solid var(--green-800); color: #fff; padding: 10px 16px; border-radius: 10px;
+  font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: .15s ease;
+  white-space: nowrap;
+}
+.btn-print:hover { background: var(--green-700); border-color: var(--green-700); }
+.print-menu {
+  position: absolute; right: 0; top: calc(100% + 6px); background: #fff;
+  border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow);
+  min-width: 190px; padding: 6px; display: none; flex-direction: column; gap: 2px; z-index: 200;
+}
+.print-menu.open { display: flex; }
+.print-menu button {
+  all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 8px; font-size: 13px; font-weight: 600;
+  color: var(--ink); cursor: pointer; width: 100%; font-family: 'Inter', sans-serif;
+}
+.print-menu button i { width: 16px; text-align: center; }
+.print-menu button:hover { background: var(--mint-50); }
+
+/* ================= TABEL DATA KUNJUNGAN ================= */
+.table-panel { padding: 0; overflow: hidden; }
+.table-scroll-outer { max-height: 58vh; overflow-y: auto; border-radius: 16px; }
+.kunjungan-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+.kunjungan-table thead th {
+  position: sticky; top: 0; z-index: 5;
+  background: var(--green-800); color: #fff; font-size: 11.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .3px; padding: 14px 16px; white-space: nowrap;
+  text-align: left; border-right: 1px solid rgba(255,255,255,.14);
+}
+.kunjungan-table thead th:last-child { border-right: none; text-align: center; }
+.kunjungan-table thead th.col-center { text-align: center; }
+.kunjungan-table tbody td {
+  padding: 12px 16px; font-size: 13.5px; color: var(--ink);
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+}
+.kunjungan-table tbody tr:nth-child(even) { background: var(--mint-50); }
+.kunjungan-table tbody tr:hover { background: var(--mint-100); }
+.kunjungan-table td.col-center, .kunjungan-table td.col-aksi { text-align: center; }
+.kunjungan-table td.col-keperluan { white-space: normal; max-width: 260px; }
+.empty-row td { text-align: center; padding: 46px 16px; color: var(--muted); font-size: 13.5px; white-space: normal; }
+.empty-row i { display: block; font-size: 30px; color: var(--mint-100); margin-bottom: 10px; }
+
+/* Badge Jenis Kunjungan & Kategori */
+.badge { display: inline-flex; align-items: center; padding: 5px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.badge-individu { background: var(--mint-100); color: var(--green-700); }
+.badge-kelas { background: var(--blue-bg); color: var(--blue-txt); }
+.badge-siswa { background: var(--mint-100); color: var(--green-700); }
+.badge-guru { background: var(--purple-bg); color: var(--purple-txt); }
+.badge-staff { background: var(--orange-bg); color: var(--orange-txt); }
+
+/* Tombol Aksi */
+.action-btn {
+  width: 30px; height: 30px; border-radius: 8px; border: none; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; font-size: 12.5px;
+  margin-right: 6px; transition: .15s ease;
+}
+.action-btn:last-child { margin-right: 0; }
+.action-view { background: var(--green-700); color: #fff; }
+.action-view:hover { background: var(--green-800); }
+.action-edit { background: var(--mint-100); color: var(--green-700); }
+.action-edit:hover { background: #c3e6d6; }
+.action-delete { background: var(--red-bg); color: var(--red-txt); }
+.action-delete:hover { background: #fbcbc6; }
+
+/* ================= SIDEBAR FOOTER (Profile + Logout + Copyright) ================= */
+.sidebar-footer { flex-shrink: 0; padding: 14px 16px 18px; border-top: 1px solid rgba(255,255,255,.12); }
+.sidebar.collapsed .sidebar-footer { display: none; }
+.sidebar-profile-wrap { position: relative; }
+.sidebar-profile {
+  display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff;
+  padding: 8px; border-radius: 12px; background: rgba(255,255,255,.06);
+  margin-bottom: 10px; transition: .15s ease; border: none; width: 100%;
+  cursor: pointer; font-family: 'Inter', sans-serif; text-align: left;
+}
+.sidebar-profile:hover { background: rgba(255,255,255,.12); }
+.avatar-circle-lg {
+  width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,.15);
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
+  flex-shrink: 0; overflow: hidden;
+}
+.avatar-circle-lg img { width: 100%; height: 100%; object-fit: cover; }
+.sidebar-profile-text { overflow: hidden; white-space: nowrap; }
+.sidebar-profile-name { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 13.5px; }
+.sidebar-profile-role { font-size: 11px; color: #c7e8da; margin-top: 1px; }
+.sidebar-logout-btn {
+  width: 100%; background: transparent; border: 1.5px solid #e2564c; color: #ff9a90;
+  padding: 9px; border-radius: 10px; font-family: 'Poppins', sans-serif; font-weight: 600;
+  font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  gap: 8px; transition: .15s ease;
+}
+.sidebar-logout-btn:hover { background: rgba(192,57,43,.2); color: #fff; }
+.sidebar-profile-chev { margin-left: auto; font-size: 11px; color: #c7e8da; transition: transform .15s ease; flex-shrink: 0; }
+.sidebar-profile[aria-expanded="true"] .sidebar-profile-chev { transform: rotate(180deg); }
+#sidebarProfileDropdown { position: absolute; left: 0; right: 0; bottom: calc(100% + 6px); top: auto; width: auto; }
+.sidebar-copyright { text-align: center; font-size: 10.5px; color: #8fd6b4; line-height: 1.5; margin-top: 14px; }
+
+/* ================= MODAL ================= */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(6,26,20,.5); display: none;
+  align-items: center; justify-content: center; z-index: 2000; padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: #fff; border-radius: 18px; box-shadow: var(--shadow); width: 100%;
+  max-width: 460px; max-height: 88vh; overflow-y: auto; padding: 24px 26px;
+}
+.modal-box.modal-wide { max-width: 620px; }
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.modal-title { font-size: 17px; font-weight: 700; color: var(--ink); margin: 0; }
+.modal-close {
+  width: 32px; height: 32px; border-radius: 8px; border: none; background: var(--mint-50);
+  color: var(--muted); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.modal-close:hover { background: var(--mint-100); color: var(--green-800); }
+
+/* Pilihan jenis kunjungan */
+.choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.choice-card {
+  border: 1.5px solid var(--border); border-radius: 14px; padding: 22px 16px; text-align: center;
+  cursor: pointer; transition: .15s ease; background: var(--bg);
+}
+.choice-card:hover { border-color: var(--green-700); background: var(--mint-50); box-shadow: var(--shadow); }
+.choice-card i { font-size: 30px; color: var(--green-700); margin-bottom: 10px; display: block; }
+.choice-card h4 { margin: 0 0 4px; font-size: 14.5px; color: var(--ink); }
+.choice-card p { margin: 0; font-size: 12px; color: var(--muted); }
+
+/* Form */
+.form-group { margin-bottom: 15px; }
+.form-label { display: block; font-size: 12.5px; font-weight: 700; color: var(--green-900); margin-bottom: 6px; }
+.form-control {
+  width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px;
+  font-size: 13.5px; font-family: 'Inter', sans-serif; color: var(--ink); background: #fff;
+}
+.form-control:focus { outline: none; border-color: var(--green-700); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-hint { font-size: 11.5px; color: var(--muted); margin-top: 4px; }
+.form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.btn-cancel {
+  padding: 10px 18px; border-radius: 10px; border: 1px solid var(--border); background: #fff;
+  color: var(--ink); font-weight: 600; font-size: 13.5px; cursor: pointer; font-family: 'Inter', sans-serif;
+}
+.btn-cancel:hover { background: var(--bg); }
+.btn-save {
+  padding: 10px 20px; border-radius: 10px; border: 1px solid var(--green-700); background: var(--green-700);
+  color: #fff; font-weight: 700; font-size: 13.5px; cursor: pointer; font-family: 'Inter', sans-serif;
+}
+.btn-save:hover { background: var(--green-800); border-color: var(--green-800); }
+.form-back {
+  background: none; border: none; color: var(--green-700); font-size: 12.5px; font-weight: 700;
+  cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 0; margin-bottom: 14px; font-family: 'Inter', sans-serif;
+}
+.form-back:hover { color: var(--green-900); text-decoration: underline; }
+
+/* Modal Lihat Detail */
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px; }
+.detail-item { background: var(--mint-50); border: 1px solid var(--mint-100); border-radius: 12px; padding: 12px 14px; }
+.detail-item.full { grid-column: 1 / -1; }
+.detail-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px; color: var(--green-700); margin-bottom: 4px; }
+.detail-value { font-size: 14px; font-weight: 600; color: var(--ink); }
+
+@media (max-width: 1300px) { .stat-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 860px) {
+  .sidebar { position: fixed; z-index: 300; }
+  .sidebar:not(.collapsed) { width: 240px; }
+  .sidebar.collapsed { width: 0; overflow: hidden; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .form-row, .choice-grid, .detail-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) { .stat-grid { grid-template-columns: 1fr; } }
+
+/* Mode kartu tabel di layar sempit */
+@media (max-width: 760px) {
+  .table-scroll-outer { border: none; border-radius: 0; }
+  .kunjungan-table thead { display: none; }
+  .kunjungan-table, .kunjungan-table tbody, .kunjungan-table tr, .kunjungan-table td { display: block; width: 100%; }
+  .kunjungan-table tbody tr {
+    background: var(--card) !important; border: 1px solid var(--border); border-radius: 14px;
+    margin: 12px; overflow: hidden; box-shadow: 0 2px 8px -4px rgba(12,63,46,.10);
+  }
+  .kunjungan-table td {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 11px 16px; border-bottom: 1px solid var(--border); white-space: normal; text-align: right; font-size: 13px;
+  }
+  .kunjungan-table tbody tr td:last-child { border-bottom: none; }
+  .kunjungan-table td::before {
+    content: attr(data-label); font-weight: 700; font-size: 11px; text-transform: uppercase;
+    letter-spacing: .3px; color: var(--green-800); text-align: left; margin-right: 12px; flex-shrink: 0;
+  }
+  .kunjungan-table td.col-aksi { justify-content: center; }
+  .empty-row td { display: block; text-align: center; }
+}
+
+/* Area cetak khusus (disembunyikan dari tampilan biasa) */
+#printArea { display: none; }
+
+/* ================= HALAMAN TAMBAH DATA KUNJUNGAN (form individu) ================= */
+.intro-banner {
+  display: flex; align-items: center; gap: 18px; position: relative; overflow: hidden;
+  background: linear-gradient(135deg, var(--mint-50), var(--mint-100));
+  border: 1px solid var(--mint-100); border-radius: 18px; padding: 22px 28px; margin-bottom: 22px;
+}
+.intro-icon {
+  width: 56px; height: 56px; border-radius: 16px; background: var(--green-700); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;
+}
+.intro-text h2 { margin: 0 0 4px; font-size: 21px; color: var(--green-900); font-weight: 700; }
+.intro-text p { margin: 0; font-size: 13.5px; color: var(--muted); }
+.intro-illustration {
+  margin-left: auto; display: flex; gap: 10px; font-size: 44px; color: var(--green-700); opacity: .3;
+  flex-shrink: 0;
+}
+
+.form-section { padding: 0; overflow: hidden; }
+.form-section-header {
+  display: flex; align-items: center; gap: 12px; padding: 16px 22px;
+  background: var(--mint-50); border-bottom: 1px solid var(--border);
+}
+.form-section-icon {
+  width: 34px; height: 34px; border-radius: 10px; background: var(--green-700); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;
+}
+.form-section-header h3 { margin: 0; font-size: 15px; font-weight: 700; color: var(--green-900); }
+.form-section-body { padding: 20px 22px; }
+.form-section-actions {
+  display: flex; justify-content: flex-end; gap: 10px; padding: 16px 22px;
+  border-top: 1px solid var(--border);
+}
+
+.req { color: #d9382d; }
+
+.input-icon-wrap { position: relative; display: flex; align-items: center; }
+.input-icon-wrap > i {
+  position: absolute; left: 13px; color: var(--muted); font-size: 13px; pointer-events: none;
+}
+.form-control.has-icon { padding-left: 38px; }
+.form-control.has-icon[type="date"] { padding-right: 12px; }
+select.form-control.has-icon { appearance: none; -webkit-appearance: none; }
+
+.textarea-wrap { position: relative; }
+.textarea-wrap textarea.form-control { resize: vertical; min-height: 80px; padding-bottom: 24px; }
+.char-counter {
+  position: absolute; right: 12px; bottom: 8px; font-size: 11px; color: var(--muted);
+  background: #fff; padding: 0 2px;
+}
+
+@media (max-width: 700px) { .intro-illustration { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo">
+        <img src="img/logo.smk.png" alt="Logo Sekolah">
+      </div>
+      <div class="brand-text">
+        <div class="brand-title">PERPUSTAKAAN</div>
+        <div class="brand-sub">SMK MA'arif Walisongo Kajoran</div>
+        <div class="brand-npp">NPP: 05014210J0000031</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group">
+        <a href="dashboard_admin.html" class="nav-link"><i class="fa-solid fa-house"></i><span>Dashboard Admin</span></a>
+        <a href="data_buku.html" class="nav-link"><i class="fa-solid fa-book"></i><span>Data Buku</span></a>
+        <a href="tambah_buku.html" class="nav-link"><i class="fa-solid fa-square-plus"></i><span>Tambah Buku</span></a>
+        <a href="data_kunjungan.html" class="nav-link active"><i class="fa-solid fa-user-clock"></i><span>Data Kunjungan</span></a>
+        <a href="data_anggota.html" class="nav-link"><i class="fa-solid fa-users"></i><span>Data Anggota</span></a>
+        <a href="data_per_item.html" class="nav-link"><i class="fa-solid fa-chart-pie"></i><span>Data Per Item</span></a>
+        <a href="data_peminjaman.html" class="nav-link"><i class="fa-solid fa-file-invoice"></i><span>Data Peminjaman</span></a>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-profile-wrap">
+        <button class="sidebar-profile" id="sidebarProfileButton" aria-expanded="false">
+          <div class="avatar-circle-lg"><i class="fa-solid fa-user"></i></div>
+          <div class="sidebar-profile-text">
+            <div class="sidebar-profile-name" id="sidebarAdminName">Admin Perpus</div>
+            <div class="sidebar-profile-role">Administrator</div>
+          </div>
+          <i class="fa-solid fa-chevron-up sidebar-profile-chev"></i>
+        </button>
+        <div class="dropdown" id="sidebarProfileDropdown">
+          <a href="profile_admin.html"><i class="fa-solid fa-user-gear"></i><span>Profile Admin</span></a>
+        </div>
+      </div>
+      <button class="sidebar-logout-btn" id="btnLogoutSidebar"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+      <div class="sidebar-copyright">&copy; 2026 SMK Ma'arif Walisongo Kajoran<br>All Rights Reserved</div>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <div class="main-area">
+
+    <header class="topbar">
+      <div class="topbar-left">
+        <button id="sidebarToggle" class="icon-btn" title="Buka/Tutup Sidebar">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <h1 class="page-title">Tambah Data Kunjungan</h1>
+      </div>
+
+      <div class="user-menu">
+        <button class="user-trigger" id="profileMenuButton" aria-expanded="false">
+          <div class="avatar-circle"><i class="fa-solid fa-user"></i></div>
+          <span class="user-name" id="topbarAdminName">Admin Perpus</span>
+          <i class="fa-solid fa-chevron-down chev"></i>
+        </button>
+
+        <div class="dropdown" id="profileDropdown">
+          <a href="profile_admin.html"><i class="fa-solid fa-user-gear"></i><span>Profile Admin</span></a>
+          <hr>
+          <button class="logout" id="btnLogoutTopbar"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></button>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <!-- ============ BANNER INTRO ============ -->
+      <section class="intro-banner">
+        <div class="intro-icon"><i class="fa-solid fa-people-group"></i></div>
+        <div class="intro-text">
+          <h2>Tambah Data Kunjungan Kelas</h2>
+          <p>Silakan isi form di bawah ini untuk menambahkan data kunjungan rombongan/kelas.</p>
+        </div>
+        <div class="intro-illustration">
+          <i class="fa-solid fa-book"></i>
+          <i class="fa-solid fa-book-open"></i>
+        </div>
+      </section>
+
+      <form id="formKelas">
+
+        <!-- ============ A. INFORMASI KUNJUNGAN ============ -->
+        <section class="panel form-section">
+          <div class="form-section-header">
+            <div class="form-section-icon"><i class="fa-solid fa-people-group"></i></div>
+            <h3>A. Informasi Kunjungan</h3>
+          </div>
+          <div class="form-section-body">
+            <div class="form-group">
+              <label class="form-label">Nama Guru Pendamping <span class="req">*</span></label>
+              <div class="input-icon-wrap">
+                <i class="fa-solid fa-chalkboard-user"></i>
+                <input type="text" class="form-control has-icon" id="kelGuru" placeholder="Masukkan nama guru pendamping" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Kelas <span class="req">*</span></label>
+                <div class="input-icon-wrap">
+                  <i class="fa-solid fa-graduation-cap"></i>
+                  <!-- Catatan: sesuaikan opsi tingkat kelas di bawah ini kalau berbeda -->
+                  <select class="form-control has-icon" id="kelTingkat" required>
+                    <option value="" disabled selected>Pilih kelas</option>
+                    <option value="X">X</option>
+                    <option value="XI">XI</option>
+                    <option value="XII">XII</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Jurusan <span class="req">*</span></label>
+                <div class="input-icon-wrap">
+                  <i class="fa-solid fa-file-lines"></i>
+                  <!-- Catatan: ganti opsi jurusan berikut sesuai jurusan yang ada di sekolah -->
+                  <select class="form-control has-icon" id="kelJurusan" required>
+                    <option value="" disabled selected>Pilih jurusan</option>
+                    <option value="PPLG">PPLG</option>
+                    <option value="TKJ">TKJ</option>
+                    <option value="MPLB">MPLB</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label">Jumlah Siswa <span class="req">*</span></label>
+              <div class="input-icon-wrap">
+                <i class="fa-solid fa-users"></i>
+                <input type="number" class="form-control has-icon" id="kelJumlah" min="1" value="1" placeholder="Masukkan jumlah siswa" required>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ B. DETAIL KUNJUNGAN ============ -->
+        <section class="panel form-section">
+          <div class="form-section-header">
+            <div class="form-section-icon"><i class="fa-solid fa-calendar-check"></i></div>
+            <h3>B. Detail Kunjungan</h3>
+          </div>
+          <div class="form-section-body">
+            <div class="form-group">
+              <label class="form-label">Mata Pelajaran <span class="req">*</span></label>
+              <div class="input-icon-wrap">
+                <i class="fa-solid fa-book-open"></i>
+                <input type="text" class="form-control has-icon" id="kelMapel" placeholder="Contoh: Bahasa Indonesia" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Tanggal <span class="req">*</span></label>
+              <div class="input-icon-wrap">
+                <i class="fa-solid fa-calendar-days"></i>
+                <input type="date" class="form-control has-icon" id="kelTanggal" required>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label">Keterangan</label>
+              <div class="textarea-wrap">
+                <textarea class="form-control" id="kelKeterangan" maxlength="250" rows="3" placeholder="Masukkan keterangan (opsional)"></textarea>
+                <span class="char-counter" id="kelKeteranganCount">0/250</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-section-actions">
+            <button type="button" class="btn-cancel" id="cancelKelas"><i class="fa-solid fa-xmark"></i> Batal</button>
+            <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> Simpan Kunjungan</button>
+          </div>
+        </section>
+
+      </form>
+
+    </main>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ============ SIDEBAR TOGGLE ============
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  const sidebar = document.getElementById('sidebar');
+  if (sidebarToggle && sidebar) {
+    sidebarToggle.addEventListener('click', () => sidebar.classList.toggle('collapsed'));
+  }
+
+  // ============ NAMA ADMIN (topbar & sidebar, dinamis kalau tersedia) ============
+  try {
+    const adminUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    if (adminUser && adminUser.name) {
+      const sidebarNameEl = document.getElementById('sidebarAdminName');
+      const topbarNameEl = document.getElementById('topbarAdminName');
+      if (sidebarNameEl) sidebarNameEl.textContent = adminUser.name;
+      if (topbarNameEl) topbarNameEl.textContent = adminUser.name;
+    }
+  } catch (e) { /* pakai nama default "Admin Perpus" */ }
+
+  // ============ LOGOUT (topbar & footer sidebar) ============
+  const handleLogout = () => {
+    if (confirm('Apakah Anda yakin ingin keluar dari halaman admin?')) {
+      localStorage.removeItem('isLoggedIn');
+      window.location.href = 'login.html';
+    }
+  };
+  const btnLogoutSidebar = document.getElementById('btnLogoutSidebar');
+  const btnLogoutTopbar = document.getElementById('btnLogoutTopbar');
+  if (btnLogoutSidebar) btnLogoutSidebar.addEventListener('click', handleLogout);
+  if (btnLogoutTopbar) btnLogoutTopbar.addEventListener('click', handleLogout);
+
+  // ============ DROPDOWN PROFIL (topbar kanan atas) ============
+  const profileMenuButton = document.getElementById('profileMenuButton');
+  const profileDropdown = document.getElementById('profileDropdown');
+  if (profileMenuButton && profileDropdown) {
+    profileMenuButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = profileDropdown.classList.toggle('open');
+      profileMenuButton.setAttribute('aria-expanded', isOpen);
+      closeOtherMenus('profile');
+    });
+  }
+
+  // ============ DROPDOWN PROFIL (kotak admin di footer sidebar) ============
+  const sidebarProfileButton = document.getElementById('sidebarProfileButton');
+  const sidebarProfileDropdown = document.getElementById('sidebarProfileDropdown');
+  if (sidebarProfileButton && sidebarProfileDropdown) {
+    sidebarProfileButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = sidebarProfileDropdown.classList.toggle('open');
+      sidebarProfileButton.setAttribute('aria-expanded', isOpen);
+      closeOtherMenus('sidebarProfile');
+    });
+  }
+
+  function closeOtherMenus(except) {
+    if (except !== 'profile' && profileDropdown) profileDropdown.classList.remove('open');
+    if (except !== 'sidebarProfile' && sidebarProfileDropdown) sidebarProfileDropdown.classList.remove('open');
+  }
+  window.addEventListener('click', () => closeOtherMenus(null));
+
+  // ============ SUMBER DATA KUNJUNGAN (key sama dengan data_kunjungan.html) ============
+  const STORAGE_KEY = 'daftar_kunjungan';
+
+  function pad2(n) { return String(n).padStart(2, '0'); }
+
+  function getVisits() {
+    try {
+      const arr = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+  }
+
+  function saveVisits(arr) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+  }
+
+  function generateId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  }
+
+  function todayIso() {
+    const d = new Date();
+    return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+  }
+
+  function nowTime() {
+    const d = new Date();
+    return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+  }
+
+  // ============ TANGGAL DEFAULT = HARI INI ============
+  document.getElementById('kelTanggal').value = todayIso();
+
+  // ============ COUNTER KARAKTER KETERANGAN ============
+  const kelKeteranganEl = document.getElementById('kelKeterangan');
+  const kelKeteranganCountEl = document.getElementById('kelKeteranganCount');
+  kelKeteranganEl.addEventListener('input', () => {
+    kelKeteranganCountEl.textContent = `${kelKeteranganEl.value.length}/250`;
+  });
+
+  // ============ TOMBOL BATAL ============
+  document.getElementById('cancelKelas').addEventListener('click', () => {
+    window.location.href = 'data_kunjungan.html';
+  });
+
+  // ============ SIMPAN KUNJUNGAN KELAS ============
+  document.getElementById('formKelas').addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const namaGuru = document.getElementById('kelGuru').value.trim();
+    const tingkat = document.getElementById('kelTingkat').value;
+    const jurusan = document.getElementById('kelJurusan').value;
+    const jumlah = Math.max(1, parseInt(document.getElementById('kelJumlah').value, 10) || 0);
+    const mataPelajaran = document.getElementById('kelMapel').value.trim();
+    const tanggalISO = document.getElementById('kelTanggal').value;
+    const keterangan = kelKeteranganEl.value.trim();
+
+    if (!namaGuru || !tingkat || !jurusan || !jumlah || !mataPelajaran || !tanggalISO) {
+      alert('Mohon lengkapi semua data yang wajib diisi.');
+      return;
+    }
+
+    const kelas = `${tingkat} ${jurusan}`.trim();
+
+    const visits = getVisits();
+    visits.push({
+      id: generateId(), jenis: 'Kelas', kategori: 'Siswa',
+      nama: namaGuru, namaGuru, kelas, jumlah,
+      mataPelajaran, tanggalISO, jamISO: nowTime(),
+      keterangan
+    });
+    saveVisits(visits);
+
+    // Kembali ke Data Kunjungan — data baru langsung muncul di tabel & statistik
+    window.location.href = 'data_kunjungan.html';
+  });
+
+});
+</script>
+</body>
+</html>

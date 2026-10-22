@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Perpustakaan SMK MA'arif Walisongo Kajoran</title>
+  
+  <!-- Font & Ikon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --green-900: #0c3f2e;
+      --green-800: #105843;
+      --green-700: #146b52;
+      --mint-100: #d7f0e4;
+      --mint-50: #eefbf5;
+      --ink: #16302c;
+      --muted: #5f7a75;
+      --border: #e1ece9;
+      --bg: #f5f9f8;
+      --card: #ffffff;
+      --shadow: 0 20px 40px -15px rgba(12, 63, 46, .1);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      background-image: radial-gradient(#e1ece9 1.5px, transparent 1.5px);
+      background-size: 24px 24px;
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1, h2, h3, .brand-title, .btn, label {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .auth-card {
+      background: var(--card);
+      width: 100%;
+      max-width: 520px;
+      padding: 44px 40px;
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      border: 1.5px solid var(--border);
+      text-align: center;
+    }
+
+    .brand-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      box-shadow: inset 0 0 0 3px var(--green-700);
+      overflow: hidden;
+    }
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .brand-title {
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--green-900);
+      line-height: 1.2;
+    }
+    .brand-sub {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+      margin-top: 2px;
+      margin-bottom: 24px;
+    }
+
+    .auth-heading {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .auth-desc {
+      font-size: 13.5px;
+      color: var(--muted);
+      margin-bottom: 24px;
+      line-height: 1.4;
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .input-with-icon {
+      position: relative;
+      display: block;
+      width: 100%;
+    }
+    .input-with-icon > i.fa-solid {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 16px;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .input-with-icon input {
+      width: 100%;
+      padding: 12px 45px 12px 42px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+      transition: .15s ease;
+    }
+    .input-with-icon input:focus {
+      border-color: var(--green-800);
+      box-shadow: 0 0 0 3px var(--mint-50);
+    }
+    .toggle-password {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      z-index: 3;
+    }
+    .toggle-password:hover {
+      color: var(--green-800);
+    }
+
+    .form-extra {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .remember-me input {
+      accent-color: var(--green-800);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+    .forgot-link {
+      color: var(--green-800);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .forgot-link:hover { text-decoration: underline; }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--green-800);
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 14.5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: .15s ease;
+      box-shadow: 0 4px 12px rgba(16, 88, 67, .2);
+    }
+    .btn-submit:hover {
+      background: var(--green-900);
+      transform: translateY(-1px);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12.5px;
+      margin: 20px 0;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1.5px solid var(--border);
+    }
+    .divider::before { margin-right: 12px; }
+    .divider::after { margin-left: 12px; }
+
+    .btn-outline-alt {
+      width: 100%;
+      background: #fff;
+      color: var(--ink);
+      border: 1.5px solid var(--border);
+      padding: 12px;
+      border-radius: 12px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: .15s ease;
+      text-decoration: none;
+    }
+    .btn-outline-alt:hover {
+      background: var(--mint-50);
+      border-color: var(--green-800);
+      color: var(--green-800);
+    }
+
+    /* ---------- KOTAK PESAN (error/info) ---------- */
+    .alert-box {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      background: #fdecea;
+      border: 1.5px solid #f5c2c0;
+      color: #b3261e;
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 10px 14px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      text-align: left;
+      line-height: 1.4;
+    }
+    .alert-box.show { display: flex; }
+    .alert-box i { font-size: 14px; flex-shrink: 0; }
+    .alert-box a { color: #b3261e; text-decoration: underline; font-weight: 700; }
+
+    /* ---------- RESPONSIVE MOBILE ---------- */
+    @media (max-width: 480px) {
+      body { padding: 14px; }
+      .auth-card { padding: 32px 22px; border-radius: 18px; }
+      .brand-logo { width: 56px; height: 56px; }
+      .auth-heading { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-card">
+    <div class="brand-logo">
+      <img src="img/logo.smk.png" alt="Logo Sekolah">
+    </div>
+    
+    <div class="brand-title">PERPUSTAKAAN</div>
+    <div class="brand-sub">SMK MA'arif Walisongo Kajoran</div>
+
+    <div class="alert-box" id="loginAlertBox"></div>
+
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label>Email / Nama</label>
+        <div class="input-with-icon">
+          <i class="fa-solid fa-envelope"></i>
+          <input type="text" id="loginEmail" placeholder="Masukkan email atau nama" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Kata Sandi</label>
+        <div class="input-with-icon">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="loginPassword" placeholder="Masukkan kata sandi" required>
+          <button type="button" class="toggle-password" onclick="togglePassword('loginPassword', 'eyeLogin')">
+            <i class="fa-solid fa-eye-slash" id="eyeLogin"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-extra">
+        <label class="remember-me">
+          <input type="checkbox"> Ingat saya
+        </label>
+        <a href="#" class="forgot-link">Lupa sandi?</a>
+      </div>
+
+      <button type="submit" class="btn-submit">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i> Masuk Sekarang
+      </button>
+    </form>
+
+    <div class="divider">Belum punya akun?</div>
+
+    <a href="register.html" class="btn-outline-alt">
+      <i class="fa-solid fa-user-plus"></i> Daftar Akun Baru
+    </a>
+  </div>
+  
+  <script>
+  function togglePassword(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.className = 'fa-solid fa-eye';
+    } else {
+      input.type = 'password';
+      icon.className = 'fa-solid fa-eye-slash';
+    }
+  }
+
+  function handleLogin(event) {
+    event.preventDefault();
+    const inputVal = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const alertBox = document.getElementById('loginAlertBox');
+    alertBox.classList.remove('show');
+
+    // Pakai key 'allUsers' — sama seperti yang dipakai register.html untuk
+    // menyimpan akun baru, dan juga dipakai halaman admin (Data Kunjungan,
+    // profil, dll). Sebelumnya login.html salah baca dari key
+    // 'registeredUsers' yang tidak pernah diisi siapa pun, jadi akun yang
+    // baru saja didaftarkan selalu dianggap "belum terdaftar".
+    const registeredUsers = JSON.parse(localStorage.getItem('allUsers')) || [];
+
+    // Cari akun berdasarkan email ATAU nama (sesuai label field "Email / Nama")
+    const foundUser = registeredUsers.find(u =>
+      u.email.toLowerCase() === inputVal.toLowerCase() ||
+      u.name.toLowerCase() === inputVal.toLowerCase()
+    );
+
+    if (!foundUser) {
+      alertBox.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Akun belum terdaftar. Silakan <a href="register.html">daftar akun baru</a> terlebih dahulu.';
+      alertBox.classList.add('show');
+      return;
+    }
+
+    if (foundUser.password !== password) {
+      alertBox.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Kata sandi salah. Silakan coba lagi.';
+      alertBox.classList.add('show');
+      return;
+    }
+
+    // Menyimpan sesi user ke dalam localStorage
+    localStorage.setItem('currentUser', JSON.stringify(foundUser));
+    localStorage.setItem('isLoggedIn', 'true');
+
+    alert("Login Berhasil! Selamat datang kembali, " + foundUser.name);
+    window.location.href = 'index.html';
+  }
+</script>
+</body>
+</html>

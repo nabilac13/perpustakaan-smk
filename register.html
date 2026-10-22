@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daftar Akun — Perpustakaan SMK MA'arif Walisongo Kajoran</title>
+  
+  <!-- Font & Ikon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --green-900: #0c3f2e;
+      --green-800: #105843;
+      --green-700: #146b52;
+      --mint-100: #d7f0e4;
+      --mint-50: #eefbf5;
+      --ink: #16302c;
+      --muted: #5f7a75;
+      --border: #e1ece9;
+      --bg: #f5f9f8;
+      --card: #ffffff;
+      --shadow: 0 20px 40px -15px rgba(12, 63, 46, .1);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      background-image: radial-gradient(#e1ece9 1.5px, transparent 1.5px);
+      background-size: 24px 24px;
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1, h2, h3, .brand-title, .btn, label {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .auth-card {
+      background: var(--card);
+      width: 100%;
+      max-width: 520px;
+      padding: 44px 40px;
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      border: 1.5px solid var(--border);
+      text-align: center;
+    }
+
+    .brand-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      box-shadow: inset 0 0 0 3px var(--green-700);
+      overflow: hidden;
+    }
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .brand-title {
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--green-900);
+      line-height: 1.2;
+    }
+    .brand-sub {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+      margin-top: 2px;
+      margin-bottom: 24px;
+    }
+
+    .auth-heading {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .auth-desc {
+      font-size: 13.5px;
+      color: var(--muted);
+      margin-bottom: 24px;
+      line-height: 1.4;
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .input-with-icon {
+      position: relative;
+      display: block;
+      width: 100%;
+    }
+    .input-with-icon > i.fa-solid {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 16px;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .input-with-icon input {
+      width: 100%;
+      padding: 12px 45px 12px 42px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+      transition: .15s ease;
+    }
+    .input-with-icon input:focus {
+      border-color: var(--green-800);
+      box-shadow: 0 0 0 3px var(--mint-50);
+    }
+
+    /* Dropdown (select) untuk Kelas & Jurusan */
+    .input-with-icon select {
+      width: 100%;
+      padding: 12px 38px 12px 42px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      transition: .15s ease;
+    }
+    .input-with-icon select:focus {
+      border-color: var(--green-800);
+      box-shadow: 0 0 0 3px var(--mint-50);
+    }
+    .input-with-icon select:invalid {
+      color: var(--muted);
+    }
+    .input-with-icon > i.select-arrow {
+      left: auto !important;
+      right: 14px !important;
+      font-size: 13px !important;
+    }
+    .toggle-password {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      z-index: 3;
+    }
+    .toggle-password:hover {
+      color: var(--green-800);
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--green-800);
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 14.5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: .15s ease;
+      box-shadow: 0 4px 12px rgba(16, 88, 67, .2);
+      margin-top: 6px;
+    }
+    .btn-submit:hover {
+      background: var(--green-900);
+      transform: translateY(-1px);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12.5px;
+      margin: 20px 0;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1.5px solid var(--border);
+    }
+    .divider::before { margin-right: 12px; }
+    .divider::after { margin-left: 12px; }
+
+    .btn-outline-alt {
+      width: 100%;
+      background: #fff;
+      color: var(--ink);
+      border: 1.5px solid var(--border);
+      padding: 12px;
+      border-radius: 12px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: .15s ease;
+      text-decoration: none;
+    }
+    .btn-outline-alt:hover {
+      background: var(--mint-50);
+      border-color: var(--green-800);
+      color: var(--green-800);
+    }
+
+    /* ---------- KOTAK PESAN (error/info) ---------- */
+    .alert-box {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      background: #fdecea;
+      border: 1.5px solid #f5c2c0;
+      color: #b3261e;
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 10px 14px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      text-align: left;
+      line-height: 1.4;
+    }
+    .alert-box.show { display: flex; }
+    .alert-box i { font-size: 14px; flex-shrink: 0; }
+    .alert-box a { color: #b3261e; text-decoration: underline; font-weight: 700; }
+
+    /* ---------- STEP 1: PILIH PERAN ---------- */
+    .role-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+    .role-option {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      cursor: pointer;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+      transition: .15s ease;
+    }
+    .role-option:hover {
+      border-color: var(--green-700);
+      background: var(--mint-50);
+      transform: translateY(-1px);
+    }
+    .role-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: var(--mint-100);
+      color: var(--green-800);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+      flex-shrink: 0;
+    }
+    .role-text-title {
+      font-weight: 700;
+      font-size: 14.5px;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+    .role-text-desc {
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+    .role-chevron {
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    /* ---------- Tombol kembali ke pilihan peran ---------- */
+    .btn-back-role {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: none;
+      border: none;
+      color: var(--green-800);
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      margin-bottom: 16px;
+      padding: 0;
+    }
+    .btn-back-role:hover { text-decoration: underline; }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--mint-50);
+      border: 1.5px solid var(--mint-100);
+      color: var(--green-800);
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 18px;
+    }
+
+    #stepForm { display: none; }
+
+    /* ---------- RESPONSIVE MOBILE ---------- */
+    @media (max-width: 480px) {
+      body { padding: 14px; }
+      .auth-card { padding: 32px 22px; border-radius: 18px; }
+      .brand-logo { width: 56px; height: 56px; }
+      .auth-heading { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-card">
+    <div class="brand-logo">
+      <img src="img/logo.smk.png" alt="Logo Sekolah">
+    </div>
+    
+    <div class="brand-title">PERPUSTAKAAN</div>
+    <div class="brand-sub">SMK MA'arif Walisongo Kajoran</div>
+
+    <!-- ============ STEP 1: PILIH DAFTAR SEBAGAI APA ============ -->
+    <div id="stepRole">
+      <div class="auth-heading">Daftar Sebagai Apa?</div>
+      <div class="auth-desc">Pilih peran Anda di sekolah untuk melanjutkan proses pendaftaran akun.</div>
+
+      <div class="role-grid">
+        <button type="button" class="role-option" data-role="Siswa">
+          <div class="role-icon"><i class="fa-solid fa-user-graduate"></i></div>
+          <div>
+            <div class="role-text-title">Siswa</div>
+            <div class="role-text-desc">Untuk peserta didik SMK Ma'arif Walisongo Kajoran</div>
+          </div>
+          <i class="fa-solid fa-chevron-right role-chevron"></i>
+        </button>
+
+        <button type="button" class="role-option" data-role="Guru">
+          <div class="role-icon"><i class="fa-solid fa-chalkboard-user"></i></div>
+          <div>
+            <div class="role-text-title">Guru</div>
+            <div class="role-text-desc">Untuk tenaga pendidik / pengajar mata pelajaran</div>
+          </div>
+          <i class="fa-solid fa-chevron-right role-chevron"></i>
+        </button>
+
+        <button type="button" class="role-option" data-role="Staff">
+          <div class="role-icon"><i class="fa-solid fa-briefcase"></i></div>
+          <div>
+            <div class="role-text-title">Staff</div>
+            <div class="role-text-desc">Untuk tenaga kependidikan / staf sekolah</div>
+          </div>
+          <i class="fa-solid fa-chevron-right role-chevron"></i>
+        </button>
+      </div>
+
+      <div class="divider">Sudah punya akun?</div>
+      <a href="login.html" class="btn-outline-alt">
+        <i class="fa-solid fa-arrow-left"></i> Kembali ke Login
+      </a>
+    </div>
+
+    <!-- ============ STEP 2: FORM PENDAFTARAN (isinya menyesuaikan peran) ============ -->
+    <div id="stepForm">
+      <button type="button" class="btn-back-role" id="btnBackRole">
+        <i class="fa-solid fa-arrow-left"></i> Ganti peran
+      </button>
+
+      <div class="role-badge" id="roleBadge"><i class="fa-solid fa-circle-check"></i> <span id="roleBadgeText">Daftar sebagai Siswa</span></div>
+
+      <div class="auth-desc" style="margin-top:-8px;">Lengkapi data di bawah ini untuk membuat akun baru.</div>
+
+      <div class="alert-box" id="regAlertBox"></div>
+
+      <form id="registerForm" onsubmit="handleRegister(event)">
+
+        <div class="form-group">
+          <label>Nama Lengkap</label>
+          <div class="input-with-icon">
+            <i class="fa-solid fa-user"></i>
+            <input type="text" id="regName" placeholder="Masukkan nama lengkap" required>
+          </div>
+        </div>
+
+        <!-- ---- Field khusus SISWA ---- -->
+        <div id="fieldsSiswa">
+          <div class="form-group">
+            <label>Kelas</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-chalkboard-user"></i>
+              <select id="regClass">
+                <option value="" disabled selected>Pilih Kelas</option>
+                <option value="X">X</option>
+                <option value="XI">XI</option>
+                <option value="XII">XII</option>
+              </select>
+              <i class="fa-solid fa-chevron-down select-arrow"></i>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Jurusan / Kompetensi Keahlian</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-graduation-cap"></i>
+              <select id="regJurusan">
+                <option value="" disabled selected>Pilih Jurusan</option>
+                <option value="PPLG">Pengembangan Perangkat Lunak dan Gim (PPLGIM)</option>
+                <option value="BCF">Broadcasting dan Perfilman (BCF)</option>
+                <option value="MPLB">Manajeman Perkantoran dan Layanan Bisnis (MPLB)</option>
+              </select>
+              <i class="fa-solid fa-chevron-down select-arrow"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- ---- Field khusus GURU & STAFF (NIP/NIY sama-sama dipakai) ---- -->
+        <div id="fieldsNip">
+          <div class="form-group">
+            <label>NIP / NIY</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-id-card"></i>
+              <input type="text" id="regNip" placeholder="Masukkan NIP / NIY">
+            </div>
+          </div>
+        </div>
+
+        <!-- ---- Field khusus GURU ---- -->
+        <div id="fieldsGuru">
+          <div class="form-group">
+            <label>Mata Pelajaran / Jabatan</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-book-open"></i>
+              <input type="text" id="regMapel" placeholder="mis. Matematika, Wali Kelas XI PPLG, dll">
+            </div>
+          </div>
+        </div>
+
+        <!-- ---- Field khusus STAFF ---- -->
+        <div id="fieldsStaff">
+          <div class="form-group">
+            <label>Jabatan</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-briefcase"></i>
+              <input type="text" id="regJabatan" placeholder="mis. Tata Usaha, Kepala Perpustakaan, dll">
+            </div>
+          </div>
+        </div>
+
+        <!-- ---- Field UMUM (semua peran): No. HP/Telp, Email, Kata Sandi ---- -->
+        <div class="form-group">
+          <label id="labelPhone">No. Telp</label>
+          <div class="input-with-icon">
+            <i class="fa-solid fa-phone"></i>
+            <input type="tel" id="regPhone" placeholder="Masukkan nomor HP/telp" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <div class="input-with-icon">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" id="regEmail" placeholder="Masukkan email aktif" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Kata Sandi</label>
+          <div class="input-with-icon">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" id="regPassword" placeholder="Masukkan kata sandi" required>
+            <button type="button" class="toggle-password" onclick="togglePassword('regPassword', 'eyeReg')">
+              <i class="fa-solid fa-eye-slash" id="eyeReg"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">
+          <i class="fa-solid fa-user-plus"></i> Daftar Sekarang
+        </button>
+      </form>
+
+      <div class="divider">Sudah punya akun?</div>
+      <a href="login.html" class="btn-outline-alt">
+        <i class="fa-solid fa-arrow-left"></i> Kembali ke Login
+      </a>
+    </div>
+
+  </div>
+
+  <script>
+  let selectedRole = null;
+  const ROLE_ICON = { Siswa: 'fa-user-graduate', Guru: 'fa-chalkboard-user', Staff: 'fa-briefcase' };
+
+  // ============ STEP 1 -> STEP 2: pilih peran ============
+  document.querySelectorAll('.role-option').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedRole = btn.dataset.role;
+      showFormStep(selectedRole);
+    });
+  });
+
+  document.getElementById('btnBackRole').addEventListener('click', () => {
+    document.getElementById('stepForm').style.display = 'none';
+    document.getElementById('stepRole').style.display = 'block';
+  });
+
+  function showFormStep(role) {
+    document.getElementById('stepRole').style.display = 'none';
+    document.getElementById('stepForm').style.display = 'block';
+
+    // Badge & label yang menyesuaikan peran terpilih
+    document.getElementById('roleBadgeText').textContent = 'Daftar sebagai ' + role;
+    document.getElementById('roleBadge').querySelector('i').className = 'fa-solid ' + ROLE_ICON[role];
+    document.getElementById('labelPhone').textContent = (role === 'Siswa') ? 'No. Telp' : 'No. HP';
+
+    // Tampilkan/sembunyikan blok field sesuai peran, dan atur "required"
+    // hanya pada field yang sedang tampil supaya validasi form tidak nyangkut
+    // di field tersembunyi.
+    const showSiswa = role === 'Siswa';
+    const showNip = role === 'Guru' || role === 'Staff';
+    const showGuru = role === 'Guru';
+    const showStaff = role === 'Staff';
+
+    document.getElementById('fieldsSiswa').style.display = showSiswa ? 'block' : 'none';
+    document.getElementById('fieldsNip').style.display = showNip ? 'block' : 'none';
+    document.getElementById('fieldsGuru').style.display = showGuru ? 'block' : 'none';
+    document.getElementById('fieldsStaff').style.display = showStaff ? 'block' : 'none';
+
+    document.getElementById('regClass').required = showSiswa;
+    document.getElementById('regJurusan').required = showSiswa;
+    document.getElementById('regNip').required = showNip;
+    document.getElementById('regMapel').required = showGuru;
+    document.getElementById('regJabatan').required = showStaff;
+
+    document.getElementById('regAlertBox').classList.remove('show');
+  }
+
+  function togglePassword(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.className = 'fa-solid fa-eye';
+    } else {
+      input.type = 'password';
+      icon.className = 'fa-solid fa-eye-slash';
+    }
+  }
+
+  function handleRegister(event) {
+    event.preventDefault();
+    const name = document.getElementById('regName').value.trim();
+    const phone = document.getElementById('regPhone').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const alertBox = document.getElementById('regAlertBox');
+    alertBox.classList.remove('show');
+
+    // Menggunakan key 'allUsers' agar sinkron dengan sistem profil
+    const registeredUsers = JSON.parse(localStorage.getItem('allUsers')) || [];
+
+    const isDuplicate = registeredUsers.some(u => u.email.toLowerCase() === email.toLowerCase());
+    if (isDuplicate) {
+      alertBox.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Email ini sudah terdaftar. Silakan <a href="login.html">login</a> saja.';
+      alertBox.classList.add('show');
+      return;
+    }
+
+    // --- LOGIKA NOMOR ANGGOTA OTOMATIS ---
+    const currentYear = new Date().getFullYear();
+    let nextNumber = registeredUsers.length + 1;
+    let formattedNumber = String(nextNumber).padStart(3, '0');
+    let autoNoAnggota = `SMKW-${currentYear}-${formattedNumber}`;
+
+    // Tanggal bergabung otomatis (format Indonesia, mis. "3 September 2026")
+    const joinDate = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+    const userData = {
+      name: name,
+      role: selectedRole,           // "Siswa" | "Guru" | "Staff"
+      email: email,
+      password: password,
+      phone: phone,
+      isMember: true,               // Langsung jadi anggota aktif setelah daftar
+      joinDate: joinDate,
+      noAnggota: autoNoAnggota,     // Nomor anggota otomatis: SMKW-2026-001, dst.
+      status: "Aktif",
+      avatarImg: "",
+      // Field di bawah ini kosong ("-") kalau memang tidak relevan dengan peran,
+      // supaya halaman lain yang membaca field ini tidak error walau undefined.
+      kelas: selectedRole === 'Siswa' ? document.getElementById('regClass').value : "-",
+      jurusan: selectedRole === 'Siswa' ? document.getElementById('regJurusan').value : "-",
+      nip: (selectedRole === 'Guru' || selectedRole === 'Staff') ? document.getElementById('regNip').value.trim() : "-",
+      mataPelajaran: selectedRole === 'Guru' ? document.getElementById('regMapel').value.trim() : "-",
+      jabatan: selectedRole === 'Staff' ? document.getElementById('regJabatan').value.trim() : "-",
+    };
+
+    // Simpan ke daftar akun terdaftar
+    registeredUsers.push(userData);
+    localStorage.setItem('allUsers', JSON.stringify(registeredUsers));
+    
+    // Set sesi user yang sedang aktif
+    localStorage.setItem('currentUser', JSON.stringify(userData));
+    localStorage.setItem('isLoggedIn', 'true');
+
+    alert("Pendaftaran Berhasil! Selamat datang, " + name);
+    window.location.href = 'index.html';
+  }
+  </script>
+</body>
+</html>

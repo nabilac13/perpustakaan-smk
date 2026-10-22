@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Anggota — Perpustakaan SMK MA'arif Walisongo Kajoran</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --green-900: #0c3f2e;
+  --green-800: #105843;
+  --green-700: #146b52;
+  --green-600: #1c8264;
+  --mint-100: #d7f0e4;
+  --mint-50: #eefbf5;
+  --ink: #16302c;
+  --muted: #5f7a75;
+  --border: #e1ece9;
+  --bg: #f5f9f8;
+  --card: #ffffff;
+  --shadow: 0 10px 30px -12px rgba(12, 63, 46, .14);
+  --sidebar-w: 268px;
+  --sidebar-w-collapsed: 78px;
+
+  --clr-pengunjung: #27ae60;
+  --clr-peminjaman: #0c3f2e;
+  --clr-dikembalikan: #8e44ad;
+  --clr-terlambat: #f2994a;
+  --clr-denda: #e74c3c;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  height: 100vh;
+  overflow: hidden;
+}
+
+h1, h2, h3, .brand-title, .btn-primary, .nav-link, .stat-value {
+  font-family: 'Poppins', sans-serif;
+}
+
+.app-shell { display: flex; height: 100vh; width: 100%; }
+
+/* ================= SIDEBAR ================= */
+.sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  background: #022c22;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  transition: width .2s ease;
+}
+.sidebar.collapsed { width: var(--sidebar-w-collapsed); }
+
+.sidebar-brand {
+  display: flex; align-items: center; gap: 12px;
+  padding: 18px 16px; border-bottom: 1px solid rgba(255,255,255,.12); flex-shrink: 0;
+}
+.brand-logo {
+  width: 42px; height: 42px; border-radius: 50%; background: #fff;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  box-shadow: inset 0 0 0 3px var(--green-700); overflow: hidden;
+}
+.brand-logo img { width: 100%; height: 100%; object-fit: cover; }
+.brand-text { line-height: 1.25; overflow: hidden; white-space: nowrap; }
+.sidebar.collapsed .brand-text { display: none; }
+.brand-title { font-weight: 700; font-size: 14.5px; letter-spacing: .3px; }
+.brand-sub { font-size: 11px; color: #c7e8da; font-weight: 500; margin-top: 1px; }
+.brand-npp { font-size: 10px; color: #9fd8bd; font-weight: 500; margin-top: 3px; }
+
+.sidebar-nav { flex: 1; overflow-y: auto; padding: 14px 12px 24px; }
+.sidebar-nav::-webkit-scrollbar { width: 6px; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,.18); border-radius: 6px; }
+
+.nav-group { margin-bottom: 18px; }
+.nav-label {
+  font-size: 10.5px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase;
+  color: #8fd6b4; margin: 0 0 8px 10px; white-space: nowrap; overflow: hidden;
+}
+.sidebar.collapsed .nav-label { opacity: 0; height: 0; margin: 0; }
+
+.nav-link {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; border-radius: 10px; color: #e3f4ec;
+  text-decoration: none; font-size: 14px; font-weight: 600;
+  margin-bottom: 3px; cursor: pointer; border: none; background: transparent;
+  width: 100%; text-align: left; transition: background .15s ease;
+  white-space: nowrap; overflow: hidden;
+}
+.nav-link i { width: 18px; text-align: center; font-size: 16px; flex-shrink: 0; }
+.nav-link:hover { background: rgba(255,255,255,.1); }
+.nav-link.active { background: var(--green-700); color: #fff; box-shadow: 0 3px 10px rgba(0,0,0,.12); }
+.nav-link.logout { color: #ffc9c0; }
+.nav-link.logout:hover { background: rgba(192,57,43,.25); }
+.sidebar.collapsed .nav-link span { display: none; }
+
+/* ================= MAIN AREA ================= */
+.main-area { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; min-width: 0; }
+
+.topbar {
+  height: 68px; flex-shrink: 0; background: #044c29; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; padding: 0 24px;
+  z-index: 50; color: #ffffff;
+}
+.topbar .page-title { color: #ffffff; }
+.topbar-left { display: flex; align-items: center; gap: 16px; }
+
+.icon-btn {
+  width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border);
+  background: #fff; color: var(--ink); font-size: 16px; display: flex;
+  align-items: center; justify-content: center; cursor: pointer; transition: .15s ease;
+}
+.icon-btn:hover { background: var(--mint-50); border-color: var(--green-700); color: var(--green-800); }
+
+.page-title { font-size: 20px; font-weight: 700; margin: 0; }
+
+/* --- user menu / dropdown --- */
+.user-menu { position: relative; }
+.user-trigger {
+  display: flex; align-items: center; gap: 10px; background: var(--bg);
+  border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px 6px 6px;
+  cursor: pointer; transition: .15s ease;
+}
+.user-trigger:hover { background: var(--mint-50); border-color: var(--green-700); }
+.avatar-circle {
+  width: 32px; height: 32px; border-radius: 50%; background: var(--green-800);
+  color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;
+}
+.user-name { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+.chev { font-size: 11px; color: var(--muted); transition: transform .15s ease; }
+.user-trigger[aria-expanded="true"] .chev { transform: rotate(180deg); }
+
+.dropdown {
+  position: absolute; right: 0; top: calc(100% + 8px);
+  background: #fff; border-radius: 12px; box-shadow: var(--shadow);
+  border: 1px solid var(--border); width: 220px; padding: 8px;
+  display: none; flex-direction: column; gap: 2px; z-index: 1000;
+}
+.dropdown.open { display: flex !important; }
+.dropdown a, .dropdown button {
+  all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 8px; font-size: 13.5px; font-weight: 600;
+  color: var(--ink); cursor: pointer; font-family: 'Inter', sans-serif; width: 100%;
+}
+.dropdown a i, .dropdown button i { width: 16px; text-align: center; }
+.dropdown a:hover, .dropdown button:hover { background: var(--mint-50); }
+.dropdown .logout, .dropdown button.logout { color: #c0392b; }
+.dropdown hr { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
+
+/* ================= CONTENT ================= */
+.content { flex: 1; overflow-y: auto; padding: 22px 26px 40px; }
+
+/* Stat Cards Hijau (samain dengan Data Peminjaman) */
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 22px; }
+.stat-card {
+  background: linear-gradient(135deg, var(--green-800), var(--green-900));
+  border: 1px solid var(--green-900); border-radius: 16px;
+  box-shadow: var(--shadow); padding: 18px; display: flex; align-items: flex-start; gap: 14px;
+  color: #fff;
+}
+.stat-icon {
+  width: 48px; height: 48px; border-radius: 14px; background: rgba(255,255,255,.15);
+  color: #fff; display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0;
+}
+.stat-label { font-size: 12.5px; font-weight: 600; color: #c7e8da; margin: 0 0 4px; }
+.stat-value { font-size: 24px; font-weight: 700; color: #fff; margin: 0; line-height: 1.2; }
+.stat-value-currency { font-size: 19px; }
+.stat-desc { font-size: 11.5px; color: #9fd8bd; margin: 4px 0 0; }
+
+/* Panel umum */
+.panel {
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  box-shadow: var(--shadow); padding: 20px 22px; margin-bottom: 22px;
+}
+.panel-header {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px; margin-bottom: 4px;
+}
+.panel-title { font-size: 16px; font-weight: 700; color: var(--ink); margin: 0; }
+.panel-header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+/* Dropdown Tahun */
+.year-select { position: relative; }
+.year-btn {
+  display: flex; align-items: center; gap: 8px; background: var(--mint-50);
+  border: 1px solid var(--mint-100); padding: 8px 14px; border-radius: 10px;
+  font-size: 13px; font-weight: 600; color: var(--green-900); cursor: pointer;
+  font-family: 'Inter', sans-serif;
+}
+.year-menu {
+  position: absolute; right: 0; top: calc(100% + 6px); background: #fff;
+  border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow);
+  min-width: 120px; padding: 6px; display: none; flex-direction: column; z-index: 200; max-height: 220px; overflow-y: auto;
+}
+.year-menu.open { display: flex; }
+.year-menu button {
+  all: unset; box-sizing: border-box; padding: 8px 10px; border-radius: 8px; font-size: 13px;
+  font-weight: 600; color: var(--ink); cursor: pointer; width: 100%; font-family: 'Inter', sans-serif;
+}
+.year-menu button:hover { background: var(--mint-50); }
+.year-menu button.active { background: var(--green-800); color: #fff; }
+
+/* Tombol Cetak Laporan */
+.print-select { position: relative; }
+.btn-print {
+  display: flex; align-items: center; gap: 8px; background: var(--green-800);
+  border: 1px solid var(--green-800); color: #fff; padding: 9px 16px; border-radius: 10px;
+  font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: .15s ease;
+}
+.btn-print:hover { background: var(--green-700); border-color: var(--green-700); }
+.print-menu {
+  position: absolute; right: 0; top: calc(100% + 6px); background: #fff;
+  border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow);
+  min-width: 190px; padding: 6px; display: none; flex-direction: column; gap: 2px; z-index: 200;
+}
+.print-menu.open { display: flex; }
+.print-menu button {
+  all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 8px; font-size: 13px; font-weight: 600;
+  color: var(--ink); cursor: pointer; width: 100%; font-family: 'Inter', sans-serif;
+}
+.print-menu button i { width: 16px; text-align: center; }
+.print-menu button:hover { background: var(--mint-50); }
+
+/* Legenda Chart */
+.chart-legend { display: flex; flex-wrap: wrap; gap: 18px; margin: 14px 0 6px; }
+.legend-item { display: flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 600; color: var(--ink); }
+.legend-dot { width: 11px; height: 11px; border-radius: 3px; flex-shrink: 0; }
+.chart-wrap { position: relative; height: 340px; margin-top: 10px; }
+
+/* State kosong / gagal muat untuk grafik statistik — supaya area grafik
+   tidak terlihat blank & membingungkan ketika belum ada data atau ketika
+   Chart.js gagal dimuat dari internet. */
+.chart-state {
+  position: absolute; inset: 0; display: none;
+  flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; gap: 10px; padding: 20px; border-radius: 12px;
+}
+.chart-state.show { display: flex; }
+.chart-state i { font-size: 30px; }
+.chart-state p { margin: 0; font-size: 13.5px; font-weight: 600; max-width: 340px; line-height: 1.5; }
+.chart-state.state-empty i { color: var(--mint-100); }
+.chart-state.state-empty p { color: var(--muted); }
+.chart-state.state-error i { color: #f2994a; }
+.chart-state.state-error p { color: var(--muted); }
+.chart-state.state-loading i { color: var(--green-700); }
+.chart-state.state-loading p { color: var(--muted); }
+.chart-state .retry-btn {
+  border: 1px solid var(--green-700); background: var(--mint-50); color: var(--green-800);
+  padding: 7px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 700;
+  cursor: pointer; font-family: 'Inter', sans-serif;
+}
+.chart-state .retry-btn:hover { background: var(--mint-100); }
+
+/* Tabel Rekapan */
+.table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.rekap-table { width: 100%; border-collapse: separate; border-spacing: 0; text-align: center; }
+.rekap-table thead tr { background: var(--green-800); }
+.rekap-table thead th {
+  color: #fff; font-size: 11.5px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .3px; padding: 13px 18px; white-space: nowrap; text-align: center;
+  border-right: 1px solid rgba(255, 255, 255, .14);
+}
+.rekap-table thead th:last-child { border-right: none; }
+.rekap-table tbody td {
+  padding: 12px 18px; font-size: 13.5px; color: var(--ink);
+  border-bottom: 1px solid var(--border); border-right: 1px solid var(--border);
+  white-space: nowrap; text-align: center;
+}
+.rekap-table tbody td:last-child { border-right: none; }
+.rekap-table tbody tr:last-child td { border-bottom: none; }
+.rekap-table tbody tr:nth-child(even) { background: var(--mint-50); }
+.rekap-table tbody tr:hover { background: var(--mint-100); }
+.rekap-table tbody tr.current-month { box-shadow: inset 3px 0 0 var(--green-700); }
+.rekap-table td.col-bulan { text-align: left; font-weight: 600; }
+
+@media (max-width: 1100px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 860px) {
+  .sidebar { position: fixed; z-index: 300; }
+  .sidebar:not(.collapsed) { width: 240px; }
+  .sidebar.collapsed { width: 0; overflow: hidden; }
+}
+@media (max-width: 520px) { .stat-grid { grid-template-columns: 1fr; } }
+
+/* ================= TABEL REKAPAN: MODE KARTU DI LAYAR SEMPIT =================
+   Di layar lebar tabel tetap tampil biasa (scroll horizontal kalau perlu).
+   Di layar sempit (HP), tiap baris diubah jadi kartu supaya semua kolom
+   (Pengunjung, Peminjam, Dikembalikan, Terlambat, Denda) langsung kelihatan
+   tanpa perlu geser-geser dan tidak kepotong. */
+@media (max-width: 700px) {
+  .table-scroll { border: none; border-radius: 0; }
+  .rekap-table thead { display: none; }
+  .rekap-table, .rekap-table tbody, .rekap-table tr, .rekap-table td { display: block; width: 100%; }
+  .rekap-table { border: none; }
+  .rekap-table tbody tr {
+    background: var(--card) !important;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px -4px rgba(12,63,46,.10);
+  }
+  .rekap-table tbody tr.current-month { box-shadow: inset 3px 0 0 var(--green-700), 0 2px 8px -4px rgba(12,63,46,.10); }
+  .rekap-table td {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 11px 16px; border-bottom: 1px solid var(--border);
+    white-space: normal; text-align: right; font-size: 13px;
+  }
+  .rekap-table tbody tr td:last-child { border-bottom: none; }
+  .rekap-table td::before {
+    content: attr(data-label); font-weight: 700; font-size: 11px;
+    text-transform: uppercase; letter-spacing: .3px; color: var(--green-800);
+    text-align: left; margin-right: 12px; flex-shrink: 0;
+  }
+  .rekap-table td.col-bulan {
+    background: var(--green-800); color: #fff; font-weight: 700; font-size: 13.5px;
+    justify-content: center; padding: 12px 16px; text-align: center;
+  }
+  .rekap-table td.col-bulan::before { content: none; }
+}
+
+/* ================= SIDEBAR FOOTER (Profile + Logout + Copyright) ================= */
+.sidebar-footer {
+  flex-shrink: 0; padding: 14px 16px 18px; border-top: 1px solid rgba(255,255,255,.12);
+}
+.sidebar.collapsed .sidebar-footer { display: none; }
+.sidebar-profile-wrap { position: relative; }
+.sidebar-profile {
+  display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff;
+  padding: 8px; border-radius: 12px; background: rgba(255,255,255,.06);
+  margin-bottom: 10px; transition: .15s ease; border: none; width: 100%;
+  cursor: pointer; font-family: 'Inter', sans-serif; text-align: left;
+}
+.sidebar-profile:hover { background: rgba(255,255,255,.12); }
+.avatar-circle-lg {
+  width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,.15);
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
+  flex-shrink: 0; overflow: hidden;
+}
+.avatar-circle-lg img { width: 100%; height: 100%; object-fit: cover; }
+.sidebar-profile-text { overflow: hidden; white-space: nowrap; }
+.sidebar-profile-name { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 13.5px; }
+.sidebar-profile-role { font-size: 11px; color: #c7e8da; margin-top: 1px; }
+.sidebar-logout-btn {
+  width: 100%; background: transparent; border: 1.5px solid #e2564c; color: #ff9a90;
+  padding: 9px; border-radius: 10px; font-family: 'Poppins', sans-serif; font-weight: 600;
+  font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  gap: 8px; transition: .15s ease;
+}
+.sidebar-logout-btn:hover { background: rgba(192,57,43,.2); color: #fff; }
+.sidebar-profile-chev { margin-left: auto; font-size: 11px; color: #c7e8da; transition: transform .15s ease; flex-shrink: 0; }
+.sidebar-profile[aria-expanded="true"] .sidebar-profile-chev { transform: rotate(180deg); }
+#sidebarProfileDropdown {
+  position: absolute; left: 0; right: 0; bottom: calc(100% + 6px); top: auto; width: auto;
+}
+.sidebar-copyright { text-align: center; font-size: 10.5px; color: #8fd6b4; line-height: 1.5; margin-top: 14px; }
+
+/* ================= GRANULARITY TABS (Statistik Tahunan/Bulanan/Mingguan) ================= */
+.gran-tabs {
+  display: flex; background: var(--mint-50); border: 1px solid var(--mint-100);
+  border-radius: 10px; padding: 3px; gap: 2px;
+}
+.gran-tab {
+  all: unset; box-sizing: border-box; padding: 7px 12px; border-radius: 8px;
+  font-size: 12.5px; font-weight: 600; color: var(--green-900); cursor: pointer;
+  font-family: 'Inter', sans-serif; white-space: nowrap;
+}
+.gran-tab.active { background: var(--green-800); color: #fff; }
+
+/* Area cetak khusus (disembunyikan dari tampilan biasa) */
+#printArea { display: none; }
+
+/* ================= KARTU STATISTIK ANGGOTA (samain dengan Data Kunjungan) ================= */
+.member-stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 22px; }
+.member-stat-card {
+  background: linear-gradient(135deg, var(--green-800), var(--green-900));
+  border: 1px solid var(--green-900); border-radius: 16px;
+  box-shadow: var(--shadow); padding: 18px; display: flex; align-items: flex-start; gap: 14px;
+  color: #fff;
+}
+.member-stat-icon {
+  width: 48px; height: 48px; border-radius: 14px; background: rgba(255,255,255,.15); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0;
+}
+.member-stat-label { font-size: 12.5px; font-weight: 600; color: #c7e8da; margin: 0 0 4px; }
+.member-stat-value { font-size: 24px; font-weight: 700; color: #fff; margin: 0; line-height: 1.2; }
+.member-stat-desc { font-size: 11.5px; color: #9fd8bd; margin: 4px 0 0; }
+
+/* ================= TOOLBAR: TOMBOL TAMBAH, SEARCH, FILTER ================= */
+.toolbar-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.btn-add {
+  display: flex; align-items: center; gap: 8px; background: var(--green-700);
+  border: 1px solid var(--green-700); color: #fff; padding: 10px 18px; border-radius: 10px;
+  font-size: 13.5px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: .15s ease;
+  white-space: nowrap; text-decoration: none;
+}
+.btn-add:hover { background: var(--green-800); border-color: var(--green-800); }
+
+.search-wrap { flex: 1; min-width: 220px; position: relative; display: flex; align-items: center; }
+.search-wrap i { position: absolute; left: 14px; color: var(--muted); font-size: 13px; }
+.search-input {
+  width: 100%; padding: 10px 14px 10px 36px; border: 1px solid var(--border); border-radius: 10px;
+  font-size: 13.5px; font-family: 'Inter', sans-serif; color: var(--ink); background: #fff;
+}
+.search-input:focus { outline: none; border-color: var(--green-700); }
+
+.filter-select {
+  padding: 10px 14px; border: 1px solid var(--border); border-radius: 10px;
+  font-size: 13px; font-weight: 600; color: var(--green-900); background: var(--mint-50);
+  font-family: 'Inter', sans-serif; cursor: pointer; min-width: 130px;
+}
+.filter-select:focus { outline: none; border-color: var(--green-700); }
+
+.btn-reset {
+  display: flex; align-items: center; gap: 8px; background: #fff;
+  border: 1px solid var(--border); color: var(--ink); padding: 10px 16px; border-radius: 10px;
+  font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: .15s ease;
+  white-space: nowrap;
+}
+.btn-reset:hover { background: var(--bg); border-color: var(--green-700); color: var(--green-800); }
+
+/* ================= TABEL DATA ANGGOTA ================= */
+.table-panel { padding: 0; overflow: hidden; }
+.table-scroll-outer { max-height: 64vh; overflow-y: auto; border-radius: 0; }
+.anggota-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+.anggota-table thead th {
+  position: sticky; top: 0; z-index: 5;
+  background: var(--green-800); color: #fff; font-size: 11.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .3px; padding: 14px 16px; white-space: nowrap;
+  text-align: left; border-right: 1px solid rgba(255,255,255,.14);
+}
+.anggota-table thead th:last-child { border-right: none; text-align: center; }
+.anggota-table thead th.col-center { text-align: center; }
+.anggota-table tbody td {
+  padding: 12px 16px; font-size: 13.5px; color: var(--ink);
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+}
+.anggota-table tbody tr:nth-child(even) { background: var(--mint-50); }
+.anggota-table tbody tr:hover { background: var(--mint-100); }
+.anggota-table td.col-center, .anggota-table td.col-aksi { text-align: center; }
+.empty-row td { text-align: center; padding: 46px 16px; color: var(--muted); font-size: 13.5px; white-space: normal; }
+.empty-row i { display: block; font-size: 30px; color: var(--mint-100); margin-bottom: 10px; }
+
+.badge { display: inline-flex; align-items: center; padding: 5px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.badge-siswa { background: #d7f0e4; color: #146b52; }
+.badge-guru { background: #eaf1ff; color: #2f6fed; }
+.badge-staff { background: #ede9fe; color: #7c3aed; }
+
+.action-btn {
+  width: 30px; height: 30px; border-radius: 8px; border: none; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; font-size: 12.5px;
+  margin-right: 6px; transition: .15s ease;
+}
+.action-btn:last-child { margin-right: 0; }
+.action-edit { background: var(--mint-100); color: var(--green-700); }
+.action-edit:hover { background: #c3e6d6; }
+.action-delete { background: #fde2df; color: #d9382d; }
+.action-delete:hover { background: #fbcbc6; }
+
+/* ================= MODAL (Ubah Data Anggota) ================= */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(6,26,20,.5); display: none;
+  align-items: center; justify-content: center; z-index: 2000; padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: #fff; border-radius: 18px; box-shadow: var(--shadow); width: 100%;
+  max-width: 560px; max-height: 88vh; overflow-y: auto; padding: 24px 26px;
+}
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.modal-title { font-size: 17px; font-weight: 700; color: var(--ink); margin: 0; }
+.modal-close {
+  width: 32px; height: 32px; border-radius: 8px; border: none; background: var(--mint-50);
+  color: var(--muted); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.modal-close:hover { background: var(--mint-100); color: var(--green-800); }
+
+.form-group { margin-bottom: 15px; }
+.form-label { display: block; font-size: 12.5px; font-weight: 700; color: var(--green-900); margin-bottom: 6px; }
+.form-control {
+  width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px;
+  font-size: 13.5px; font-family: 'Inter', sans-serif; color: var(--ink); background: #fff;
+}
+.form-control:focus { outline: none; border-color: var(--green-700); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.btn-cancel {
+  padding: 10px 18px; border-radius: 10px; border: 1px solid var(--border); background: #fff;
+  color: var(--ink); font-weight: 600; font-size: 13.5px; cursor: pointer; font-family: 'Inter', sans-serif;
+}
+.btn-cancel:hover { background: var(--bg); }
+.btn-save {
+  padding: 10px 20px; border-radius: 10px; border: 1px solid var(--green-700); background: var(--green-700);
+  color: #fff; font-weight: 700; font-size: 13.5px; cursor: pointer; font-family: 'Inter', sans-serif;
+}
+.btn-save:hover { background: var(--green-800); border-color: var(--green-800); }
+
+@media (max-width: 1300px) { .member-stat-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 860px) {
+  .sidebar { position: fixed; z-index: 300; }
+  .sidebar:not(.collapsed) { width: 240px; }
+  .sidebar.collapsed { width: 0; overflow: hidden; }
+  .form-row { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) { .member-stat-grid { grid-template-columns: 1fr; } }
+
+/* Mode kartu tabel di layar sempit */
+@media (max-width: 760px) {
+  .table-scroll-outer { border: none; }
+  .anggota-table thead { display: none; }
+  .anggota-table, .anggota-table tbody, .anggota-table tr, .anggota-table td { display: block; width: 100%; }
+  .anggota-table tbody tr {
+    background: var(--card) !important; border: 1px solid var(--border); border-radius: 14px;
+    margin: 12px; overflow: hidden; box-shadow: 0 2px 8px -4px rgba(12,63,46,.10);
+  }
+  .anggota-table td {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 11px 16px; border-bottom: 1px solid var(--border); white-space: normal; text-align: right; font-size: 13px;
+  }
+  .anggota-table tbody tr td:last-child { border-bottom: none; }
+  .anggota-table td::before {
+    content: attr(data-label); font-weight: 700; font-size: 11px; text-transform: uppercase;
+    letter-spacing: .3px; color: var(--green-800); text-align: left; margin-right: 12px; flex-shrink: 0;
+  }
+  .anggota-table td.col-aksi { justify-content: center; }
+  .empty-row td { display: block; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo">
+        <img src="img/logo.smk.png" alt="Logo Sekolah">
+      </div>
+      <div class="brand-text">
+        <div class="brand-title">PERPUSTAKAAN</div>
+        <div class="brand-sub">SMK MA'arif Walisongo Kajoran</div>
+        <div class="brand-npp">NPP: 05014210J0000031</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group">
+        <a href="dashboard_admin.html" class="nav-link"><i class="fa-solid fa-house"></i><span>Dashboard Admin</span></a>
+        <a href="data_buku.html" class="nav-link"><i class="fa-solid fa-book"></i><span>Data Buku</span></a>
+        <a href="tambah_buku.html" class="nav-link"><i class="fa-solid fa-square-plus"></i><span>Tambah Buku</span></a>
+        <a href="data_kunjungan.html" class="nav-link"><i class="fa-solid fa-user-clock"></i><span>Data Kunjungan</span></a>
+        <a href="data_anggota.html" class="nav-link active"><i class="fa-solid fa-users"></i><span>Data Anggota</span></a>
+        <a href="data_per_item.html" class="nav-link"><i class="fa-solid fa-chart-pie"></i><span>Data Per Item</span></a>
+        <a href="data_peminjaman.html" class="nav-link"><i class="fa-solid fa-file-invoice"></i><span>Data Peminjaman</span></a>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-profile-wrap">
+        <button class="sidebar-profile" id="sidebarProfileButton" aria-expanded="false">
+          <div class="avatar-circle-lg"><i class="fa-solid fa-user"></i></div>
+          <div class="sidebar-profile-text">
+            <div class="sidebar-profile-name" id="sidebarAdminName">Admin Perpus</div>
+            <div class="sidebar-profile-role">Administrator</div>
+          </div>
+          <i class="fa-solid fa-chevron-up sidebar-profile-chev"></i>
+        </button>
+        <div class="dropdown" id="sidebarProfileDropdown">
+          <a href="profile_admin.html"><i class="fa-solid fa-user-gear"></i><span>Profile Admin</span></a>
+        </div>
+      </div>
+      <button class="sidebar-logout-btn" id="btnLogoutSidebar"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+      <div class="sidebar-copyright">&copy; 2026 SMK Ma'arif Walisongo Kajoran<br>All Rights Reserved</div>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <div class="main-area">
+
+    <header class="topbar">
+      <div class="topbar-left">
+        <button id="sidebarToggle" class="icon-btn" title="Buka/Tutup Sidebar">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <h1 class="page-title">Data Anggota</h1>
+      </div>
+
+      <div class="user-menu">
+        <button class="user-trigger" id="profileMenuButton" aria-expanded="false">
+          <div class="avatar-circle"><i class="fa-solid fa-user"></i></div>
+          <span class="user-name" id="topbarAdminName">Admin Perpus</span>
+          <i class="fa-solid fa-chevron-down chev"></i>
+        </button>
+
+        <div class="dropdown" id="profileDropdown">
+          <a href="profile_admin.html"><i class="fa-solid fa-user-gear"></i><span>Profile Admin</span></a>
+          <hr>
+          <button class="logout" id="btnLogoutTopbar"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></button>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <!-- ============ STAT CARDS ANGGOTA ============ -->
+      <section class="member-stat-grid">
+        <div class="member-stat-card">
+          <div class="member-stat-icon"><i class="fa-solid fa-people-group"></i></div>
+          <div>
+            <p class="member-stat-label">Total Anggota</p>
+            <h3 class="member-stat-value" id="cardTotalAnggota">0</h3>
+            <p class="member-stat-desc">Seluruh Anggota</p>
+          </div>
+        </div>
+        <div class="member-stat-card">
+          <div class="member-stat-icon"><i class="fa-solid fa-user-graduate"></i></div>
+          <div>
+            <p class="member-stat-label">Siswa</p>
+            <h3 class="member-stat-value" id="cardSiswa">0</h3>
+            <p class="member-stat-desc">Anggota Siswa</p>
+          </div>
+        </div>
+        <div class="member-stat-card">
+          <div class="member-stat-icon"><i class="fa-solid fa-chalkboard-user"></i></div>
+          <div>
+            <p class="member-stat-label">Guru</p>
+            <h3 class="member-stat-value" id="cardGuru">0</h3>
+            <p class="member-stat-desc">Anggota Guru</p>
+          </div>
+        </div>
+        <div class="member-stat-card">
+          <div class="member-stat-icon"><i class="fa-solid fa-briefcase"></i></div>
+          <div>
+            <p class="member-stat-label">Staf</p>
+            <h3 class="member-stat-value" id="cardStaff">0</h3>
+            <p class="member-stat-desc">Anggota Staf</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ PANEL TABEL DATA ANGGOTA ============ -->
+      <section class="panel table-panel">
+        <div style="padding:20px 22px 4px;">
+          <div class="panel-header">
+            <h3 class="panel-title"><i class="fa-solid fa-users" style="color:var(--green-700); margin-right:8px;"></i>Data Anggota Perpustakaan SMK MA'arif Walisongo Kajoran</h3>
+            <div class="panel-header-right">
+              <a href="register.html" class="btn-add"><i class="fa-solid fa-user-plus"></i> Tambah Anggota</a>
+            </div>
+          </div>
+
+          <div class="toolbar-row" style="margin-top:14px;">
+            <div class="search-wrap">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" class="search-input" id="searchInput" placeholder="Cari nama, no. anggota, no. telp...">
+            </div>
+
+            <select class="filter-select" id="filterRole">
+              <option value="semua">Semua Status</option>
+              <option value="Siswa">Siswa</option>
+              <option value="Guru">Guru</option>
+              <option value="Staff">Staff</option>
+            </select>
+
+            <!-- Muncul hanya ketika filter Status = Siswa -->
+            <select class="filter-select" id="filterKelas" style="display:none;">
+              <option value="semua">Semua Kelas</option>
+              <option value="X">X</option>
+              <option value="XI">XI</option>
+              <option value="XII">XII</option>
+            </select>
+            <select class="filter-select" id="filterJurusan" style="display:none;">
+              <option value="semua">Semua Jurusan</option>
+              <option value="PPLG">PPLG</option>
+              <option value="BCF">BCF</option>
+              <option value="MPLB">MPLB</option>
+            </select>
+
+            <select class="filter-select" id="filterBulan"></select>
+
+            <button type="button" class="btn-reset" id="btnResetFilter"><i class="fa-solid fa-rotate-left"></i> Reset Filter</button>
+
+            <div class="print-select">
+              <button type="button" class="btn-print" id="printBtn">
+                <i class="fa-solid fa-print"></i> Cetak Laporan <i class="fa-solid fa-chevron-down" style="font-size:10px;"></i>
+              </button>
+              <div class="print-menu" id="printMenu">
+                <button type="button" id="printPdfBtn"><i class="fa-solid fa-file-pdf"></i> Cetak PDF</button>
+                <button type="button" id="printWordBtn"><i class="fa-solid fa-file-word"></i> Unduh Word</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-scroll-outer">
+          <table class="anggota-table">
+            <thead>
+              <tr>
+                <th class="col-center" style="width:50px;">No</th>
+                <th>No. Anggota</th>
+                <th>Nama</th>
+                <th>No. Telp</th>
+                <th class="col-center">Status</th>
+                <th>Tgl. Bergabung</th>
+                <th class="col-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="anggotaTbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ============ MODAL: UBAH DATA ANGGOTA ============ -->
+<div class="modal-overlay" id="modalEdit">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 class="modal-title">Ubah Data Anggota</h3>
+      <button class="modal-close" data-close="modalEdit"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <form id="formEdit">
+      <input type="hidden" id="editNoAnggota">
+
+      <div class="form-group">
+        <label class="form-label">Nama Lengkap</label>
+        <input type="text" class="form-control" id="editNama" required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-control" id="editRole" required>
+            <option value="Siswa">Siswa</option>
+            <option value="Guru">Guru</option>
+            <option value="Staff">Staff</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">No. Telp</label>
+          <input type="text" class="form-control" id="editPhone" required>
+        </div>
+      </div>
+
+      <div class="form-row" id="editSiswaRow">
+        <div class="form-group">
+          <label class="form-label">Kelas</label>
+          <select class="form-control" id="editKelas">
+            <option value="X">X</option>
+            <option value="XI">XI</option>
+            <option value="XII">XII</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Jurusan</label>
+          <select class="form-control" id="editJurusan">
+            <option value="PPLG">PPLG</option>
+            <option value="BCF">BCF</option>
+            <option value="MPLB">MPLB</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" id="editNipGroup">
+        <label class="form-label">NIP / NIY</label>
+        <input type="text" class="form-control" id="editNip">
+      </div>
+      <div class="form-group" id="editMapelGroup">
+        <label class="form-label">Mata Pelajaran / Jabatan (Guru)</label>
+        <input type="text" class="form-control" id="editMapel">
+      </div>
+      <div class="form-group" id="editJabatanGroup">
+        <label class="form-label">Jabatan (Staff)</label>
+        <input type="text" class="form-control" id="editJabatan">
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" data-close="modalEdit">Batal</button>
+        <button type="submit" class="btn-save">Simpan Perubahan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ AREA KHUSUS UNTUK CETAK / EXPORT (kop surat) ============ -->
+<div id="printArea"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ============ SIDEBAR TOGGLE ============
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  const sidebar = document.getElementById('sidebar');
+  if (sidebarToggle && sidebar) {
+    sidebarToggle.addEventListener('click', () => sidebar.classList.toggle('collapsed'));
+  }
+
+  // ============ NAMA ADMIN (topbar & sidebar, dinamis kalau tersedia) ============
+  try {
+    const adminUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    if (adminUser && adminUser.name) {
+      const sidebarNameEl = document.getElementById('sidebarAdminName');
+      const topbarNameEl = document.getElementById('topbarAdminName');
+      if (sidebarNameEl) sidebarNameEl.textContent = adminUser.name;
+      if (topbarNameEl) topbarNameEl.textContent = adminUser.name;
+    }
+  } catch (e) { /* pakai nama default "Admin Perpus" */ }
+
+  // ============ LOGOUT (topbar & footer sidebar) ============
+  const handleLogout = () => {
+    if (confirm('Apakah Anda yakin ingin keluar dari halaman admin?')) {
+      localStorage.removeItem('isLoggedIn');
+      window.location.href = 'login.html';
+    }
+  };
+  const btnLogoutSidebar = document.getElementById('btnLogoutSidebar');
+  const btnLogoutTopbar = document.getElementById('btnLogoutTopbar');
+  if (btnLogoutSidebar) btnLogoutSidebar.addEventListener('click', handleLogout);
+  if (btnLogoutTopbar) btnLogoutTopbar.addEventListener('click', handleLogout);
+
+  // ============ DROPDOWN PROFIL (topbar kanan atas) ============
+  const profileMenuButton = document.getElementById('profileMenuButton');
+  const profileDropdown = document.getElementById('profileDropdown');
+  if (profileMenuButton && profileDropdown) {
+    profileMenuButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = profileDropdown.classList.toggle('open');
+      profileMenuButton.setAttribute('aria-expanded', isOpen);
+      closeOtherMenus('profile');
+    });
+  }
+
+  // ============ DROPDOWN PROFIL (kotak admin di footer sidebar) ============
+  const sidebarProfileButton = document.getElementById('sidebarProfileButton');
+  const sidebarProfileDropdown = document.getElementById('sidebarProfileDropdown');
+  if (sidebarProfileButton && sidebarProfileDropdown) {
+    sidebarProfileButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = sidebarProfileDropdown.classList.toggle('open');
+      sidebarProfileButton.setAttribute('aria-expanded', isOpen);
+      closeOtherMenus('sidebarProfile');
+    });
+  }
+
+  // ============ DROPDOWN CETAK LAPORAN ============
+  const printBtn = document.getElementById('printBtn');
+  const printMenu = document.getElementById('printMenu');
+  if (printBtn && printMenu) {
+    printBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      printMenu.classList.toggle('open');
+      closeOtherMenus('print');
+    });
+  }
+
+  function closeOtherMenus(except) {
+    if (except !== 'profile' && profileDropdown) profileDropdown.classList.remove('open');
+    if (except !== 'sidebarProfile' && sidebarProfileDropdown) sidebarProfileDropdown.classList.remove('open');
+    if (except !== 'print' && printMenu) printMenu.classList.remove('open');
+  }
+  window.addEventListener('click', () => closeOtherMenus(null));
+
+  // ============ MODAL HELPER ============
+  function openModal(id) { document.getElementById(id).classList.add('open'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+  document.querySelectorAll('[data-close]').forEach(btn => {
+    btn.addEventListener('click', () => closeModal(btn.dataset.close));
+  });
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); });
+  });
+
+  function escapeHtml(str) {
+    return String(str ?? '').replace(/[&<>"']/g, m => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[m]));
+  }
+
+  // ============ SUMBER DATA ANGGOTA (key 'allUsers', sama dengan register.html) ============
+  const USERS_KEY = 'allUsers';
+
+  function getAllUsers() {
+    try {
+      const arr = JSON.parse(localStorage.getItem(USERS_KEY));
+      return Array.isArray(arr) ? arr.filter(u => u && u.isMember) : [];
+    } catch (e) { return []; }
+  }
+
+  function saveAllUsers(arr) {
+    // Catatan: field lain milik akun (email, password, dst.) tetap dipertahankan
+    // karena kita hanya mengubah/menghapus objek yang sudah ada di array.
+    localStorage.setItem(USERS_KEY, JSON.stringify(arr));
+  }
+
+  // ============ PARSE TANGGAL INDONESIA ("3 September 2026") ============
+  const INDO_MONTHS = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
+  function parseJoinDate(str) {
+    if (!str) return null;
+    const parts = String(str).trim().split(/\s+/);
+    if (parts.length < 3) return null;
+    const day = parseInt(parts[0], 10);
+    const monthIdx = INDO_MONTHS.findIndex(m => m.toLowerCase() === parts[1].toLowerCase());
+    const year = parseInt(parts[2], 10);
+    if (isNaN(day) || monthIdx === -1 || isNaN(year)) return null;
+    return new Date(year, monthIdx, day);
+  }
+
+  function formatBulanKey(date) {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+  }
+
+  // ============ STATE FILTER ============
+  const state = { search: '', role: 'semua', kelas: 'semua', jurusan: 'semua', bulan: 'semua' };
+
+  const searchInput = document.getElementById('searchInput');
+  const filterRole = document.getElementById('filterRole');
+  const filterKelas = document.getElementById('filterKelas');
+  const filterJurusan = document.getElementById('filterJurusan');
+  const filterBulan = document.getElementById('filterBulan');
+  const btnResetFilter = document.getElementById('btnResetFilter');
+
+  // ============ ISI DROPDOWN BULAN SECARA DINAMIS DARI TANGGAL BERGABUNG ============
+  function renderBulanOptions() {
+    const users = getAllUsers();
+    const monthMap = new Map();
+    users.forEach(u => {
+      const d = parseJoinDate(u.joinDate);
+      if (d) monthMap.set(formatBulanKey(d), d);
+    });
+    const sortedKeys = Array.from(monthMap.keys()).sort().reverse();
+    filterBulan.innerHTML = '<option value="semua">Semua Bulan</option>' + sortedKeys.map(key => {
+      const d = monthMap.get(key);
+      return `<option value="${key}">${INDO_MONTHS[d.getMonth()]} ${d.getFullYear()}</option>`;
+    }).join('');
+  }
+
+  // ============ TAMPIL/SEMBUNYIKAN FILTER KELAS & JURUSAN SESUAI STATUS ============
+  function toggleKelasJurusanFilter() {
+    const showSiswa = filterRole.value === 'Siswa';
+    filterKelas.style.display = showSiswa ? '' : 'none';
+    filterJurusan.style.display = showSiswa ? '' : 'none';
+    if (!showSiswa) { filterKelas.value = 'semua'; filterJurusan.value = 'semua'; }
+  }
+  filterRole.addEventListener('change', () => {
+    state.role = filterRole.value;
+    state.kelas = 'semua'; state.jurusan = 'semua';
+    toggleKelasJurusanFilter();
+    refreshAll();
+  });
+  filterKelas.addEventListener('change', () => { state.kelas = filterKelas.value; refreshAll(); });
+  filterJurusan.addEventListener('change', () => { state.jurusan = filterJurusan.value; refreshAll(); });
+  filterBulan.addEventListener('change', () => { state.bulan = filterBulan.value; refreshAll(); });
+
+  searchInput.addEventListener('input', () => {
+    state.search = searchInput.value.trim().toLowerCase();
+    refreshAll();
+  });
+
+  btnResetFilter.addEventListener('click', () => {
+    state.search = ''; state.role = 'semua'; state.kelas = 'semua'; state.jurusan = 'semua'; state.bulan = 'semua';
+    searchInput.value = ''; filterRole.value = 'semua'; filterBulan.value = 'semua';
+    toggleKelasJurusanFilter();
+    refreshAll();
+  });
+
+  // ============ FILTER: UNTUK KARTU STATISTIK (hanya ikut filter Bulan) ============
+  function getStatsList() {
+    const users = getAllUsers();
+    if (state.bulan === 'semua') return users;
+    return users.filter(u => {
+      const d = parseJoinDate(u.joinDate);
+      return d && formatBulanKey(d) === state.bulan;
+    });
+  }
+
+  // ============ FILTER: UNTUK TABEL (search + status + kelas + jurusan + bulan) ============
+  function getTableList() {
+    let list = getStatsList();
+
+    if (state.role !== 'semua') list = list.filter(u => u.role === state.role);
+    if (state.role === 'Siswa') {
+      if (state.kelas !== 'semua') list = list.filter(u => u.kelas === state.kelas);
+      if (state.jurusan !== 'semua') list = list.filter(u => u.jurusan === state.jurusan);
+    }
+    if (state.search) {
+      list = list.filter(u =>
+        (u.name || '').toLowerCase().includes(state.search) ||
+        (u.noAnggota || '').toLowerCase().includes(state.search) ||
+        (u.phone || '').toLowerCase().includes(state.search)
+      );
+    }
+
+    // Urutkan dari yang paling baru bergabung
+    list = list.slice().sort((a, b) => {
+      const da = parseJoinDate(a.joinDate); const db = parseJoinDate(b.joinDate);
+      if (!da && !db) return 0;
+      if (!da) return 1;
+      if (!db) return -1;
+      return db - da;
+    });
+
+    return list;
+  }
+
+  function computeStats(list) {
+    return {
+      total: list.length,
+      siswa: list.filter(u => u.role === 'Siswa').length,
+      guru: list.filter(u => u.role === 'Guru').length,
+      staff: list.filter(u => u.role === 'Staff').length
+    };
+  }
+
+  // ============ KARTU STATISTIK ============
+  function updateStatCards() {
+    const s = computeStats(getStatsList());
+    document.getElementById('cardTotalAnggota').textContent = s.total.toLocaleString('id-ID');
+    document.getElementById('cardSiswa').textContent = s.siswa.toLocaleString('id-ID');
+    document.getElementById('cardGuru').textContent = s.guru.toLocaleString('id-ID');
+    document.getElementById('cardStaff').textContent = s.staff.toLocaleString('id-ID');
+  }
+
+  // ============ BADGE STATUS ============
+  function badgeRole(role) {
+    if (role === 'Siswa') return `<span class="badge badge-siswa">Siswa</span>`;
+    if (role === 'Guru') return `<span class="badge badge-guru">Guru</span>`;
+    return `<span class="badge badge-staff">Staff</span>`;
+  }
+
+  // ============ RENDER TABEL + PAGINASI ============
+  const anggotaTbody = document.getElementById('anggotaTbody');
+  function renderTable() {
+    const fullList = getTableList();
+
+    if (fullList.length === 0) {
+      anggotaTbody.innerHTML = `
+        <tr class="empty-row">
+          <td colspan="7">
+            <i class="fa-solid fa-user-slash"></i>
+            Belum ada data anggota yang cocok dengan pencarian/filter.
+          </td>
+        </tr>`;
+      return;
+    }
+
+    anggotaTbody.innerHTML = fullList.map((u, i) => `
+      <tr>
+        <td class="col-center" data-label="No">${i + 1}</td>
+        <td data-label="No. Anggota">${escapeHtml(u.noAnggota)}</td>
+        <td data-label="Nama">${escapeHtml(u.name)}</td>
+        <td data-label="No. Telp">${escapeHtml(u.phone || '-')}</td>
+        <td class="col-center" data-label="Status">${badgeRole(u.role)}</td>
+        <td data-label="Tgl. Bergabung">${escapeHtml(u.joinDate || '-')}</td>
+        <td class="col-aksi" data-label="Aksi">
+          <button class="action-btn action-edit" data-edit="${escapeHtml(u.noAnggota)}" title="Ubah"><i class="fa-solid fa-pen"></i></button>
+          <button class="action-btn action-delete" data-delete="${escapeHtml(u.noAnggota)}" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  // ============ AKSI: UBAH & HAPUS (delegasi event di tbody) ============
+  const editRoleEl = document.getElementById('editRole');
+  const editSiswaRow = document.getElementById('editSiswaRow');
+  const editNipGroup = document.getElementById('editNipGroup');
+  const editMapelGroup = document.getElementById('editMapelGroup');
+  const editJabatanGroup = document.getElementById('editJabatanGroup');
+
+  function toggleEditFieldsByRole() {
+    const role = editRoleEl.value;
+    editSiswaRow.style.display = role === 'Siswa' ? '' : 'none';
+    editNipGroup.style.display = (role === 'Guru' || role === 'Staff') ? '' : 'none';
+    editMapelGroup.style.display = role === 'Guru' ? '' : 'none';
+    editJabatanGroup.style.display = role === 'Staff' ? '' : 'none';
+  }
+  editRoleEl.addEventListener('change', toggleEditFieldsByRole);
+
+  anggotaTbody.addEventListener('click', (e) => {
+    const editBtn = e.target.closest('[data-edit]');
+    const deleteBtn = e.target.closest('[data-delete]');
+
+    if (editBtn) {
+      const users = JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+      const u = users.find(x => x.noAnggota === editBtn.dataset.edit);
+      if (!u) return;
+      document.getElementById('editNoAnggota').value = u.noAnggota;
+      document.getElementById('editNama').value = u.name || '';
+      editRoleEl.value = u.role || 'Siswa';
+      document.getElementById('editPhone').value = u.phone || '';
+      document.getElementById('editKelas').value = (u.kelas && u.kelas !== '-') ? u.kelas : 'X';
+      document.getElementById('editJurusan').value = (u.jurusan && u.jurusan !== '-') ? u.jurusan : 'PPLG';
+      document.getElementById('editNip').value = (u.nip && u.nip !== '-') ? u.nip : '';
+      document.getElementById('editMapel').value = (u.mataPelajaran && u.mataPelajaran !== '-') ? u.mataPelajaran : '';
+      document.getElementById('editJabatan').value = (u.jabatan && u.jabatan !== '-') ? u.jabatan : '';
+      toggleEditFieldsByRole();
+      openModal('modalEdit');
+    }
+
+    if (deleteBtn) {
+      const noAnggota = deleteBtn.dataset.delete;
+      if (!confirm('Yakin ingin menghapus anggota ini? Akun login anggota ini juga akan ikut terhapus.')) return;
+      const users = JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+      const updated = users.filter(u => u.noAnggota !== noAnggota);
+      saveAllUsers(updated);
+      renderBulanOptions();
+      refreshAll();
+    }
+  });
+
+  document.getElementById('formEdit').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const noAnggota = document.getElementById('editNoAnggota').value;
+    const users = JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+    const idx = users.findIndex(u => u.noAnggota === noAnggota);
+    if (idx === -1) return;
+
+    const role = editRoleEl.value;
+    users[idx] = {
+      ...users[idx],
+      name: document.getElementById('editNama').value.trim(),
+      role: role,
+      phone: document.getElementById('editPhone').value.trim(),
+      kelas: role === 'Siswa' ? document.getElementById('editKelas').value : '-',
+      jurusan: role === 'Siswa' ? document.getElementById('editJurusan').value : '-',
+      nip: (role === 'Guru' || role === 'Staff') ? document.getElementById('editNip').value.trim() : '-',
+      mataPelajaran: role === 'Guru' ? document.getElementById('editMapel').value.trim() : '-',
+      jabatan: role === 'Staff' ? document.getElementById('editJabatan').value.trim() : '-'
+    };
+
+    saveAllUsers(users);
+    closeModal('modalEdit');
+    renderBulanOptions();
+    refreshAll();
+  });
+
+  // ============ LOGO / KOP SEKOLAH (embedded langsung) ============
+  const KOP_SEKOLAH_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAr0AAABqCAYAAACxgOlmAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAGd0SURBVHhe7d13fBRF/8Dxz+5d7tJ7rxACgdB7kSIgvdkoFiygInZABVEpitiwgGLHgvQuvffeAwRCDSGk974ru/v74xJIjqD4qM+D/Ob9ktfL7O3Mzsxe+e7s7IykaZqGIAiCIAiCINzBZPsNgiAIgiAIgnCnEUGvIAiCIAiCcMcTQa8gCIIgCIJwxxNBryAIgiAIgnDHE0GvIAiCIAiCcMcTQa8gCIIgCIJwx5PElGWCcIvUAs7E7WfnlWRSCkpQDO6EBMfQrXFTopxlsKSw7+RFsso/UbJbFPfUCcJYJY9cTp6K47LFtpPsWpM+0aG2166ll3APakKHYFdkQC1JZFf8FQo0kBxDaFcvEu9qLldNGSfZnJSHCoCEb3gr2voZquyj5l9g88VUTJptH6+Q5rQPdKqyD2o+p06fJMGkgWSkRlQLGrrbH1Ah5dIBjuTKhEe1pLGHrurLt5KHXXuBhM7BGX+/WjQM8qjabnZt0ynYFW6ocyWSG3VjGlHb0e6YaiHx8bGcL9VAH0DLhnUIrNjFlMyeuEvkaCC7R9GtdhC21lNITzzEwSwL6Pxo3qguwRVp/lQ9q57Xyq7VQ3KhTt0mRDtf30MpSmDbieOczMgko1TFydWP6MjW9KwXikeVjEykXDrEujNnSSywoncNoFG9tvSMCsCx8m6YSTh3kFOFWvXtpGZyKDaeNFXCJ6wl7fyrnAnATHriMTbHx3Mxr4gSjHh5BhMT2ZTOtYJwta+cOYsjp/ay83IqGVYdPr5RdGzcllY+9vneqPp2UclPOc6u1GI0JFz8G3F3mHulNlXJTjrCvowyNCSc/OrTJdzrhja/Rs3lVFwcCWYNvVc9ekX62u3wH7RrOUk24OYRRIOwcHwcqux8jVp4kW3nUyjRQDIE0bp+FH72ha30WZFcIri7TniVdlZyTrMhIRtF8qB+g0ZEVv3YC4JQTgS9gnALlKydvDbjA75NKECp/ILkycMvL+XH5kbUvKX0eeUztpXvIHn0YtG0N+lX6ZfRevVnOr31A0fK99HXHknRhEcAKqXX0XDA9+x7sA56tYANPz/NA9uSsUpudHnka1b0qFEejFWmkrppFHVmH8ECgERg+6mcGtEBW3gIYOX0imdptTQeKwA62g6ex7a+Idf2ALAmz+buN7/jsAKgp/mDP7JjQCT6KnuVsWzmvTx8wMgToxfxTZOqAcyt5GHfXtfp8anRnXefGsWwCFtAbt82hx6sU02dK9HVY9J7XzMupGqpoYB5nw9i2JEi0DXh42nTedHXFrCXHJ1KzOdrSdNAFzCIDR+8RHu9LQic+eEgxpy2oK8xjAOThlG/PMb/c/WsdF4rvV6lHroo3pj0AxNr6AGFK4dn8NCsFRwpqtpIklsPFn3+Nv3K3whq/hE++P5DpsWmUFJlT0dqNB7Kt08PpVNFhKxm8fWHDzLqtBXQU6/n5+x8pAluFUlMGxn0/DusNOno8PBC1vcKpOKSxpSxnck/fsnXcWmUVuxfwdiRn2dOZci1t4JKetwvjJg1l/WZZXb7BtGz3xt8168Z/vYB3jXVt4tatI+XJo3jh3QFyaUF097+mOdDKkWUSgIfvvMkEy/Z3uUONZ/mwMTHibG7LrvGcpRXxr7CN5kqbq0mk/li12sv/eftWpWDazQPDR7HZ3fXxqXKK1bOrBxJq8VnbO9hXV0mTfmGcaF275DKnxVdTV4c9y0f13W+9nrJ3vGEfr2TEl0TPpo2nZfK39OCIFR1068bQRDKqdnMn/MBXycUoOBCncZ9eWXAE4zueg+dg9xwkOwTyMgSaAUHWH6q8k+llfiDu4hVbK//MZWck98yZmcyViQCm73IzG7VBbx2JBkZjfST29lSOTJREll25DxWSf6dD76VuP1bOa6AXqcDrMQe2sbpGwLT3/Nn85DwCr+LIe0607OmH45Yyb68llE/LiLupmnsORIcEk3TGhX/ahBoqK6RXWkfU9vWQ6cmcCShIlw2cyQulozyLgAlK079meUHt57l+FUrIBNRpzlR1+KJP1vPP0fN28irs5bZAl6ncHp2eohxAx5mRJvmRLvouVa70lgmTRvHO7EplKDDI7ARPZu2oXWAMzJlXI79noGfz+aIuWr+NlbObP6MqeeqhnTVsaau4tEpE/k0Lo1SdHgHN+Xedr14tF0netSugb/dB6Hw7Pfc+9ksW8CrcyWqTlt6N6pPLUcZTKmsX/IGA1fGYxcO/z61gE2LZ/BzugKSD/0efp1nKwe8gPXqFpYmWkGnQw9Yrmxn6dUbA9E/9BfaVXKJone7btzfuC4hDmApOsvs2R/xRZJdOZQEFh84hwUdeh2gnGf5wYTyi9KbUBL4dvZP7P1TDScIAiLoFYRbYD3LrguFaIC+5kMsHDWODx58iqlPTGLd+7P4JMbuvqXsT1SAEbRcNh08QH7FdiWBZUcvYJUDifT7454YtfgQk+es5oICer+eTH+iJzVv4ROr8wkl0mALupedLLq23Xp1G6uSFHR+IdS4WT7Wsyw8mIAVPU2btCFEAmvSDpYk3tCXenN/Og+Z0KbD+WHku6yYNJN36trCelPSSQ7c0J14E7pQHn/2W/a9O8v2b9KbPFFtG8sE12tCPR2gFXEiIQEzgHKF7WfTUDHg5AAol9h7rgAVsKad5WSxBpIHbWLqXB928afr+eeYLx/nYLEG6Gje+z2WPPU8kx58junPT+fouy/TWQ9g5dSGL5h+uRQw0KDbBxz/8CtWjJ7Gjvd/4oc2tl7aggvzmLgzrepdigrWi3w1+1cO/F4QpaYw69eZrMpVQPKm2+CZnHr/CxaMfJMfRr7HbxPmcOnj1+lV8VFQLvLF3IUcMwEOtRj5yhxi3/6YZa99y9EpbzLQVwcUc2DNt/ySVW2pqqGRd+p7xuxIwoqOGu1HM6N98LVeaBsLR/dtJ04Bhxp30d1LBuUSKw5csJ3nW/bX2lXn054Jz0xk3qvfsnlgE9t7xnKRvRerXlyYEzax7KoCumh6N/JDRuHUoa3E/m7UC+akpYxaeYpi+xcEQfhdN/vpu6MVFBaQmJRA/MUTnD4by9mEOM5dOM2FC3HEXzzJ6bMnOHPhFIkplykpFV8r/+9Jzrg42nqxrCnb+frwles/NrIzrvbjRjWJ+jXrYEQj69Q2NpXvbL2yjZVXFWTvurTwrK4XsrISti39nB/TFNDX4JnhL9LP89Y+rpoUSfMIA2j5bDl4gDwArJw4uIs4RSa0Rl2CbnJ404XN/JaqgK4Wvfv3oYuHBGoiKw6ctQsaDLS/90M2vDGFUVFVg/5bz6M6rni7lIcxDs642Y9O+BvoA5vR1kcGFC4lnCVbBSXnCDuTFXBswN2RRqCM4+dOU4ZKYeI5ziuAMYZOda4P4/hr9fxjkqNT+a1whfhDS1mRev0KQHZ0xkUGrOdZeOA8JkD26sY7A9sSVPE2cQhhyJCHudsIUMLuw3tJsxv87BzVhk4uEqbEhbyyOs7uFv511uQN/Hy6CJDwbvYs3/VucMO4cr2rx7UxxubEzSxJNAMyIW2f4Z0mvteCU2NAN6b2aWarW1ksvx3PuXFMdjW0ssNM/nUVFxQwBN/HV490uD4eu4IljoWHr6Cgo2GToTzRwAsJhfjDWzj6B4FkFX+xXa+T8HR1w/YJMeDuWPkNbebAvp2cU0Ef3o7XO7YgQAIlZQeLr92BsOdI60ZN8ZLMxK7/jGkXfu9KRRAEe/ZfGXek0tJSLiSc4vzVU6RlJlJqKsbFyRVfj2D8fULwcQvAx8sfb+9AArxDCQmIIMgnFDdnd8pKS0jJTuR08gkuJp7HbPk7fs6EfxWHGB5qE2W7JW66wHdfPk79CZN4Z9958qr9sVPxbtiJtgbQig6x7EQBKhaOH9rFGUUmokl7Gsm/P5TelDCXMVuTsOBIs77jeLd+5Qd1/oDqTreWDXBCI/vUdjYUq2A9z/Kjl7FKgfRqXtuud6xCGbv27iRBA31Ye/pFtKBfedBw4cgWDlT5HZbxD2lMp3oNia7y5NKfyeO6soIkjl44xtI1H/J+bCmgo1bb3nT7w7Ec5dRstm/8irHzvmTsvC8Zv+4AqdWeG8ChLnfXdkcCTElnOG5VyTl9lGNWMNRow/P1a6JHI/PiCeKsVmIvXaIUMNRoRkeXirr+Z/X8M4y1ujMo3NYAxVdW8Oj4Idw18wcWJRZeCxLVsgucSLf1MzpHNqOD3TOJsmcjWgfazrY547IteK9Ece/CR/c1xQMzx9Z/xqeXqv9+K7wUT7wCYKB10/YEyGBN3sy7823tbfs3k0+OpqGgUnTlPBdVACPNY5peHy8MgExQnfrU1gFYuZScdOOYbHuamaOrZ/BDmhWM0bz69Ai6XDsX15XEb2JVhgq6KPo0r02XZi3xl0BJ28XiC9XXrTp/tV01cw7nE+LYeWAuz/62nyJAH3APQxtWGuBvOs7CIymo6GjYtANNGnSgi7sE6lVW7Y/DVDnDa1T8Wr/EW/VcwXKW6bPnceQPG08QhAo3fmvcITRN43LyRS5cPUVBcT6urn64G33RyS7oJQOyTkbWy8h6PTq9Hr1ejyzbvsQ0NDRZQkZCJ0s461wIcgnD09OH3KIszl09RXpmmv0hhTuWgZb3TWVO36bYnouykJawmalfjaDl54s4ekNni4bk0ZEHop1AK2Trwf3kWs6y7MgVFCmI3q1i7B5ksqeSkRDHZcXWyxzs6233lPgf0CT8m3ehvSNoxYdZdrwQ0+VtrExRkP3v4r5IHdWG3GWHWXw8AxUd9Zu0p67Omc5Nm+MrgZqxmyXnqv8ZruI/ykPh/LaJdJz8Io8s2kGCLpjOPd5i6cNtuMXObdBy2bdrEdPXLWD6ugXM2HOy0qwQ9oy0rReDM6AVXeBwejF7TsdRjI660S1pG9OICAmUtDj25mRy/IqtPnWjmxF6Leb9T+r5JznE8OYr7/BqPT/bOG5rNkf2/8xjk59g4IZ4igCttJhiFUDCycmlvEexEskFj/I3j2YxU2bXJpoGte55hfF1XcAUz2ez51Vza10hv6TIFphKTni7GZEBa/oBvitvb9u/Rfwcn4mCRkFpqe2Wv2TE3enGSyzJybX8AUsNk8VU/fuxMi2XoxdTsACSox8R7tVdDZWwbf8ekjTQh7alX7Ae1/rt6ewmgZbCmv0nb3n88F9tVyVtJUMnj6D7l9/yW4aeyJhBzBr1Ij0qBepFcVtYm6OCLpJezSLQO7agb30PJFQSjm1hb7UxuoYmhTBi6BN0dIKShPmMWnP+b7mzIAj/H9zqT8q/hqZpJF49R3L6eZwdnHA3BCCjw1FvwNHohN5oIKeogF0nj7FkxwYW7FzD3F2rmLttBQu2rmDuzpXM276SJTvWsuvUETILC1EVUBUFFAkjjgS4hOHooCclI570zBT7Igh3Il0gfQd/wYkPP2dGjzZEOUqAmaRjXzFidfyNPzqSD/1aN8UdyDu9g7XxO1ibpqALaM8DtX4/5AWZ0LaPMtRfB1oOa+Z/xDfJf647R/bswAN1XYBCth/ew65De7mg6ohs2pnWNzl83oktrMvTAEdIXceb877k3dP5uEiAls6a/cduevu7wn+ah6tvNM0CXNEBms6ZmrViiKourrkZyYvWdz3A890H8nz3gYxs2wDfmwzhABnvek1oorM93Hfs/FG2nitAk/y5KyYCl4gmtHaTQLnA3tOxHE1WQPKnXUzEtYuV/7Sef5betz1Txs/j+LhXeaFxGK4SYElnzfwP+OSSBZ2TK646AI3C/Gzy7Xu31RzSC23/K7t64VvdN74ukpGPPcZdjlB8cS6jNiZz/Sk5AAk3Jyfb3QGthIy8YlRAH9CWkX0f5dWedxFVJV8d7s7OtkBRKyG9fP/KlPyc8osSGS93zz/+IZL9Gdy3F5E60PL3MO7HZcTbB+fFB1l0PBsNcOYKsxd+ydhlR8g2yoDKlWOb2VHttYiKWl5AWbJV/C+3q2MgTWuGlA/30OHiH0PLwMoznBSyaf9eUjXAAOd2fcPYebPYXuhkm6Ywaw+Lz9w8RNeHPsBn/RvhRikH13zGzPQ78MdcEP4Bd9TnJCUzmbPZJ3FycMeIJ7LOAUcnJ2QHHbvOHGX25t9YsGklJy+dISo8nPs6deOhTr15tFN/Hu48gIc6D+CRTv0Z3Lkffdt3IdgvgINxR5m7bRVzt63k8LlYSlULFtWEpupxNgbhpDcQn36SgsJrjysJdzAX/xY88+hH7H/jcZo5AFg5cza2mjF9Ev5Nu3C3M1B6gjlrDnFB1VGrWWda3CTorExyasbkoX2ppbP11k6aNY/jN0TWv0Pyok/r5ngABefW8empJBQ5hL6t6t3YawWg5rJ23/7y2QuKiT1g6zWdseUgl1UAleTjW9l689/hv5CHjpp3jWXn1K/4sIE7lFzgxx/f4eOEP1Fh2YcuPV/kk6Ev88nQl/m4T5vrYzCrofNuxl1BOsDM6UOr2JmrIrk15O5IAxga0jHSESjh6L6NxJaB5NKAThWTn/7H9fxPORFZ/16mjZ7F+gHRtl5/JYE957JRnOrSPMjWk1p2cScrc6reZy9L3M2GdAWQ8KtZn3o3ee8ZwgbxWb8GuFLKvrWL2FkloJRxC69dHtiaOXBwG5dV0Id0YfygZ5lyXwdq27W1e826ROts+x88spOkKp8PE7FH93NBBSRPmkfdwowkSLjHjODTjiHo0ciN+56Ra85V6rlVyTy+iQ0Fti7XgsStfLluAdPXL2dT+Swcau5elsZVcyliySG9RLXV07l8gr+/2K56/558PXE22x5uiTdFnNz+IU+sir82ZEEt2MuC2FxbD3fpeZZsWMD0dQv59mSqrYdcy2TdwcNcfwzVngP1e47itdpOUHaSzzYcu/HCWxCEG/zOz8K/h6IoJCbH4qCAt8UPWa/H6OJITkkhc7csZ9HW1YT5BzC02wAe7tafe5q3J8wnAINkQEKHpEmAjCrJSJKEHnDSGYkMCKN7i04MubsvAzv3x2gwsHDLbyzbtZ7sohysZhOKpiPIMYIypYhLVy/YF024E1iOM+3Hn1mTWlLeYyVjcHbHvfyurU5vrPZHW3Ztx4MN3JG0XHbEXcAqh9GvZXS1+95IxrvRCD7pGIIeKDz/CyOWx1LeuXQLZHyadqGrq4RWcIytVxR0gR24v2a1IS9qwR4WxxXagvV6A3nvoef5oPzfOx3r4ARo+ftYcuLmP8N/OQ9DJCMfG0ZnZ6Asjk9+XcAJ+968v4s+kk51fJFRST5/nIuKbexmOwMgu9OhbhQOqCSfP8llBZxrNeOuipj3L9RTU0wUlJZQWPHPdPMKmuLn8MKK3Zwvq+iGdMDT1aW8t1mHg4MDkq4mD3VsjDtAyUEmfv0dK1OLULGQeWkVL3xXPu2brgaP3N3Sbo7Yyhxo1Gs0o2s5oZUVkmdXLENEdx6uZbufX3D6ex6dvZETRbadVYsFs93tfX1oD4ZG246Wf/I7nly8k3MlKlhzObx9Gk9vuIQVcAjpybAGdgNmb0Zyo/ugV3giQAeUsO+393n3bHkQq+ayZv9h8gDJvSnPD75+Tj4Y2JsmBkDLYf2Bg+QDaukl9l3KwawWcGjfXgpgpF5m3+kdVXNrXSG/pMgWmEpOeLsZkQFr+gG+K29v279F/BifiYJGQWmp7Za/ZMTd6cZLLMnJtfwBSw2TxVT9+7EyLZejF1OwAJKjHxHu1V0NlbBt/x6SNNCHtqVfsB7X+u3p7CaBlsKa/SdvefzwX21XJW0lQyePoPuX3/JbhkkpXtGt6VTlcaWCW7SjpQOgFbD5wN7KL1bDSPM+o3i5RrWfbEEQ/mP/RJeCIAgCIOPfrTnu2q3hlk/9V/pFcsHDU6HcSA+kO4H82Vs4kFXlWJs9zXhmYnP+9lXFBUEQ7hAi6BUEQfjXBb0aGobbtjBBEIT/PhH0CoIgCIIgCHc80RkgCIIgCIIg3PFE0CsIgiAIgiDc8UTQKwiCIAiCINzxRNArCIIgCIIg3PFE0CsIgiAIgiDc8UTQKwiCIAiCINzxRNArCIIgCIIg3PFE0CsIgiAIgiDc8f4PXqEmYoJc9GsAAAAASUVORK5CYII=';
+
+  function formatTanggalIndo(dateInput) {
+    const date = new Date(dateInput);
+    if (isNaN(date.getTime())) return '-';
+    return `${date.getDate()} ${INDO_MONTHS[date.getMonth()]} ${date.getFullYear()}`;
+  }
+
+  // ============ CETAK LAPORAN (PDF & Word), memakai data hasil filter saat ini ============
+  function buildFilterDescription() {
+    let desc = 'Semua Anggota';
+    if (state.role !== 'semua') {
+      desc = state.role;
+      if (state.role === 'Siswa') {
+        if (state.kelas !== 'semua') desc += ` - Kelas ${state.kelas}`;
+        if (state.jurusan !== 'semua') desc += ` - Jurusan ${state.jurusan}`;
+      }
+    }
+    if (state.bulan !== 'semua') {
+      const [y, m] = state.bulan.split('-');
+      desc += ` (${INDO_MONTHS[parseInt(m, 10) - 1]} ${y})`;
+    }
+    return desc;
+  }
+
+  function buildLaporanHtml() {
+    const adminUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    const namaPetugas = (adminUser && adminUser.name) ? adminUser.name : '.........................................';
+    const tanggalCetak = formatTanggalIndo(new Date());
+    const list = getTableList();
+    const s = computeStats(list);
+
+    const rowsHtml = list.map((u, i) => `
+      <tr>
+        <td style="text-align:center;">${i + 1}</td>
+        <td>${escapeHtml(u.noAnggota)}</td>
+        <td>${escapeHtml(u.name)}</td>
+        <td style="text-align:center;">${escapeHtml(u.role)}</td>
+        <td style="text-align:center;">${u.role === 'Siswa' ? escapeHtml(`${u.kelas || '-'} ${u.jurusan || ''}`.trim()) : '-'}</td>
+        <td>${escapeHtml(u.phone || '-')}</td>
+        <td>${escapeHtml(u.joinDate || '-')}</td>
+      </tr>
+    `).join('');
+
+    return `
+    <div style="font-family:'Times New Roman', Times, serif; color:#111; max-width:900px; margin:0 auto;">
+      <div style="text-align:center; font-weight:bold; font-size:13px; letter-spacing:.3px; margin-bottom:2px;">PEMERINTAH KABUPATEN MAGELANG</div>
+      <div style="text-align:center; margin-bottom:14px;">
+        <img src="${KOP_SEKOLAH_BASE64}" style="width:100%; max-width:700px;">
+      </div>
+
+      <div style="text-align:center; font-weight:bold; font-size:14px; margin-bottom:2px;">LAPORAN DATA ANGGOTA PERPUSTAKAAN</div>
+      <div style="text-align:center; font-weight:bold; font-size:14px; margin-bottom:16px;">SMK MA'ARIF WALISONGO KAJORAN</div>
+
+      <table style="font-size:12.5px; margin-bottom:16px;">
+        <tr><td style="width:190px; padding:2px 0;">Filter Data</td><td style="width:14px;">:</td><td>${buildFilterDescription()}</td></tr>
+        <tr><td style="padding:2px 0;">Petugas Perpustakaan</td><td>:</td><td>${namaPetugas}</td></tr>
+        <tr><td style="padding:2px 0;">Tanggal Cetak</td><td>:</td><td>${tanggalCetak}</td></tr>
+      </table>
+
+      <table style="width:100%; border-collapse:collapse; font-size:11.5px; margin-bottom:14px;" border="1" cellpadding="6" cellspacing="0">
+        <thead>
+          <tr style="background:#105843; color:#fff;">
+            <th style="width:30px;">No.</th>
+            <th>No. Anggota</th>
+            <th>Nama</th>
+            <th>Status</th>
+            <th>Kelas/Jurusan</th>
+            <th>No. Telp</th>
+            <th>Tgl. Bergabung</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rowsHtml || '<tr><td colspan="7" style="text-align:center;">Belum ada data anggota.</td></tr>'}
+        </tbody>
+      </table>
+
+      <table style="width:100%; border-collapse:collapse; font-size:12px; margin-bottom:24px;" border="1" cellpadding="6" cellspacing="0">
+        <tr style="background:#eefbf5; font-weight:bold;">
+          <td>Total Anggota (hasil filter)</td><td style="text-align:center;">${s.total}</td>
+          <td>Siswa</td><td style="text-align:center;">${s.siswa}</td>
+        </tr>
+        <tr>
+          <td>Guru</td><td style="text-align:center;">${s.guru}</td>
+          <td>Staff</td><td style="text-align:center;">${s.staff}</td>
+        </tr>
+      </table>
+
+      <table style="width:100%; font-size:12.5px;">
+        <tr>
+          <td style="width:50%; text-align:center;">Mengetahui,</td>
+          <td style="width:50%; text-align:center;">Kajoran, ${tanggalCetak}</td>
+        </tr>
+        <tr>
+          <td style="text-align:center; font-weight:bold;">Kepala Sekolah</td>
+          <td style="text-align:center; font-weight:bold;">Petugas Perpustakaan</td>
+        </tr>
+        <tr><td style="height:60px;"></td><td></td></tr>
+        <tr>
+          <td style="text-align:center; font-weight:bold; text-decoration:underline;">Maksum, S.Pd.I</td>
+          <td style="text-align:center; font-weight:bold; text-decoration:underline;">${namaPetugas}</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;">NIP. .........................................</td>
+          <td style="text-align:center;">NIP. .........................................</td>
+        </tr>
+      </table>
+    </div>
+    `;
+  }
+
+  document.getElementById('printPdfBtn').addEventListener('click', () => {
+    const html = buildLaporanHtml();
+    document.getElementById('printArea').innerHTML = html;
+
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+      <html><head><title>Laporan Data Anggota Perpustakaan</title>
+      <style>
+        @page { margin: 0; }
+        body { margin: 0; padding: 14mm 12mm; }
+      </style>
+      </head>
+      <body style="font-family:Arial, sans-serif;">
+        ${html}
+      <\/body><\/html>
+    `);
+    printWindow.document.close();
+    printWindow.onload = () => { printWindow.focus(); printWindow.print(); };
+    printMenu.classList.remove('open');
+  });
+
+  document.getElementById('printWordBtn').addEventListener('click', () => {
+    const html = buildLaporanHtml();
+    const docHtml = `
+      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+      <head><meta charset="utf-8"><title>Laporan Data Anggota Perpustakaan</title></head>
+      <body>
+        ${html}
+      <\/body><\/html>
+    `;
+    const blob = new Blob(['\ufeff', docHtml], { type: 'application/msword' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `Laporan-Data-Anggota-Perpustakaan.doc`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+    printMenu.classList.remove('open');
+  });
+
+  // ============ REFRESH SEMUA ============
+  function refreshAll() {
+    updateStatCards();
+    renderTable();
+  }
+
+  // ============ INISIALISASI ============
+  renderBulanOptions();
+  refreshAll();
+
+  // ============ SINKRON OTOMATIS ANTAR TAB ============
+  window.addEventListener('storage', (e) => {
+    if (!e.key) return;
+    if (e.key === USERS_KEY) { renderBulanOptions(); refreshAll(); }
+  });
+});
+</script>
+</body>
+</html>

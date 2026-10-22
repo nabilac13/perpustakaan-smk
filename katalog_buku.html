@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katalog Buku — Perpustakaan SMK MA'arif Walisongo Kajoran</title>
+<!-- Font Awesome untuk Ikon Estetik -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green-900: #0c3f2e;
+    --green-800: #105843;
+    --green-700: #146b52;
+    --green-600: #1c8264;
+    --mint-100: #d7f0e4;
+    --mint-50: #eefbf5;
+    --ink: #16302c;
+    --muted: #5f7a75;
+    --border: #e1ece9;
+    --bg: #f5f9f8;
+    --card: #ffffff;
+    --available: #22a55e;
+    --shadow: 0 10px 30px -12px rgba(12, 63, 46, .16);
+    --navbar-h: 78px;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;
+    padding:0;
+  }
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    min-height:100vh;
+  }
+  h1,h2,h3,.brand-title,.nav-link,.btn,.badge,.avatar-name{font-family:'Poppins',sans-serif;}
+
+  /* ---------- NAVBAR ---------- */
+  header.topbar{
+    background: linear-gradient(180deg, var(--green-900), var(--green-800));
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, .12);
+  }
+  .brand{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+    margin-left: 12px;
+  }
+  .brand-logo{
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    box-shadow: inset 0 0 0 3px var(--green-700);
+    overflow: hidden;
+  }
+  .brand-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .brand-title{
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: .3px;
+    line-height: 1.15;
+  }
+  .brand-sub{
+    font-family: 'Inter', sans-serif;
+    font-size: 11.5px;
+    color: #c7e8da;
+    font-weight: 500;
+    line-height: 1.3;
+    margin-top: 2px;
+  }
+
+  nav.nav-links{
+    display: flex;
+    gap: 6px;
+  }
+  .nav-link{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #e3f4ec;
+    background: transparent;
+    border: none;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 14.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .15s ease;
+  }
+  .nav-link i {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .nav-link:hover{
+    background: rgba(255, 255, 255, .08);
+  }
+  .nav-link.active{
+    background: rgba(255, 255, 255, .16);
+    color: #fff;
+  }
+
+  /* auth area */
+  .auth-area{
+    display:flex;
+    align-items:center;
+  }
+  .btn-login{
+    background: #fff;
+    color: var(--green-800);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: .15s ease;
+    font-family: 'Poppins', sans-serif;
+  }
+  .btn-login:hover{
+    background: var(--mint-50);
+    transform: translateY(-1px);
+  }
+
+  .user-menu{
+    position:relative;
+  }
+  .user-trigger{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px 6px 4px 4px;
+    border-radius: 12px;
+    transition: .15s ease;
+  }
+  .user-trigger:hover{
+    background: rgba(255, 255, 255, .08);
+  }
+  
+  /* Avatar Siluet / Foto Profil */
+  .avatar-circle{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-size: 20px;
+    flex-shrink: 0;
+    border: 2px solid rgba(255, 255, 255, .5);
+    overflow: hidden;
+  }
+  .avatar-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .user-text{
+    text-align:left;
+    line-height:1.25;
+  }
+  .avatar-name{
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .avatar-status{
+    font-size: 11.5px;
+    color: #bfe8d5;
+    font-weight: 500;
+  }
+  .chev{
+    width: 16px;
+    height: 16px;
+    color: #cdead9;
+    transition: .15s ease;
+  }
+  .user-trigger[aria-expanded="true"] .chev{transform:rotate(180deg);}
+
+  /* ---------- MOBILE NAV TOGGLE (hamburger) ---------- */
+  .nav-toggle{
+    display:none;
+    align-items:center;
+    justify-content:center;
+    width:40px;
+    height:40px;
+    border-radius:10px;
+    background:rgba(255,255,255,.08);
+    border:none;
+    color:#fff;
+    font-size:18px;
+    cursor:pointer;
+    flex-shrink:0;
+    transition:.15s ease;
+  }
+  .nav-toggle:hover{
+    background:rgba(255,255,255,.16);
+  }
+
+  .dropdown{
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    width: 190px;
+    padding: 8px;
+    display: none;
+    flex-direction: column;
+    gap: 2px;
+    z-index: 100;
+  }
+  .dropdown.open{display:flex;}
+  .dropdown a, .dropdown button{
+    all:unset;
+    box-sizing:border-box;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+  .dropdown a:hover, .dropdown button:hover{background: var(--mint-50);}
+  .dropdown .logout{color:#c0392b;}
+  .dropdown hr{
+    border:none;
+    border-top:1px solid var(--border);
+    margin:4px 0;
+  }
+
+  /* ---------- TOOLBAR & CONTENT ---------- */
+  main{
+    padding:26px 28px 60px;
+    max-width:1440px;
+    margin:0 auto;
+  }
+
+  /* Hanya melebar di layar yang BENAR-BENAR lebar (PC/monitor besar).
+     Laptop/layar sempit tetap pakai batas 1440px seperti semula,
+     jadi tidak akan pernah kepotong/overflow di layar kecil. */
+  @media (min-width: 1600px) {
+    main { max-width: 1680px; }
+  }
+  .toolbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+  }
+  .btn-filter{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    background:var(--green-800);
+    color:#fff;
+    border:none;
+    padding:12px 20px;
+    border-radius:10px;
+    font-weight:700;
+    font-size:14.5px;
+    cursor:pointer;
+    transition:.15s ease;
+  }
+  .btn-filter:hover{
+    background:var(--green-700);
+  }
+  .btn-filter.active{
+    background:var(--green-900);
+    box-shadow:0 0 0 3px var(--mint-100);
+  }
+
+  .search-wrap{
+    flex:1;
+    min-width:260px;
+    max-width:520px;
+    position:relative;
+    margin-left:auto;
+  }
+  .search-wrap input{
+    width:100%;
+    padding:12px 44px 12px 16px;
+    border-radius:10px;
+    border:1.5px solid var(--border);
+    font-size:14px;
+    font-family:'Inter',sans-serif;
+    outline:none;
+    background:#fff;
+    transition:.15s;
+  }
+  .search-wrap input:focus{
+    border-color:var(--green-600);
+  }
+  .search-wrap i{
+    position:absolute;
+    right:16px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:16px;
+    color:var(--green-700);
+  }
+
+  .content-layout{
+    display:flex;
+    align-items:flex-start;
+    gap:22px;
+  }
+
+  .filter-panel{
+    width:280px;
+    flex-shrink:0;
+    background:var(--card);
+    border:1.5px solid var(--mint-100);
+    border-radius:16px;
+    padding:22px 20px 20px;
+    box-shadow:var(--shadow);
+    display:none;
+  }
+  .filter-panel.open{
+    display:block;
+    animation:slideIn .18s ease;
+    position:sticky;
+    top:90px;
+    max-height:calc(100vh - 110px);
+    overflow-y:auto;
+  }
+  @keyframes slideIn{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:translateX(0);}}
+  .filter-panel h3{
+    margin:0 0 14px;
+    font-size:17px;
+    color:var(--green-900);
+  }
+  .filter-panel hr{
+    border:none;
+    border-top:1px solid var(--border);
+    margin:14px 0;
+  }
+  .filter-group-label{
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--ink);
+    margin-bottom:10px;
+    display:block;
+  }
+  .genre-list{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+    margin-bottom:4px;
+  }
+  .genre-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:13.5px;
+    color:var(--ink);
+    cursor:pointer;
+    font-weight:500;
+  }
+  .genre-item input{
+    width:16px;
+    height:16px;
+    accent-color:var(--green-700);
+    cursor:pointer;
+    flex-shrink:0;
+  }
+  .genre-item.all{
+    color:var(--green-700);
+    font-weight:700;
+  }
+  .filter-panel input[type="text"], .filter-panel input[type="number"]{
+    width:100%;
+    padding:9px 11px;
+    border-radius:8px;
+    border:1.5px solid var(--border);
+    font-size:13.5px;
+    font-family:'Inter',sans-serif;
+    outline:none;
+  }
+  .filter-panel input:focus{
+    border-color:var(--green-600);
+  }
+  .year-row{
+    display:flex;
+    gap:8px;
+  }
+  .year-row input{
+    width:50%;
+  }
+  .filter-actions{
+    margin-top:18px;
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+  }
+  .btn-apply{
+    background:var(--green-800);
+    color:#fff;
+    border:none;
+    padding:12px;
+    border-radius:9px;
+    font-weight:700;
+    font-size:14px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+  }
+  .btn-apply:hover{background:var(--green-700);}
+  .btn-reset{
+    background:#fff;
+    color:var(--green-800);
+    border:1.5px solid var(--green-800);
+    padding:11px;
+    border-radius:9px;
+    font-weight:700;
+    font-size:14px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+  }
+  .btn-reset:hover{
+    background:var(--mint-50);
+  }
+
+  .grid-area{
+    flex:1;
+    min-width:0;
+  }
+  .result-count{
+    color:var(--muted);
+    font-size:13.5px;
+    margin-bottom:14px;
+    font-weight:500;
+  }
+
+  .book-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+    gap:20px;
+  }
+  .book-card{
+    background:var(--card);
+    border:1.5px solid var(--border);
+    border-radius:16px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    box-shadow:0 4px 14px -8px rgba(12, 63, 46, .12);
+    transition:.18s ease;
+  }
+  .book-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 14px 28px -14px rgba(12, 63, 46, .28);
+  }
+  
+  .cover{
+    position:relative;
+    height:280px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:16px;
+    overflow:hidden;
+    background:var(--mint-50);
+  }
+  .cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    position: absolute;
+    inset: 0;
+  }
+  .cover .eyebrow{
+    font-size: 10px;
+    letter-spacing: 3px;
+    font-weight: 700;
+    opacity: .75;
+    margin-bottom: 10px;
+  }
+  .cover .cover-title{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 19px;
+    line-height: 1.2;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, .25);
+  }
+  .cover .cover-author{
+    margin-top: 10px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    font-weight: 600;
+    opacity: .85;
+    text-transform: uppercase;
+  }
+  
+  .bookmark-btn{
+    position:absolute;
+    top:12px;
+    right:12px;
+    width:36px;
+    height:36px;
+    border-radius:10px;
+    background:#ffffff;
+    border:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    transition:.15s;
+    z-index: 2;
+  }
+  .bookmark-btn:hover{transform:scale(1.06);}
+  .bookmark-btn i{font-size:15px;color:#8c9e9b;}
+  .bookmark-btn.saved i{color:var(--green-800);}
+
+  .card-body{
+    padding:14px 16px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    flex:1;
+  }
+  .badge-row{
+    display:flex;
+    gap:6px;
+    flex-wrap: wrap;
+  }
+  .badge{
+    font-size:11px;
+    font-weight:700;
+    padding:4px 10px;
+    border-radius:20px;
+  }
+  .badge.fiksi{
+    background:var(--mint-100);
+    color:var(--green-800);
+  }
+  .badge.nonfiksi{
+    background:#eef1e8;
+    color:#5a6b3f;
+  }
+  .badge.format {
+    background: #e2f0fb;
+    color: #1d6fa5;
+  }
+  .book-title{
+    font-size:15px;
+    font-weight:700;
+    color:var(--ink);
+    line-height:1.3;
+  }
+  .book-author{
+    font-size:12.5px;
+    color:var(--muted);
+    font-weight:500;
+    margin-top:-4px;
+  }
+  .avail{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:12.5px;
+    color:var(--ink);
+    font-weight:600;
+    margin-top:2px;
+  }
+  .dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--available);
+    flex-shrink:0;
+  }
+  .card-actions{
+    display:flex;
+    flex-direction: column;
+    gap:6px;
+    width: 100%;
+    margin-top:auto;
+  }
+  .btn-row-top {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+  }
+  .btn-detail, .btn-baca{
+    flex: 1;
+    border-radius: 9px;
+    padding: 8px 0;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn-detail{
+    background:#fff;
+    border:1.5px solid var(--green-800);
+    color:var(--green-800);
+  }
+  .btn-detail:hover{
+    background:var(--mint-50);
+  }
+  .btn-baca{
+    background:var(--green-800);
+    border:none;
+    color:#fff;
+  }
+  .btn-baca:hover{
+    background:var(--green-700);
+  }
+  .btn-pinjam-full {
+    width: 100%;
+    background: var(--green-700);
+    color: #fff;
+    border: none;
+    border-radius: 9px;
+    padding: 8px 0;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: 'Poopins', sans-serif;
+    transition: .15 ease;
+  }
+  .btn-pinjam-full:hover {
+    background: var(--green-900)
+  }
+
+  @media (max-width:820px){
+    header.topbar{
+      flex-direction:row;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      padding:12px 16px;
+      gap:0;
+      position:relative;
+    }
+    .brand{margin-left:0; width:auto; justify-content:flex-start;}
+    .nav-toggle{display:flex;}
+    nav.nav-links{
+      display:none;
+      position:absolute;
+      top:100%;
+      left:0;
+      width:100%;
+      flex-direction:column;
+      gap:4px;
+      background:linear-gradient(180deg, var(--green-800), var(--green-900));
+      padding:10px 16px 16px;
+      box-shadow:0 12px 20px -8px rgba(0,0,0,.25);
+      z-index:60;
+    }
+    nav.nav-links.open{display:flex;}
+    .nav-link{width:100%; justify-content:flex-start; padding:12px 14px;}
+    .auth-area{display:none;}
+    .content-layout{flex-direction:column;}
+    .filter-panel{width:100%; position:static !important; max-height:none !important;}
+    main{padding:18px 16px 40px;}
+  }
+
+  /* ---------- PHONE: grid buku 2 kolom, card lebih compact ---------- */
+  @media (max-width:600px){
+    .book-grid{
+      grid-template-columns:repeat(2, 1fr);
+      gap:12px;
+    }
+    .cover{height:150px; padding:12px;}
+    .cover .eyebrow{font-size:8px; letter-spacing:2px; margin-bottom:6px;}
+    .cover .cover-title{font-size:14px;}
+    .cover .cover-author{font-size:9px; margin-top:6px;}
+    .bookmark-btn{width:30px; height:30px; top:8px; right:8px;}
+    .bookmark-btn i{font-size:12px;}
+    .card-body{padding:10px 12px 12px; gap:6px;}
+    .badge{font-size:9.5px; padding:3px 8px;}
+    .book-title{font-size:13px;}
+    .book-author{font-size:11px;}
+    .avail{font-size:11px;}
+    .card-actions{gap:4px;}
+    .btn-detail, .btn-pinjam, .btn-baca{font-size:10.5px; padding:7px 0;}
+    .toolbar{gap:10px;}
+    .btn-filter{padding:10px 14px; font-size:13px;}
+    .search-wrap{min-width:0;}
+  }
+
+  /* ---------- AUTH MODAL (perlu login/daftar) ---------- */
+  .auth-modal-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(12, 63, 46, .45);
+    align-items:center;
+    justify-content:center;
+    z-index:200;
+    padding:20px;
+  }
+  .auth-modal-overlay.open{display:flex;}
+  .auth-modal{
+    position:relative;
+    background:#fff;
+    border-radius:20px;
+    box-shadow:var(--shadow);
+    width:100%;
+    max-width:380px;
+    padding:34px 28px 28px;
+    text-align:center;
+    animation:authPop .18s ease;
+  }
+  @keyframes authPop{
+    from{transform:scale(.95); opacity:0;}
+    to{transform:scale(1); opacity:1;}
+  }
+  .auth-modal-close{
+    position:absolute;
+    top:14px;
+    right:14px;
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    border:none;
+    background:var(--mint-50);
+    color:var(--muted);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+  }
+  .auth-modal-close:hover{background:var(--mint-100); color:var(--ink);}
+  .auth-modal-icon{
+    width:64px;
+    height:64px;
+    margin:0 auto 16px;
+    border-radius:50%;
+    background:var(--mint-50);
+    border:1.5px solid var(--mint-100);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--green-700);
+    font-size:26px;
+  }
+  .auth-modal h3{
+    margin:0 0 10px;
+    font-size:19px;
+    color:var(--ink);
+    font-family:'Poppins', sans-serif;
+  }
+  .auth-modal p{
+    margin:0 0 22px;
+    font-size:13.5px;
+    color:var(--muted);
+    line-height:1.6;
+  }
+  .auth-modal-actions{
+    display:flex;
+    gap:10px;
+    margin-bottom:12px;
+  }
+  .btn-modal-login, .btn-modal-register{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:12px 10px;
+    border-radius:10px;
+    font-weight:700;
+    font-size:13.5px;
+    cursor:pointer;
+    font-family:'Poppins', sans-serif;
+    border:none;
+    transition:.15s ease;
+  }
+  .btn-modal-login{background:var(--green-800); color:#fff;}
+  .btn-modal-login:hover{background:var(--green-900);}
+  .btn-modal-register{
+    background:var(--mint-50);
+    color:var(--green-800);
+    border:1.5px solid var(--mint-100);
+  }
+  .btn-modal-register:hover{background:var(--mint-100);}
+  .auth-modal-later{
+    background:none;
+    border:none;
+    color:var(--muted);
+    font-size:12.5px;
+    font-weight:600;
+    cursor:pointer;
+    text-decoration:underline;
+    font-family:'Inter', sans-serif;
+  }
+  .auth-modal-later:hover{color:var(--ink);}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-logo">
+      <img src="img/logo.smk.png" alt="logo sekolah">
+    </div>
+    <div>
+      <div class="brand-title">PERPUSTAKAAN</div>
+      <div class="brand-sub">SMK MA'arif Walisongo Kajoran</div>
+    </div>
+  </div>
+
+  <nav class="nav-links" id="navLinks">
+    <a href="index.html" class="nav-link">
+      <i class="fa-solid fa-house-chimney"></i>
+      <span>Beranda</span>
+    </a>
+    <a href="katalog_buku.html" class="nav-link active">
+      <i class="fa-solid fa-book-bookmark"></i>
+      <span>Katalog</span>
+    </a>
+    <a href="pinjam.html" class="nav-link">
+      <i class="fa-solid fa-box"></i>
+      <span>Pinjam</span>
+    </a>
+    <a href="profile_anggota.html" class="nav-link" id="navProfileLink">
+      <i class="fa-solid fa-circle-user"></i>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <!-- Area Autentikasi / Profil dengan ikon siluet -->
+  <div class="auth-area" id="authArea">
+    <!-- Diisi otomatis oleh JavaScript -->
+  </div>
+
+  <!-- Tombol menu khusus tampilan mobile -->
+  <button class="nav-toggle" id="navToggle" aria-label="Buka menu" aria-expanded="false">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+</header>
+
+<main>
+  <div class="toolbar">
+    <button class="btn-filter" id="btnToggleFilter">
+      <i class="fa-solid fa-filter"></i>
+      Tampilkan Filter
+    </button>
+    <div class="search-wrap">
+      <input type="text" id="searchInput" placeholder="Cari buku berdasarkan judul, penulis, atau genre...">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </div>
+  </div>
+
+  <div class="content-layout">
+    <aside class="filter-panel" id="filterPanel">
+      <h3>Filter Buku</h3>
+      <span class="filter-group-label">Genre</span>
+      <div class="genre-list" id="genreList">
+        <label class="genre-item all"><input type="checkbox" value="Semua Genre" data-all> Semua Genre</label>
+        <label class="genre-item"><input type="checkbox" value="Fiksi"> Fiksi</label>
+        <label class="genre-item"><input type="checkbox" value="Nonfiksi"> Nonfiksi</label>
+        <label class="genre-item"><input type="checkbox" value="Fantasi"> Fantasi</label>
+        <label class="genre-item"><input type="checkbox" value="Matematika"> Matematika</label>
+        <label class="genre-item"><input type="checkbox" value="Pendidikan"> Pendidikan</label>
+        <label class="genre-item"><input type="checkbox" value="Teknologi"> Teknologi</label>
+        <label class="genre-item"><input type="checkbox" value="Kejuruan"> Kejuruan</label>
+        <label class="genre-item"><input type="checkbox" value="Ekonomi"> Ekonomi</label>
+        <label class="genre-item"><input type="checkbox" value="Antropologi"> Antropologi</label>
+        <label class="genre-item"><input type="checkbox" value="Agama"> Agama</label>
+        <label class="genre-item"><input type="checkbox" value="Sains"> Sains</label>
+        <label class="genre-item"><input type="checkbox" value="Cerita Anak"> Cerita Anak</label>
+      </div>
+      <div class="filter-actions">
+        <button class="btn-apply" id="btnApplyFilter">
+          <i class="fa-solid fa-filter"></i>
+          Terapkan Filter
+        </button>
+        <button class="btn-reset" id="btnResetFilter">
+          <i class="fa-solid fa-rotate-left"></i>
+          Reset Filter
+        </button>
+      </div>
+    </aside>
+
+    <section class="grid-area">
+      <div class="result-count" id="resultCount"></div>
+      <div class="book-grid" id="bookGrid"></div>
+    </section>
+  </div>
+</main>
+
+<!-- Modal Notifikasi: perlu login/daftar dulu -->
+<div class="auth-modal-overlay" id="authModal">
+  <div class="auth-modal">
+    <button class="auth-modal-close" onclick="closeAuthModal()" aria-label="Tutup">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div class="auth-modal-icon"><i class="fa-solid fa-book" id="authModalIcon"></i></div>
+    <h3 id="authModalTitle">Masuk dulu, yuk!</h3>
+    <p id="authModalDesc">Kamu perlu masuk sebagai anggota perpustakaan untuk melanjutkan.</p>
+    <div class="auth-modal-actions">
+      <button class="btn-modal-login" onclick="window.location.href='login.html'">
+        <i class="fa-solid fa-right-to-bracket"></i> Masuk Akun
+      </button>
+      <button class="btn-modal-register" onclick="window.location.href='register.html'">
+        <i class="fa-solid fa-user-plus"></i> Daftar Akun
+      </button>
+    </div>
+    <button class="auth-modal-later" onclick="closeAuthModal()">Nanti saja, lihat-lihat dulu</button>
+  </div>
+</div>
+
+<script src="js/data-buku.js"></script>
+<script>
+// Katalog buku sekarang bersumber dari modul bersama DataBuku (js/data-buku.js),
+// sama seperti tambah_buku.html & data_buku.html, supaya satu sumber data.
+let books = DataBuku.getBooks();
+
+// ---------- BUKU FAVORIT/DISIMPAN (PERSISTEN VIA LOCALSTORAGE) ----------
+// Kunci sama persis dengan index.html supaya buku yang disimpan dari kedua
+// halaman ini tetap sinkron dan bisa ditampilkan juga di halaman Pinjam.
+function getFavoriteKey() {
+  return isLoggedIn && currentUser.email ? `favorit_buku_${currentUser.email}` : null;
+}
+
+function getFavoriteIds() {
+  const key = getFavoriteKey();
+  if (!key) return new Set();
+  try {
+    const raw = localStorage.getItem(key);
+    return new Set(raw ? JSON.parse(raw) : []);
+  } catch (e) {
+    return new Set();
+  }
+}
+
+function saveFavoriteIds(set) {
+  const key = getFavoriteKey();
+  if (!key) return;
+  localStorage.setItem(key, JSON.stringify(Array.from(set)));
+}
+
+let bookmarked; // diinisialisasi setelah currentUser tersedia (lihat bawah)
+let activeFilters = null;
+
+// ---------- BUKU YANG SEDANG DIPINJAM PENGGUNA (UNTUK STATUS TROLI) ----------
+// Dipakai supaya tombol "Pinjam Buku" otomatis berubah jadi "Sedang Kamu Pinjam"
+// begitu buku itu dipinjam, dan kembali normal begitu admin menandai status
+// buku itu "Dikembalikan".
+function getActiveLoanTitles() {
+  if (!isLoggedIn || !currentUser.email) return new Set();
+  try {
+    const key = `riwayat_pinjam_${currentUser.email}`;
+    const data = JSON.parse(localStorage.getItem(key)) || [];
+    return new Set(
+      data
+        .filter(item => item.status === 'Dipinjam' || item.status === 'Terlambat')
+        .map(item => (item.title || item.judul || '').trim().toLowerCase())
+    );
+  } catch (e) {
+    return new Set();
+  }
+}
+
+// ---------- STOK BUKU (DIBAGIKAN ANTAR HALAMAN VIA LOCALSTORAGE) ----------
+// Kunci localStorage sama persis dengan yang dipakai di index.html supaya
+// jumlah stok selalu sinkron di kedua halaman.
+const STOCK_KEY = 'book_stock';
+
+function getStockData() {
+  try {
+    const raw = localStorage.getItem(STOCK_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveStockData(stock) {
+  localStorage.setItem(STOCK_KEY, JSON.stringify(stock));
+}
+
+function initStock() {
+  const stock = getStockData();
+  let changed = false;
+  books.forEach(b => {
+    if (!(String(b.id) in stock)) {
+      stock[String(b.id)] = Number(b.avail);
+      changed = true;
+    }
+  });
+  if (changed) saveStockData(stock);
+  return stock;
+}
+
+function getAvail(bookId) {
+  const stock = getStockData();
+  const key = String(bookId);
+  if (stock.hasOwnProperty(key)) return stock[key];
+  const book = books.find(b => b.id === bookId);
+  return book ? Number(book.avail) : 0;
+}
+
+function decrementStock(bookId) {
+  const stock = getStockData();
+  const key = String(bookId);
+  const current = stock.hasOwnProperty(key) ? stock[key] : getAvail(bookId);
+  stock[key] = Math.max(0, current - 1);
+  saveStockData(stock);
+  return stock[key];
+}
+
+// Dipanggil saat admin MENGONFIRMASI buku telah dikembalikan (siap dipakai
+// begitu halaman konfirmasi admin dibuat): incrementStock(bookId, totalBuku)
+function incrementStock(bookId, maxTotal) {
+  const stock = getStockData();
+  const key = String(bookId);
+  const current = stock.hasOwnProperty(key) ? stock[key] : getAvail(bookId);
+  stock[key] = (typeof maxTotal === 'number') ? Math.min(maxTotal, current + 1) : current + 1;
+  saveStockData(stock);
+  return stock[key];
+}
+
+initStock();
+
+// Mengambil data dari localStorage untuk integrasi login
+const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+const savedUser = JSON.parse(localStorage.getItem('currentUser'));
+
+const currentUser = isLoggedIn && savedUser ? savedUser : {
+  name: "Tamu",
+  status: "Belum Login",
+  avatarImg: "" 
+};
+
+// Menampilkan Kelas + Jurusan (mis. "XII PPLG") di navbar, bukan status keanggotaan
+function kelasRoman(kelas) {
+  const map = { '10': 'X', '11': 'XI', '12': 'XII', 10: 'X', 11: 'XI', 12: 'XII' };
+  return map[kelas] || kelas || '';
+}
+function displayKelasJurusan(user) {
+  const kj = `${kelasRoman(user.kelas)} ${user.jurusan && user.jurusan !== '-' ? user.jurusan : ''}`.trim();
+  return kj || user.status;
+}
+
+bookmarked = getFavoriteIds();
+
+function renderAuthArea() {
+  const authArea = document.getElementById('authArea');
+
+  if (isLoggedIn) {
+    const avatarContent = currentUser.avatarImg 
+      ? `<img src="${currentUser.avatarImg}" alt="Foto Profil">` 
+      : `<i class="fa-solid fa-user"></i>`;
+
+    authArea.innerHTML = `
+      <div class="user-menu">
+        <button class="user-trigger" id="userTrigger" aria-expanded="false">
+          <div class="avatar-circle">${avatarContent}</div>
+          <div class="user-text">
+            <div class="avatar-name">${currentUser.name}</div>
+            <div class="avatar-status">${displayKelasJurusan(currentUser)}</div>
+          </div>
+          <i class="fa-solid fa-chevron-down chev"></i>
+        </button>
+        <div class="dropdown" id="userDropdown">
+          <a href="profile_anggota.html"><i class="fa-solid fa-user"></i> Profil Saya</a>
+          <a href="pinjam.html"><i class="fa-solid fa-book-open"></i> Buku Pinjaman</a>
+          <hr>
+          <button class="logout" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+        </div>
+      </div>
+    `;
+
+    const trigger = document.getElementById('userTrigger');
+    const dropdown = document.getElementById('userDropdown');
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = dropdown.classList.toggle('open');
+      trigger.setAttribute('aria-expanded', isOpen);
+    });
+
+    window.addEventListener('click', () => {
+      dropdown.classList.remove('open');
+      trigger.setAttribute('aria-expanded', 'false');
+    });
+  } else {
+    authArea.innerHTML = `<button class="btn-login" onclick="window.location.href='login.html'">Log in</button>`;
+  }
+}
+
+// ---------- MODAL: perlu login/daftar dulu ----------
+// Dipakai saat pengguna belum login mencoba pinjam buku, menyimpan buku
+// ke favorit, atau membuka menu Profile.
+const AUTH_MODAL_CONTENT = {
+  pinjam: {
+    icon: 'fa-book',
+    title: 'Masuk dulu, yuk!',
+    desc: 'Kamu perlu masuk sebagai anggota perpustakaan untuk bisa meminjam buku ini. Kamu tetap bisa membaca dan melihat detail buku tanpa masuk.'
+  },
+  simpan: {
+    icon: 'fa-bookmark',
+    title: 'Masuk dulu, yuk!',
+    desc: 'Kamu perlu masuk sebagai anggota perpustakaan untuk menyimpan buku ke daftar favorit.'
+  },
+  profile: {
+    icon: 'fa-user',
+    title: 'Kamu belum masuk',
+    desc: 'Seluruh siswa-siswi SMK Ma\'arif Walisongo Kajoran otomatis menjadi anggota perpustakaan. Masuk dengan akun sekolahmu untuk melihat profil dan riwayat peminjaman. Sambil menunggu, kamu tetap bisa menjelajahi dan membaca buku secara online.'
+  }
+};
+
+function openAuthModal(context) {
+  const c = AUTH_MODAL_CONTENT[context] || AUTH_MODAL_CONTENT.pinjam;
+  document.getElementById('authModalIcon').className = `fa-solid ${c.icon}`;
+  document.getElementById('authModalTitle').textContent = c.title;
+  document.getElementById('authModalDesc').textContent = c.desc;
+  document.getElementById('authModal').classList.add('open');
+}
+
+function closeAuthModal() {
+  document.getElementById('authModal').classList.remove('open');
+}
+
+document.getElementById('authModal').addEventListener('click', (e) => {
+  if (e.target.id === 'authModal') closeAuthModal();
+});
+
+// Menu Profile tidak bisa dibuka sebelum pengguna login
+document.getElementById('navProfileLink').addEventListener('click', (e) => {
+  if (!isLoggedIn) {
+    e.preventDefault();
+    openAuthModal('profile');
+  }
+});
+
+function handleLogout() {
+  localStorage.removeItem('isLoggedIn');
+  localStorage.removeItem('currentUser');
+  window.location.href = 'index.html';
+}
+
+function renderBooks(list){
+  const grid = document.getElementById('bookGrid');
+  const count = document.getElementById('resultCount');
+  grid.innerHTML = "";
+  count.textContent = list.length + " buku ditemukan";
+
+  if(list.length === 0){
+    grid.innerHTML = `<div class="empty-state">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <h3>Buku tidak ditemukan</h3>
+      <p>Coba ubah kata kunci atau filter pencarian Anda.</p>
+    </div>`;
+    return;
+  }
+
+  const activeLoanTitles = getActiveLoanTitles();
+
+  list.forEach(b=>{
+    const badgeClass = b.genre === "Fiksi" ? "fiksi" : "nonfiksi";
+    const isSaved = bookmarked.has(b.id);
+    const card = document.createElement('div');
+    card.className = "book-card";
+
+    const coverStyle = b.image 
+      ? `background: url('${b.image}') center/contain no-repeat, var(--mint-50);` 
+      : `background: linear-gradient(155deg, ${b.grad[0]}, ${b.grad[1]});`;
+
+    const availNow = getAvail(b.id);
+    const isHabis = availNow <= 0;
+    const isBorrowedByMe = activeLoanTitles.has(b.title.trim().toLowerCase());
+
+    let pinjamBtnHtml;
+    if (isBorrowedByMe) {
+      pinjamBtnHtml = `<button class="btn-pinjam-full" disabled style="opacity:.75;cursor:not-allowed;background:var(--green-900);">
+        <i class="fa-solid fa-circle-check"></i> Sedang Kamu Pinjam
+      </button>`;
+    } else if (isHabis) {
+      pinjamBtnHtml = `<button class="btn-pinjam-full" disabled style="opacity:.55;cursor:not-allowed;">
+        <i class="fa-solid fa-cart-plus"></i> Stok Habis
+      </button>`;
+    } else {
+      pinjamBtnHtml = `<button class="btn-pinjam-full" onclick="pinjamBukuLangsung(${b.id})">
+        <i class="fa-solid fa-cart-plus"></i> Pinjam Buku
+      </button>`;
+    }
+
+    card.innerHTML = `
+      <div class="cover" style="${coverStyle}">
+        <button class="bookmark-btn ${isSaved ? 'saved' : ''}" data-id="${b.id}" title="Simpan buku">
+          <i class="fa-solid fa-bookmark"></i>
+        </button>
+        ${!b.image ? `
+          <div class="eyebrow">${b.eyebrow || b.genre}</div>
+          <div class="cover-title">${b.title}</div>
+          <div class="cover-author">${b.author}</div>
+        ` : ''}
+      </div>
+      <div class="card-body">
+        <div class="badge-row">
+          <span class="badge ${badgeClass}">${b.genre}</span>
+          <span class="badge format">${b.format || 'E-Book & Fisik'}</span>
+        </div>
+        <div class="book-title">${b.title}</div>
+        <div class="book-author">${b.author}</div>
+        <div class="avail"><span class="dot" style="${isHabis ? 'background:#d9534f;' : ''}"></span> Tersedia ${availNow} / ${b.total}</div>
+        <div class="card-actions">
+          <div class="btn-row-top">
+            <button class="btn-detail" onclick="detailBuku(${b.id})">Detail</button>
+            <button class="btn-baca" onclick="bacaBuku(${b.id})">
+              <i class="fa-solid fa-book-open-reader"></i> Baca
+            </button>
+          </div>
+          ${pinjamBtnHtml}
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  document.querySelectorAll('.bookmark-btn').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      if (!isLoggedIn) {
+        openAuthModal('simpan');
+        return;
+      }
+      const id = Number(btn.dataset.id);
+      if(bookmarked.has(id)) {
+        bookmarked.delete(id);
+        alert("Buku dihapus dari daftar simpan.");
+      } else {
+        bookmarked.add(id);
+        alert("Buku berhasil disimpan!");
+      }
+      saveFavoriteIds(bookmarked);
+      applyCurrentView();
+    });
+  });
+}
+
+function detailBuku(id) {
+  window.location.href = `detail_buku.html?id=${id}`;
+}
+
+function pinjamBuku(id) {
+  if (!isLoggedIn) {
+    openAuthModal('pinjam');
+    return;
+  }
+  window.location.href = `pinjam.html?id=${id}`;
+}
+
+function bacaBuku(id) {
+  window.location.href = `baca_buku.html?id=${id}`;
+}
+
+// Pinjam buku langsung dari kartu katalog (tanpa pindah halaman dulu),
+// sama seperti tombol "Pinjam Buku" di Beranda.
+function pinjamBukuLangsung(id) {
+  if (!isLoggedIn || !currentUser || !currentUser.email) {
+    openAuthModal('pinjam');
+    return;
+  }
+
+  const selectedBook = books.find(b => b.id === id);
+  if (!selectedBook) return;
+
+  if (getAvail(id) <= 0) {
+    alert(`Maaf, stok buku "${selectedBook.title}" sedang habis.`);
+    return;
+  }
+
+  const storageKey = `riwayat_pinjam_${currentUser.email}`;
+  let historyData = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+  const alreadyBorrowed = historyData.some(item => item.title === selectedBook.title && (item.status === 'Dipinjam' || item.status === 'Terlambat'));
+  if (alreadyBorrowed) {
+    alert("Anda sudah meminjam buku ini sebelumnya!");
+    return;
+  }
+
+  const today = new Date();
+  const dueDateObj = new Date();
+  dueDateObj.setDate(today.getDate() + 7);
+  const dueDateStr = dueDateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+
+  const newLoan = {
+    id: Date.now(),
+    nama: currentUser.name || 'Tamu',
+    email: currentUser.email || '',
+    inventaris: 'INV-' + String(Date.now()).slice(-6),
+    title: selectedBook.title,
+    judul: selectedBook.title,
+    author: selectedBook.author,
+    genre: selectedBook.genre,
+    borrowDate: today.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }),
+    tglPinjam: today.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }),
+    tglPinjamISO: today.toISOString(),
+    dueDate: dueDateStr,
+    tglKembali: dueDateStr,
+    tglKembaliISO: dueDateObj.toISOString(),
+    status: 'Dipinjam',
+    fine: 0,
+    denda: 'Rp. 0'
+  };
+
+  historyData.unshift(newLoan);
+  localStorage.setItem(storageKey, JSON.stringify(historyData));
+  decrementStock(id);
+
+  alert(`Berhasil meminjam buku "${selectedBook.title}"! Silakan cek di menu Pinjam.`);
+  applyCurrentView();
+}
+
+function applyCurrentView(){
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  let list = books.filter(b=>{
+    const matchesSearch = !q
+      || b.title.toLowerCase().includes(q)
+      || b.author.toLowerCase().includes(q)
+      || b.genre.toLowerCase().includes(q);
+    return matchesSearch;
+  });
+
+  if(activeFilters && activeFilters.genres.length){
+    list = list.filter(b => activeFilters.genres.includes(b.genre));
+  }
+  renderBooks(list);
+}
+
+document.getElementById('searchInput').addEventListener('input', applyCurrentView);
+
+const genreList = document.getElementById('genreList');
+const allCheckbox = genreList.querySelector('[data-all]');
+const genreCheckboxes = Array.from(genreList.querySelectorAll('input:not([data-all])'));
+
+allCheckbox.addEventListener('change', ()=>{
+  genreCheckboxes.forEach(cb => cb.checked = allCheckbox.checked);
+});
+genreCheckboxes.forEach(cb=>{
+  cb.addEventListener('change', ()=>{
+    allCheckbox.checked = genreCheckboxes.every(c=>c.checked);
+  });
+});
+
+document.getElementById('btnApplyFilter').addEventListener('click', ()=>{
+  const genres = genreCheckboxes.filter(cb=>cb.checked).map(cb=>cb.value);
+  activeFilters = { genres };
+  applyCurrentView();
+});
+
+document.getElementById('btnResetFilter').addEventListener('click', ()=>{
+  genreCheckboxes.forEach(cb=>cb.checked=false);
+  allCheckbox.checked = false;
+  activeFilters = null;
+  applyCurrentView();
+});
+
+const filterPanel = document.getElementById('filterPanel');
+const btnToggleFilter = document.getElementById('btnToggleFilter');
+
+btnToggleFilter.addEventListener('click', ()=>{
+  const willOpen = !filterPanel.classList.contains('open');
+  if(willOpen){
+    filterPanel.classList.add('open');
+    btnToggleFilter.classList.add('active');
+    btnToggleFilter.lastChild.textContent = " Sembunyikan Filter";
+  } else {
+    filterPanel.classList.remove('open');
+    btnToggleFilter.classList.remove('active');
+    btnToggleFilter.lastChild.textContent = " Tampilkan Filter";
+    genreCheckboxes.forEach(cb=>cb.checked=false);
+    allCheckbox.checked = false;
+    activeFilters = null;
+    applyCurrentView();
+  }
+});
+
+// ---------- MOBILE NAV TOGGLE ----------
+const navToggle = document.getElementById('navToggle');
+const navLinksEl = document.getElementById('navLinks');
+
+navToggle.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const isOpen = navLinksEl.classList.toggle('open');
+  navToggle.setAttribute('aria-expanded', isOpen);
+  navToggle.innerHTML = isOpen
+    ? '<i class="fa-solid fa-xmark"></i>'
+    : '<i class="fa-solid fa-bars"></i>';
+});
+
+navLinksEl.addEventListener('click', (e) => e.stopPropagation());
+
+window.addEventListener('click', () => {
+  if (navLinksEl.classList.contains('open')) {
+    navLinksEl.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', 'false');
+    navToggle.innerHTML = '<i class="fa-solid fa-bars"></i>';
+  }
+});
+
+// Inisialisasi awal saat halaman dimuat
+renderAuthArea();
+renderBooks(books);
+
+// Sinkron otomatis: jika status peminjaman berubah (mis. admin menandai
+// Terlambat/Dikembalikan) atau daftar favorit berubah dari tab/halaman lain,
+// kartu buku di Katalog ikut ter-update (termasuk tombol "Pinjam Buku").
+window.addEventListener('storage', (e) => {
+  if (e.key === DataBuku.BOOKS_KEY) {
+    books = DataBuku.getBooks();
+    applyCurrentView();
+  }
+  if (isLoggedIn && currentUser.email && e.key === `riwayat_pinjam_${currentUser.email}`) {
+    applyCurrentView();
+  }
+  if (isLoggedIn && currentUser.email && e.key === `favorit_buku_${currentUser.email}`) {
+    bookmarked = getFavoriteIds();
+    applyCurrentView();
+  }
+});
+</script>
+</body>
+</html>
